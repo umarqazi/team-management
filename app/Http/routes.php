@@ -15,4 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/pages', 'PagesController@showPage');
+// Route::get('/pages', 'PagesController@showPage');
+
+Route::get('/project/create', 'ProjectsController@create');
+Route::get('/projects', 'ProjectsController@index');
+Route::get('/project_view/{project}', 'ProjectsController@project_view');
+
+Route::post('/projects', 'ProjectsController@store');
