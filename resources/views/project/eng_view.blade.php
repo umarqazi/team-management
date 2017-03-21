@@ -22,15 +22,12 @@
         <td>{{$project->name}}</td>
         <td>{{$project->teamlead}}</td>
         <td>{{$project->developer}}</td>
-        <td><p> 8 </p></td>
+        <td><p>8</p></td>
         <td><p> 12 </p></td>
         <td><a href="/project_view/{{$project->id}}"> View </a></td>
       </tr>
   @endforeach
     </tbody>
   </table>
-<p> </p> 
 </div>
-
-
 @endsection

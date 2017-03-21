@@ -6,12 +6,43 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use \App\Project;
+use \App\Hour;
+
 
 class ProjectsController extends Controller
 {
     public function index()
     {
     	$projects = Project::all();
+
+        // $hours = Hour::with('project')->get();
+        // echo "<pre>";
+        // echo "<br>";
+        // print_r($hours);
+        // echo "</pre>";
+        // die();
+
+        // foreach ($results as $table2record) {
+        //   echo $table2record->id; //access table2 data
+        //   echo $table2record->project->booktitle; //access table1 data
+        // }
+
+
+
+        // foreach ($projects as $project) {
+        //     echo $hours->id;
+        //     echo $hours->productive_hours;
+        // }
+        // die();
+        
+        // echo "<pre>";
+        // echo "<br>";
+        // print_r($hours);
+        // echo "</pre>";
+
+        // die();
+        // Hour::where('project_id', $projects);
+
     	$user = "engineering_admin";
     	// $user = "CEO";
 
@@ -28,8 +59,8 @@ class ProjectsController extends Controller
 
     public function project_view(project $project)
     {
-    	// var_dump($project);
-    	 return view('project.project_view', compact('project'));
+        $hour = hour::where('project_id', $project->id)->first();
+    	 return view('project.project_view', compact('project','hour'));
     }
 
     public function create()
@@ -45,6 +76,8 @@ class ProjectsController extends Controller
     	// echo "</pre>";
 
     	// die();
+
+
 		$project = new Project; 
 		$project->name = $request->name;
 		$project->technology = $request->technology;
