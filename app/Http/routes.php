@@ -11,8 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/pages', 'PagesController@showPage');
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
+
+Route::resource('users', 'UsersController');
