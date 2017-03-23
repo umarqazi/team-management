@@ -20,3 +20,13 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 
 Route::resource('users', 'UsersController');
+
+Route::get('/project/create', 'ProjectsController@create');
+
+Route::get('/projects', 'ProjectsController@index');
+
+Route::get('/project_view/{project}', 'ProjectsController@project_view');
+
+Route::post('/project_view/{project}', 'HoursController@store');
+
+Route::post('/projects', 'ProjectsController@store');

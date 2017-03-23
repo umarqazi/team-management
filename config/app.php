@@ -158,6 +158,9 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
+        // laravel-permissions package
+        Spatie\Permission\PermissionServiceProvider::class,
+
     ],
 
     /*
