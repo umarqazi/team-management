@@ -13,6 +13,14 @@ class HoursController extends Controller
     public function store(Request $request)
     {
     	// die($request->project_id);
+
+        // $sum_actual_hours = DB::table('hours')->where('project_id', $request->project_id)->sum('actual_hours');
+
+        // $sum_actual_hours = DB::table('hours')->where('project_id', $request->project_id)->sum('actual_hours');
+
+        // var_dump($sum_actual_hours);
+        // die();
+
     	$hour = new Hour; 
     	$hour->project_id = $request->project_id;
     	$hour->actual_hours = $request->actual_hours;

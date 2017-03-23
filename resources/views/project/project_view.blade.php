@@ -20,11 +20,12 @@
     <tbody>
    
       <tr>
-        <td>{{$project->created_at}}</td>
+      <!--   <td>{{$project->created_at->format('d-m-Y')}}</td> -->
+        <td>{{$project->created_at->diffForHumans()}}</td>
         <td>{{$project->teamlead}}</td>
         <td>{{$project->developer}}</td>
-        <td>{{$hour->actual_hours}}</td>
-        <td>{{$hour->productive_hours}}</td>
+        <td>{{$sum_actual_hours}}</td>
+        <td>{{$sum_productive_hours}}</td>
       </tr>
  
     </tbody>

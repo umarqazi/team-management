@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use DB;
 use App\Http\Requests;
 use \App\Project;
 use \App\Hour;
@@ -15,36 +15,10 @@ class ProjectsController extends Controller
     {
     	$projects = Project::all();
 
-        // $hours = Hour::with('project')->get();
-        // echo "<pre>";
-        // echo "<br>";
-        // print_r($hours);
-        // echo "</pre>";
-        // die();
+        // $hours = Hour::all();
 
-        // foreach ($results as $table2record) {
-        //   echo $table2record->id; //access table2 data
-        //   echo $table2record->project->booktitle; //access table1 data
-        // }
-
-
-
-        // foreach ($projects as $project) {
-        //     echo $hours->id;
-        //     echo $hours->productive_hours;
-        // }
-        // die();
-        
-        // echo "<pre>";
-        // echo "<br>";
-        // print_r($hours);
-        // echo "</pre>";
-
-        // die();
-        // Hour::where('project_id', $projects);
-
-    	$user = "engineering_admin";
-    	// $user = "CEO";
+    	// $user = "engineering_admin";
+    	$user = "CEO";
 
     	if($user == "engineering_admin")
     	{
@@ -52,15 +26,20 @@ class ProjectsController extends Controller
     	}
     	else
     	{
-    		// die("here");
     		return view('project.index', compact('projects')) ;
     	}   	
     }
 
     public function project_view(project $project)
     {
-        $hour = hour::where('project_id', $project->id)->first();
-    	 return view('project.project_view', compact('project','hour'));
+        // $hour = hour::where('project_id', $project->id)->first();
+
+        $sum_actual_hours = DB::table('hours')->where('project_id', $project->id)->sum('actual_hours');
+
+        $sum_productive_hours = DB::table('hours')->where('project_id', $project->id)->sum('productive_hours');
+
+    	 return view('project.project_view', compact('project','sum_actual_hours',
+            'sum_productive_hours'));
     }
 
     public function create()

@@ -11,7 +11,7 @@
         <th>Name</th>
         <th>Team lead</th>
         <th>Developer</th>
-         <th>Actual Hours</th>
+        <!--  <th>Actual Hours</th> -->
         <!-- <th>Action</th> -->
       </tr>
     </thead>
@@ -21,7 +21,7 @@
         <td>{{$project->name}}</td>
         <td>{{$project->teamlead}}</td>
         <td>{{$project->developer}}</td>
-        <td><p> 8 </p></td>
+        <!-- <td><p> 8 </p></td> -->
      <!--    <td><a href=""> View </a></td> -->
       </tr>
   @endforeach
