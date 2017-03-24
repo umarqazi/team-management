@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+// use DB;
 use App\Http\Requests;
 use \App\Project;
 use \App\Hour;
+use Carbon\Carbon;
 
 
 class ProjectsController extends Controller
@@ -15,10 +16,10 @@ class ProjectsController extends Controller
     {
     	$projects = Project::all();
 
-        // $hours = Hour::all();
+        $hours = Hour::all();
 
-    	// $user = "engineering_admin";
-    	$user = "CEO";
+    	$user = "engineering_admin";
+    	// $user = "CEO";
 
     	if($user == "engineering_admin")
     	{
@@ -26,20 +27,25 @@ class ProjectsController extends Controller
     	}
     	else
     	{
-    		return view('project.index', compact('projects')) ;
+    		return view('project.index', compact('projects','hours')) ;
     	}   	
     }
 
-    public function project_view(project $project)
+    public function project_view(Project $project)
     {
-        // $hour = hour::where('project_id', $project->id)->first();
+        $hours = array();
 
-        $sum_actual_hours = DB::table('hours')->where('project_id', $project->id)->sum('actual_hours');
+        foreach ($project->hours->groupBy(function($d) {
+             return Carbon::parse($d->created_at)->format('m');
+        }) as $hour) {
+            $hours[]    = array(
+                'month'             => Carbon::parse($hour[0]['created_at'])->format('F'),
+                'actual_hours'      => $hour->sum('actual_hours'),
+                'productive_hours'  => $hour->sum('productive_hours')
+                );
+        }
 
-        $sum_productive_hours = DB::table('hours')->where('project_id', $project->id)->sum('productive_hours');
-
-    	 return view('project.project_view', compact('project','sum_actual_hours',
-            'sum_productive_hours'));
+    	return view('project.project_view', compact('project', 'hours'));
     }
 
     public function create()
@@ -49,14 +55,6 @@ class ProjectsController extends Controller
 
     public function store(Request $request)
     {
-    	// echo "<pre>";
-    	// echo "<br>";
-    	// print_r($request->name);
-    	// echo "</pre>";
-
-    	// die();
-
-
 		$project = new Project; 
 		$project->name = $request->name;
 		$project->technology = $request->technology;
@@ -64,30 +62,7 @@ class ProjectsController extends Controller
 		$project->developer = $request->developer;
 		$project->description = $request->description;
 		$project->save();
-		return redirect('projects'); 		
+		return redirect('project'); 		
     }
-
-    // public function edit(project $project)
-    // {
-    //     return view('project.edit_project', compact('project'));
-    // }
-
-
-    //    public function update( Request $request , category $category)
-    // {
-    //     $this->validate($request, [
-    //         'name' => 'bail|required|max:255',
-    //     ]); 
-
-    //      $category->update($request->all());
-    //      return redirect('/admin/categories');
-    // }
-
-
-    // public function destroy(project $project)
-    // {   
-    //      $project->delete();       
-    //      return redirect('projects/index');
-    // }
 
 }

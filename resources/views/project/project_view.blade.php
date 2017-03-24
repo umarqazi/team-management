@@ -5,6 +5,7 @@
 <h2>{{$project->name}}</h2>
 
 <div class="content" style="margin-top: 20px;">
+
   <table class="table">
     <thead>
       <tr>
@@ -13,20 +14,20 @@
         <th>Developer</th>
         <th>Actual Hours</th>
         <th>Productive Hours</th>
-
-        <!-- <th>Action</th> -->
       </tr>
     </thead>
     <tbody>
-   
+  
+      @foreach($hours as $hour)
       <tr>
       <!--   <td>{{$project->created_at->format('d-m-Y')}}</td> -->
-        <td>{{$project->created_at->diffForHumans()}}</td>
+        <td>{{$hour['month']}}</td>
         <td>{{$project->teamlead}}</td>
         <td>{{$project->developer}}</td>
-        <td>{{$sum_actual_hours}}</td>
-        <td>{{$sum_productive_hours}}</td>
+        <td>{{$hour['actual_hours']}}</td>
+        <td>{{$hour['productive_hours']}}</td>
       </tr>
+      @endforeach
  
     </tbody>
   </table>
@@ -35,7 +36,6 @@
   	<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Hours
     </button>
   	<a href="/projects" class="btn btn-default">Go Back</a>
-  	<!-- <button class="btn btn-default">Go Back</button> -->
   </div>
 
 </div>

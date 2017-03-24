@@ -11,8 +11,13 @@ class Project extends Model
 
 	 public function hours()
     {
-        return $this->hasMany('App\Hours');
+        return $this->hasMany('App\Hour');
     }
+
+    // public function accumulative_hours()
+    // {
+    // 	return $this->hasMany('App\Hour')->selectRaw('sum(productive_hours) as productive_hours');
+    // }
 
 
 }
