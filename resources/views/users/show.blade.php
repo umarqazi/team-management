@@ -25,9 +25,9 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at }}</td>
-                            <td><a href="{{ url('/users/'. $user->id.'edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
+                            <td><a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
                             <td>
-                                {{ Form::open(array('url' => '/users/' . $value->id, 'class' => 'pull-right')) }}
+                                {{ Form::open(array('url' => '/users/' . $user->id, 'class' => 'pull-right')) }}
                                     {{ Form::hidden('_method', 'DELETE') }}
                                     <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i>Delete</button>
                                 {{ Form::close() }}

@@ -32,7 +32,7 @@
                             <td>{{ $value->name }}</td>
                             <td>{{ $value->email }}</td>
                             <td>{{ $value->created_at }}</td>
-                            <td><a href="{{ url('/users/'. $value->id.'edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
+                            <td><a href="{{ url('/users/'. $value->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
                             <td>
                                 {{ Form::open(array('url' => '/users/' . $value->id, 'class' => 'pull-right')) }}
                                     {{ Form::hidden('_method', 'DELETE') }}
