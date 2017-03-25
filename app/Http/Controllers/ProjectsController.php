@@ -17,8 +17,8 @@ class ProjectsController extends Controller
 
         // $hours = Hour::all();
 
-    	// $user = "engineering_admin";
-    	$user = "CEO";
+    	$user = "engineering_admin";
+    	// $user = "CEO";
 
     	if($user == "engineering_admin")
     	{
