@@ -36,6 +36,10 @@
 <div id="engineering_admin">
   <h2>Engineering Admin</h2>
 
+  <div class="text-right">
+  <a href="/project/create">Create Project</a>
+  </div>
+
   <div class="content" style="margin-top: 20px;">
     <table class="table">
       <thead>
