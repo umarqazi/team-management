@@ -11,8 +11,29 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index' );
 
 Route::get('/pages', 'PagesController@showPage');
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
+
+Route::resource('users', 'UsersController');
+
+Route::get('/project/create', 'ProjectsController@create');
+
+Route::get('/projects', 'ProjectsController@index');
+
+Route::get('/project/{project}', 'ProjectsController@show');
+
+Route::post('/project/{project}', 'HoursController@store');
+
+Route::post('/projects', 'ProjectsController@store');
+
+Route::get('/project/{project}/edit', 'ProjectsController@edit');
+
+Route::put('/projects/{project}', 'ProjectsController@update');
+
+Route::delete('/projects/{project}', 'ProjectsController@destroy');
+
