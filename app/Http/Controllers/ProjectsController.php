@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Validator;
 // use DB;
 use App\Http\Requests;
 use \App\Project;
 use \App\Hour;
 use Carbon\Carbon;
-
+// use Session;
 
 class ProjectsController extends Controller
 {
     public function index()
     {
-    	$projects = Project::all();
+    	$projects = Project::paginate(8);
 
         $hours = Hour::all();
 
@@ -31,7 +32,7 @@ class ProjectsController extends Controller
     	}   	
     }
 
-    public function project_view(Project $project)
+    public function show(Project $project)
     {
         $hours = array();
 
@@ -50,11 +51,20 @@ class ProjectsController extends Controller
 
     public function create()
     {
-    	return view("project.create");
+        return view("project.create");
     }
 
+   
     public function store(Request $request)
-    {
+        {
+          $this->validate($request, [
+           'name' => 'required|unique:projects|max:255',
+           'technology' => 'required',
+           'teamlead' => 'required',
+           'developer' => 'required',           
+       ]);
+
+
 		$project = new Project; 
 		$project->name = $request->name;
 		$project->technology = $request->technology;
@@ -62,7 +72,31 @@ class ProjectsController extends Controller
 		$project->developer = $request->developer;
 		$project->description = $request->description;
 		$project->save();
-		return redirect('project'); 		
+		return redirect('/projects'); 		
+    }
+
+    public function edit(Project $project)
+    {
+       return view('project.edit', compact('project'));
+    }
+
+    public function update( Request $request , Project $project)
+    {
+        $this->validate($request, [
+           'name' => 'required|unique:projects|max:255',
+           'technology' => 'required',
+           'teamlead' => 'required',
+           'developer' => 'required',           
+       ]);
+
+         $project->update($request->all());
+         return redirect('/projects');
+    }
+
+    public function destroy(Project $project)
+    {   
+         $project->delete();       
+         return redirect('/projects');
     }
 
 }

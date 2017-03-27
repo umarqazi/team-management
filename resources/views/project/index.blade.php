@@ -29,7 +29,9 @@
       </tbody> 
     </table>
   </div>
+
 </div> <!-- /ceo -->
+
 
 {{--
 
@@ -37,7 +39,7 @@
   <h2>Engineering Admin</h2>
 
   <div class="text-right">
-  <a href="/project/create">Create Project</a>
+  <a href="/project/create" class="btn btn-primary">Create Project</a>
   </div>
 
   <div class="content" style="margin-top: 20px;">
@@ -60,7 +62,7 @@
           <td>{{$project->teamlead}}</td>
           <td>{{$project->developer}}</td>
          
-          <td><a href="/project_view/{{$project->id}}"> View </a></td>
+          <td><a href="/project/{{$project->id}}"> View </a></td>
         </tr>
     @endforeach
       </tbody>

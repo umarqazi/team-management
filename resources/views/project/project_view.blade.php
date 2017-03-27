@@ -5,7 +5,6 @@
 <h2>{{$project->name}}</h2>
 
 <div class="content" style="margin-top: 20px;">
-
   <table class="table">
     <thead>
       <tr>
@@ -20,7 +19,6 @@
   
       @foreach($hours as $hour)
       <tr>
-      <!--   <td>{{$project->created_at->format('d-m-Y')}}</td> -->
         <td>{{$hour['month']}}</td>
         <td>{{$project->teamlead}}</td>
         <td>{{$project->developer}}</td>
@@ -52,7 +50,7 @@
         <h4 class="modal-title">Enter Hours</h4>
       </div>
       <div class="modal-body">
-      <form action="/project_view/{{$project->id}}" method="POST">
+      <form action="/project/{{$project->id}}" method="POST">
          <div class="form-group">
           <label for="actual_hours">Actual Hours:</label>
           <input type="text" name="actual_hours" class="form-control" id="actual_hours">
