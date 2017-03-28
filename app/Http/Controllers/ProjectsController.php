@@ -29,6 +29,21 @@ class ProjectsController extends Controller
        // die();
     	$projects = Project::paginate(8);
 
+        // echo("<pre>");
+        foreach ($projects as $project) {
+            $teamleads   = array();
+            foreach ($project->teamlead as $teamlead) {
+                $teamleads[]  = $teamlead->name;
+            }
+            $project->teamlead  = implode(", ", $teamleads);
+
+            $developers = array();
+            foreach ($project->developers as $developer) {
+                $developers[]    = $developer->name;
+            }
+            $project->developers    = implode(", ", $developers);
+        }
+
         $hours = Hour::all();
 
     	$user = "engineering_admin";
@@ -58,11 +73,6 @@ class ProjectsController extends Controller
                 );
         }
 
-      // echo("<pre>");
-        // print_r($project->users);
-
-        // die('dying');
-
     	return view('project.project_view', compact('project', 'hours'));
     }
 
@@ -87,8 +97,8 @@ class ProjectsController extends Controller
 		$project = new Project; 
 		$project->name = $request->name;
 		$project->technology = $request->technology;
-		$project->teamlead = $request->teamlead;
-		$project->developer = $request->developer;
+		// $project->teamlead = $request->teamlead;
+		// $project->developer = $request->developer;
 		$project->description = $request->description;
 
 		$project->save();

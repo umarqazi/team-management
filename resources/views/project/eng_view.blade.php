@@ -27,7 +27,7 @@
         <td>{{$project->name}}</td>
         <td>{{$project->technology}}</td>
         <td>{{$project->teamlead}}</td>
-        <td>{{$project->developer}}</td>
+        <td>{{$project->developers}}</td>
        
         <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
         <td><a href="/project/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td> 
