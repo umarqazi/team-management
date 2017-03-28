@@ -1,9 +1,11 @@
-
-@extends('master')
+@extends('layouts.app')
 
 @section('content')
-<h2>Engineering Admin</h2>
- <div class="text-right">
+<!-- <h2>Engineering Admin</h2> -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+ <div class="text-right" style="margin-top:20px;">
   <a href="/project/create" class="btn btn-primary">Create Project</a>
   </div>
 <div class="content" style="margin-top: 20px;">
@@ -44,4 +46,5 @@
     {{ $projects->links() }}
     </div>
 </div>
+</div> </div> </div>
 @endsection

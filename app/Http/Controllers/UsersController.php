@@ -86,10 +86,10 @@ class UsersController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        //$book = Book::where('id', '=', $id)->get();
 
-        // show the view and pass the nerd to it
-        return view('/users.show')->with('user', $user);
+        $projects   = $user->projects;
+
+        return view('/users.show' , compact('user','projects'));
     }
 
     /**

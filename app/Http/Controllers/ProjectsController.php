@@ -3,18 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 // use Illuminate\Support\Facades\Validator;
 // use DB;
 use App\Http\Requests;
 use \App\Project;
 use \App\Hour;
+use \App\User;
 use Carbon\Carbon;
+use Auth;
 // use Session;
 
 class ProjectsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
     public function index()
     {
+       // print_r(Auth::user()->id) ;
+       // die();
     	$projects = Project::paginate(8);
 
         $hours = Hour::all();
@@ -46,12 +58,19 @@ class ProjectsController extends Controller
                 );
         }
 
+      // echo("<pre>");
+        // print_r($project->users);
+
+        // die('dying');
+
     	return view('project.project_view', compact('project', 'hours'));
     }
 
     public function create()
     {
-        return view("project.create");
+        $developers = User::role('developer')->get();
+        $teamleads = User::role('teamlead')->get();
+        return view("project.create", compact('teamleads','developers'));
     }
 
    
@@ -71,7 +90,11 @@ class ProjectsController extends Controller
 		$project->teamlead = $request->teamlead;
 		$project->developer = $request->developer;
 		$project->description = $request->description;
+
 		$project->save();
+        // $project->users()->attach(Auth::user()->id);
+        $project->users()->attach($request->teamlead);
+        $project->users()->attach($request->developer);
 		return redirect('/projects'); 		
     }
 
