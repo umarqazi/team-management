@@ -35,14 +35,23 @@
 		    <label for="technology">Technology:</label>
 		    <input type="text" name="technology" value="{{$project->technology}}" class="form-control" id="technology">
 		  </div>
-		   <div class="form-group">
-		    <label for="teamlead">Team lead:</label>
-		    <input type="text" name="teamlead" value="{{$project->teamlead}}" class="form-control" id="teamlead">
-		  </div>
-		   <div class="form-group">
-		    <label for="developer">Developer:</label>
-		    <input type="text" name="developer" value="{{$project->developer}}" class="form-control" id="developer">
-		  </div>
+			<div class="form-group">
+				<label for="sel1">Team Lead:</label>
+				<select class="form-control" id="teamlead" name="teamlead" required>
+					@foreach($teamleads as $teamlead)
+						<option value="{{$teamlead->id}}" @if($teamlead->id == $project->teamlead->id) {{"selected"}} @endif >{{$teamlead->name}}</option>
+					@endforeach
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="sel1">Developer:</label>
+				<select class="form-control" id="developer" name="developer" required>
+					@foreach($developers as $developer)
+						<option value="{{$developer->id}}" @if($developer->id == $project->developer->id) {{"selected"}} @endif >{{$developer->name}}</option>
+					@endforeach
+				</select>
+			</div>
 		   <div class="form-group">
 		   <textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description.">{{$project->description}}</textarea>
 		  </div>

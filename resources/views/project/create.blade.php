@@ -37,7 +37,7 @@
 		  <div class="form-group">
 		    <label for="sel1">Team Lead:</label>
 		    <select class="form-control" id="teamlead" name="teamlead">
-		    <option>Select Team Lead</option>
+		    <option value="">Select Team Lead</option>
 		    @foreach($teamleads as $teamlead)
 		      <option value="{{$teamlead->id}}">{{$teamlead->name}}</option>
 		  	@endforeach
@@ -47,7 +47,7 @@
 		  <div class="form-group">
 		    <label for="sel1">Developer:</label>
 		    <select class="form-control" id="developer" name="developer">
-		    <option>Select Developer</option>
+		    <option value="">Select Developer</option>
 		    @foreach($developers as $developer)
 		      <option value="{{$developer->id}}">{{$developer->name}}</option>
 		  	@endforeach

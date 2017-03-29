@@ -25,7 +25,7 @@
                 <tr>
                   <td>{{$hour['month']}}</td>
                   <td>{{$project->teamlead}}</td>
-                  <td>{{$project->developer}}</td>
+                  <td>{{$project->developers}}</td>
                   <td>{{$hour['actual_hours']}}</td>
                   <td>{{$hour['productive_hours']}}</td>
                 </tr>

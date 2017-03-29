@@ -15,6 +15,12 @@ use Session;
 
 class UsersController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -73,7 +79,7 @@ class UsersController extends Controller
             // redirect
             Session::flash('message', 'Successfully created a user!');
             Session::flash('alert-class', 'alert-success'); 
-            return Redirect::to('/users.index');
+            return Redirect::to('/users');
         }
     }
 
@@ -87,9 +93,7 @@ class UsersController extends Controller
     {
         $user = User::find($id);
 
-        $projects   = $user->projects;
-
-        return view('/users.show' , compact('user','projects'));
+        return view('/users.show' , compact('user'));
     }
 
     /**

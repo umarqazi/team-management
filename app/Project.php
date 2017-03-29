@@ -16,10 +16,10 @@ class Project extends Model
         return $this->hasMany('App\Hour');
     }
 
-   // public function users()
-   //  {
-   //      return $this->belongsToMany('App\User');
-   //  }
+    public function users()
+     {
+         return $this->belongsToMany('App\User');
+     }
 
     public function teamlead()
     {
