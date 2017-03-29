@@ -1,42 +1,47 @@
-@extends('master')
+@extends('layouts.app')
 
 @section('content')
 
-<h2>{{$project->name}}</h2>
 
-<div class="content" style="margin-top: 20px;">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Month</th>
-        <th>Team lead</th>
-        <th>Developer</th>
-        <th>Actual Hours</th>
-        <th>Productive Hours</th>
-      </tr>
-    </thead>
-    <tbody>
-  
-      @foreach($hours as $hour)
-      <tr>
-        <td>{{$hour['month']}}</td>
-        <td>{{$project->teamlead}}</td>
-        <td>{{$project->developer}}</td>
-        <td>{{$hour['actual_hours']}}</td>
-        <td>{{$hour['productive_hours']}}</td>
-      </tr>
-      @endforeach
- 
-    </tbody>
-  </table>
-  <!-- Trigger the modal with a button -->
-  <div class="text-center" style="margin-top: 50px;">
-  	<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Hours
-    </button>
-  	<a href="/projects" class="btn btn-default">Go Back</a>
-  </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+        <h2>{{$project->name}}</h2>
+          <div class="content" style="margin-top: 40px;">
+          
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Team lead</th>
+                  <th>Developer</th>
+                  <th>Actual Hours</th>
+                  <th>Productive Hours</th>
+                </tr>
+              </thead>
+              <tbody>
+            
+                @foreach($hours as $hour)
+                <tr>
+                  <td>{{$hour['month']}}</td>
+                  <td>{{$project->teamlead}}</td>
+                  <td>{{$project->developer}}</td>
+                  <td>{{$hour['actual_hours']}}</td>
+                  <td>{{$hour['productive_hours']}}</td>
+                </tr>
+                @endforeach
+           
+              </tbody>
+            </table>
+            <!-- Trigger the modal with a button -->
+            <div class="text-center" style="margin-top: 50px;">
+            	<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Hours
+              </button>
+            	<a href="/projects" class="btn btn-default">Go Back</a>
+            </div>
 
-</div>
+          </div>
+       </div></div></div>   
 
 
 <!-- Modal -->

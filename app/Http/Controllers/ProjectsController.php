@@ -3,19 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 // use Illuminate\Support\Facades\Validator;
 // use DB;
 use App\Http\Requests;
 use \App\Project;
 use \App\Hour;
+use \App\User;
 use Carbon\Carbon;
+use Auth;
 // use Session;
 
 class ProjectsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
     public function index()
     {
+       // print_r(Auth::user()->id) ;
+       // die();
     	$projects = Project::paginate(8);
+
+        // echo("<pre>");
+        foreach ($projects as $project) {
+            $teamleads   = array();
+            foreach ($project->teamlead as $teamlead) {
+                $teamleads[]  = $teamlead->name;
+            }
+            $project->teamlead  = implode(", ", $teamleads);
+
+            $developers = array();
+            foreach ($project->developers as $developer) {
+                $developers[]    = $developer->name;
+            }
+            $project->developers    = implode(", ", $developers);
+        }
 
         $hours = Hour::all();
 
@@ -51,7 +78,9 @@ class ProjectsController extends Controller
 
     public function create()
     {
-        return view("project.create");
+        $developers = User::role('developer')->get();
+        $teamleads = User::role('teamlead')->get();
+        return view("project.create", compact('teamleads','developers'));
     }
 
    
@@ -68,10 +97,14 @@ class ProjectsController extends Controller
 		$project = new Project; 
 		$project->name = $request->name;
 		$project->technology = $request->technology;
-		$project->teamlead = $request->teamlead;
-		$project->developer = $request->developer;
+		// $project->teamlead = $request->teamlead;
+		// $project->developer = $request->developer;
 		$project->description = $request->description;
+
 		$project->save();
+        // $project->users()->attach(Auth::user()->id);
+        $project->users()->attach($request->teamlead);
+        $project->users()->attach($request->developer);
 		return redirect('/projects'); 		
     }
 
