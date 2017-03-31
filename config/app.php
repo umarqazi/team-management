@@ -157,6 +157,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Sven\ArtisanView\ArtisanViewServiceProvider::class,
 
         // laravel-permissions package
         Spatie\Permission\PermissionServiceProvider::class,

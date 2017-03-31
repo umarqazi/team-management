@@ -11,29 +11,31 @@
 |
 */
 
-Route::get('/', 'HomeController@index' );
-
 Route::get('/pages', 'PagesController@showPage');
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+Route::group( ['middleware'  => 'auth'], function(){
+    Route::resource( 'users', 'UsersController' );
 
-Route::resource('users', 'UsersController');
+    Route::get( 'home', 'HomeController@index' );
 
-Route::get('/project/create', 'ProjectsController@create');
+    Route::get( '/', 'HomeController@index' );
 
-Route::get('/projects', 'ProjectsController@index');
+    Route::get('/projects', 'ProjectsController@index');
 
-Route::get('/project/{project}', 'ProjectsController@show');
+    Route::get('/project/create', 'ProjectsController@create');
 
-Route::post('/project/{project}', 'HoursController@store');
+    Route::get('/project/{project}', 'ProjectsController@show');
 
-Route::post('/projects', 'ProjectsController@store');
+    Route::post('/project/{project}', 'HoursController@store');
 
-Route::get('/project/{project}/edit', 'ProjectsController@edit');
+    Route::post('/projects', 'ProjectsController@store');
 
-Route::put('/projects/{project}', 'ProjectsController@update');
+    Route::get('/project/{project}/edit', 'ProjectsController@edit');
 
-Route::delete('/projects/{project}', 'ProjectsController@destroy');
+    Route::put('/projects/{project}', 'ProjectsController@update');
+
+    Route::delete('/projects/{project}', 'ProjectsController@destroy');
+});
 

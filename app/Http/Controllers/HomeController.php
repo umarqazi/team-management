@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\User;
+use App\Project;
 
 class HomeController extends Controller
 {
@@ -15,11 +17,6 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Show the application dashboard.
      *
@@ -27,10 +24,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $role = Role::create(['name' => 'teamlead']);
-        // $user = User::find(3);
-        // $user->assignRole('developer');
-        
-        return view('home');
+        $user   = Auth::user();
+
+        $projects   = array();
+
+        if($user->hasRole(['developer', 'teamlead']))
+        {
+            $projects   = $user->projects;
+        }
+        else
+        {
+            $projects   = Project::all();
+        }
+
+        $view   = view('home')->nest('dashboard', 'dashboard.sales', compact('projects'))->nest('dashboard', 'dashboard.engineers', compact('projects'));
+
+        return $view;
     }
 }
