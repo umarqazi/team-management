@@ -66,6 +66,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('role-name') ? ' has-error' : '' }}">
+                            <label for="role-name" class="col-md-4 control-label">Role:</label>
+
+                            <div class="col-md-6">
+                                <select name="role-name" class="form-control" required>
+                                    <option value="">Select a Role</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{$role->name}}">{{$role->name}}</option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('password_confirmation'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

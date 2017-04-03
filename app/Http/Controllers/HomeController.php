@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -37,7 +38,15 @@ class HomeController extends Controller
             $projects   = Project::all();
         }
 
-        $view   = view('home')->nest('dashboard', 'dashboard.sales', compact('projects'))->nest('dashboard', 'dashboard.engineers', compact('projects'));
+        $view   = View::make('home');
+        if($user->hasRole(['developer', 'teamlead']))
+        {
+            $view->nest('dashboard', 'dashboard.engineers', compact('projects'));
+        }
+        else
+        {
+            $view->nest('dashboard', 'dashboard.sales', compact('projects'));
+        }
 
         return $view;
     }

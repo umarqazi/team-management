@@ -18,6 +18,8 @@ Route::auth();
 Route::group( ['middleware'  => 'auth'], function(){
     Route::resource( 'users', 'UsersController' );
 
+    Route::resource( 'roles', 'RolesController' );
+
     Route::get( 'home', 'HomeController@index' );
 
     Route::get( '/', 'HomeController@index' );

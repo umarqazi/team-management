@@ -38,7 +38,8 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('/users.create');
+        $roles  = Role::all();
+        return view('/users.create')->with(array('roles' => $roles));
     }
 
     /**
@@ -70,6 +71,8 @@ class UsersController extends Controller
             $user->email      = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
             $user->save();
+
+            $user->assignRole(Input::get('role-name'));
 
             // redirect
             Session::flash('message', 'Successfully created a user!');

@@ -49,30 +49,30 @@
   <div class="modal-dialog">
 
     <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Enter Hours</h4>
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Enter Hours</h4>
+          </div>
+          <form action="/project/{{$project->id}}" method="POST">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="actual_hours">Actual Hours:</label>
+                      <input type="text" name="actual_hours" class="form-control" id="actual_hours">
+                  </div>
+                  <div class="form-group">
+                      <label for="productive_hours">Productive Hours:</label>
+                      <input type="text" name="productive_hours" class="form-control" id="productive_hours">
+                  </div>
+                  <input type="hidden" name="project_id" value="{{$project->id}}">
+              </div>
+              <div class="modal-footer">
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-default">Submit</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+          </form>
       </div>
-      <div class="modal-body">
-      <form action="/project/{{$project->id}}" method="POST">
-         <div class="form-group">
-          <label for="actual_hours">Actual Hours:</label>
-          <input type="text" name="actual_hours" class="form-control" id="actual_hours">
-        </div>
-         <div class="form-group">
-          <label for="productive_hours">Productive Hours:</label>
-          <input type="text" name="productive_hours" class="form-control" id="productive_hours">
-        </div>
-      <input type="hidden" name="project_id" value="{{$project->id}}">
-      </div>
-      <div class="modal-footer">
-       <input type="hidden" name="_token" value="{{ csrf_token() }}">
-      <button type="submit" class="btn btn-default">Submit</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-      </form>
-    </div>
 
   </div>
 </div>

@@ -17,5 +17,6 @@
 @hasrole(['developer', 'teamlead'])
     @yield('engineers')
 @else('sales')
+    @yield('sales')
 @endrole
 @endsection
