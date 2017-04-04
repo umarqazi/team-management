@@ -66,6 +66,24 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('role-name') ? ' has-error' : '' }}">
+                            <label for="role-name" class="col-md-4 control-label">Role:</label>
+
+                            <div class="col-md-6">
+                                <select name="role-name" class="form-control" required>
+                                    @foreach($roles as $role)
+                                        <option value="{{$role->name}}" @if( $role->name == $user->roles()->pluck('name')[0] ) {{"selected"}} @endif>{{$role->name}}</option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('role-name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role-name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

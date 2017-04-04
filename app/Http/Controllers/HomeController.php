@@ -29,7 +29,7 @@ class HomeController extends Controller
 
         $projects   = array();
 
-        if($user->hasRole(['developer', 'teamlead']))
+        if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
             $projects   = $user->projects;
         }
@@ -39,7 +39,7 @@ class HomeController extends Controller
         }
 
         $view   = View::make('home');
-        if($user->hasRole(['developer', 'teamlead']))
+        if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
             $view->nest('dashboard', 'dashboard.engineers', compact('projects'));
         }

@@ -103,9 +103,10 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        $roles  = Role::all();
 
         // show the edit form and pass the nerd
-        return view('/users.edit')->with('user', $user);
+        return view('/users.edit')->with('user', $user)->with('roles', $roles);
     }
 
     /**
@@ -138,6 +139,9 @@ class UsersController extends Controller
             $user->email      = Input::get('email');
             $user->password = bcrypt(Input::get('password'));
             $user->save();
+
+            $user->removeRole(Role::all());
+            $user->assignRole(Input::get('role-name'));
 
             // redirect
             Session::flash('message', 'Successfully updated the User!');

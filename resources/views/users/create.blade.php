@@ -77,9 +77,9 @@
                                     @endforeach
                                 </select>
 
-                                @if ($errors->has('password_confirmation'))
+                                @if ($errors->has('role-name'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                        <strong>{{ $errors->first('role-name') }}</strong>
                                     </span>
                                 @endif
                             </div>

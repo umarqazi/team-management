@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-@hasrole(['developer', 'teamlead'])
+@hasrole(['developer', 'teamlead', 'engineer'])
     @yield('engineers')
 @else('sales')
     @yield('sales')
