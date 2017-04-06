@@ -27,21 +27,21 @@ class HomeController extends Controller
     {
         $user   = Auth::user();
 
-        $projects   = array();
+        $projects   = Project::all();
 
-        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        /*if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
             $projects   = $user->projects;
         }
         else
         {
             $projects   = Project::all();
-        }
+        }*/
 
         $view   = View::make('home');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
-            $view->nest('dashboard', 'dashboard.engineers', compact('projects'));
+            $view->nest('dashboard', 'dashboard.engineers', compact('user'));
         }
         else
         {
