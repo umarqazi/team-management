@@ -38,8 +38,10 @@
 			<div class="form-group">
 				<label for="sel1">Team Lead:</label>
 				<select class="form-control" id="teamlead" name="teamlead" required>
+					<option>Select</option>
 					@foreach($teamleads as $teamlead)
-						<option value="{{$teamlead->id}}" @if($teamlead->id == $project->teamlead->id) {{"selected"}} @endif >{{$teamlead->name}}</option>
+						{{--<option value="{{$teamlead->id}}" @if($teamlead->id == $project->teamlead->id) {{"selected"}} @endif >{{$teamlead->name}}</option>--}}
+						<option value="{{$teamlead->id}}">{{$teamlead->name}}</option>
 					@endforeach
 				</select>
 			</div>
@@ -47,8 +49,10 @@
 			<div class="form-group">
 				<label for="sel1">Developer:</label>
 				<select class="form-control" id="developer" name="developer" required>
+					<option>Select Developer</option>
 					@foreach($developers as $developer)
-						<option value="{{$developer->id}}" @if($developer->id == $project->developer->id) {{"selected"}} @endif >{{$developer->name}}</option>
+						{{--<option value="{{$developer->id}}" @if($developer->id == $project->developer->id) {{"selected"}} @endif >{{$developer->name}}</option>--}}
+						<option value="{{$developer->id}}" >{{$developer->name}}</option>
 					@endforeach
 				</select>
 			</div>

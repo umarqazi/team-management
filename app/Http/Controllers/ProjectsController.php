@@ -45,7 +45,7 @@ class ProjectsController extends Controller
 
         $user   = Auth::user();
 
-    	if($user->hasRole("teamlead") || $user->hasRole("developer"))
+    	if($user->hasRole("engineer"))
     	{
     		return view('project.eng_view', compact('projects')) ;
     	}
@@ -93,10 +93,11 @@ class ProjectsController extends Controller
    
     public function store(Request $request)
         {
+
             $rules = array(
                 'name'       => 'required|unique:projects|max:255',
-                'teamlead'   => 'required',
-                'developer'  => 'required'
+//                'teamlead'   => 'required',
+//                'developer'  => 'required'
             );
             $validator = Validator::make(Input::all(), $rules);
 
@@ -106,6 +107,7 @@ class ProjectsController extends Controller
                     ->withErrors($validator)
                     ->withInput();
             }
+
             $project = new Project;
             $project->name = $request->name;
             $project->technology = $request->technology;
@@ -115,9 +117,15 @@ class ProjectsController extends Controller
 
             $project->save();
             // $project->users()->attach(Auth::user()->id);
-            $project->users()->attach($request->teamlead);
-            $project->users()->attach($request->developer);
-            return redirect('/projects');
+
+            if( !empty($request->teamlead) ) {
+                $project->users()->attach($request->teamlead);
+            }
+            if  (!empty($request->developer))
+            {
+                $project->users()->attach($request->developer);
+            }
+                return redirect('/projects');
     }
 
     public function edit(Project $project)
@@ -127,6 +135,9 @@ class ProjectsController extends Controller
 
         $project->teamlead  = ! empty ($project->teamlead[0]) ? $project->teamlead[0]: "";
         $project->developer = ! empty ($project->developers[0]) ? $project->developers[0]: "";
+
+//        print_r($project->developer);
+//        die('here');
 
         return view('project.edit', compact('project','teamleads','developers'));
     }
