@@ -15,6 +15,7 @@ use Session;
 
 class UsersController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +38,8 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('/users.create');
+        $roles  = Role::all();
+        return view('/users.create')->with(array('roles' => $roles));
     }
 
     /**
@@ -52,7 +54,7 @@ class UsersController extends Controller
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
             'name'       => 'required',
-            'email'      => 'required|email',
+            'email'      => 'required|email|unique:users',
             'password' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -70,10 +72,12 @@ class UsersController extends Controller
             $user->password = bcrypt(Input::get('password'));
             $user->save();
 
+            $user->assignRole(Input::get('role-name'));
+
             // redirect
             Session::flash('message', 'Successfully created a user!');
             Session::flash('alert-class', 'alert-success'); 
-            return Redirect::to('/users.index');
+            return Redirect::to('/users');
         }
     }
 
@@ -87,9 +91,7 @@ class UsersController extends Controller
     {
         $user = User::find($id);
 
-        $projects   = $user->projects;
-
-        return view('/users.show' , compact('user','projects'));
+        return view('/users.show' , compact('user'));
     }
 
     /**
@@ -101,9 +103,10 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        $roles  = Role::all();
 
         // show the edit form and pass the nerd
-        return view('/users.edit')->with('user', $user);
+        return view('/users.edit')->with('user', $user)->with('roles', $roles);
     }
 
     /**
@@ -119,8 +122,7 @@ class UsersController extends Controller
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
             'name'       => 'required',
-            'email'      => 'required|email',
-            'password' => 'required'
+            'email'      => 'required|email|unique:users,email,'.$id
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -134,8 +136,10 @@ class UsersController extends Controller
             $user = User::find($id);
             $user->name       = Input::get('name');
             $user->email      = Input::get('email');
-            $user->password = bcrypt(Input::get('password'));
             $user->save();
+
+            $user->removeRole(Role::all());
+            $user->assignRole(Input::get('role-name'));
 
             // redirect
             Session::flash('message', 'Successfully updated the User!');

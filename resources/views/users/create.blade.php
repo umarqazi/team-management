@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Add User</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/users') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="/users">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -61,6 +61,25 @@
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('role-name') ? ' has-error' : '' }}">
+                            <label for="role-name" class="col-md-4 control-label">Role:</label>
+
+                            <div class="col-md-6">
+                                <select name="role-name" class="form-control" required>
+                                    <option value="">Select a Role</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{$role->name}}">{{$role->name}}</option>
+                                    @endforeach
+                                </select>
+
+                                @if ($errors->has('role-name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role-name') }}</strong>
                                     </span>
                                 @endif
                             </div>

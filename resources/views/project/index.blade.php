@@ -14,7 +14,7 @@
                     <th>Name</th>
                     <th>Team lead</th>
                     <th>Developer</th>
-                     <th>Productive Hours</th>
+                    <th>Productive Hours</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -22,7 +22,7 @@
                   <tr>
                     <td>{{$project->name}}</td>
                     <td>{{$project->teamlead}}</td>
-                    <td>{{$project->developer}}</td>
+                    <td>{{$project->developers}}</td>
                     <td>
                       {{$project->hours->sum('productive_hours')}}
                     </td>
