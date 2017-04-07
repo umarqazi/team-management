@@ -46,8 +46,8 @@ class ProjectsController extends Controller
 
         $hours = Hour::all();
 
-    	$user = "engineering_admin";
-    	// $user = "CEO";
+    	// $user = "engineering_admin";
+    	$user = "CEO";
 
     	if($user == "engineering_admin")
     	{
@@ -80,6 +80,8 @@ class ProjectsController extends Controller
     {
         $developers = User::role('developer')->get();
         $teamleads = User::role('teamlead')->get();
+        // print_r($teamleads);
+        // die();
         return view("project.create", compact('teamleads','developers'));
     }
 

@@ -27,10 +27,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $developers = User::role('developer')->get();
+        echo("<pre>");
+        print_r($developers);
+        die();
+
+
         // $role = Role::create(['name' => 'teamlead']);
         // $user = User::find(3);
         // $user->assignRole('developer');
         
-        return view('home');
+        // return view('home');
     }
 }
