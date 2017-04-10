@@ -1,30 +1,63 @@
+@hasrole(['sales', 'teamlead'])
+<div class="col-md-12" style="margin-top: 20px; margin-bottom: 40px;">
+    <div class="row">
+        <div class="col-md-6">
+            <table id="myTable" class="table table-striped table-bordered" cellspacing="0"
+                   width="100%">
+                <thead>
+                <tr>
+                    <th>Allocated Resources</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Allocated Resources</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                @foreach($resources['allocated'] as $resource)
 
-    <div class="col-md-8 col-md-offset-2" style="margin-top: 20px;">
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">Resources</div>
+                    <tr>
+                        <td>{{$resource['name']}}</td>
 
-                <div class="panel-body">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th class="text-center">Allocated Resources</th>
-                            <th class="text-center">Available Resources</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="text-center">
-                            <td>ADeel</td>
-                            <td>Shaban</td>
-                        </tr>
-                        <tr class="text-center">
-                            <td>Haris</td>
-                            <td>Jazib</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                    </tr>
+                @endforeach
+
+                </tbody>
+            </table>
         </div>
-         </div>
+
+        <div class="col-md-6">
+
+            <table id="myTable2" class="table table-striped table-bordered" cellspacing="0"
+                   width="100%">
+                <thead>
+                <tr>
+                    <th>Free Resources</th>
+
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Free Resources</th>
+
+                </tr>
+                </tfoot>
+                <tbody>
+                @foreach($resources['free'] as $resource)
+
+                    <tr>
+                        <td>{{$resource['name']}}</td>
+
+                    </tr>
+                @endforeach
+
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
+</div>
+</div>
+@endrole

@@ -1,9 +1,7 @@
 @extends('project.index')
 
-@section('content')
+@section('sales')
 
-<div id="ceo">
-            <h2>CEO / SALES</h2>
             <div class="content" style="margin-top: 20px;">
               <table class="table">
                 <thead>
@@ -29,5 +27,5 @@
               </table>
             </div>
 
-          </div> <!-- /ceo --> 
+          </div>
 @endsection          

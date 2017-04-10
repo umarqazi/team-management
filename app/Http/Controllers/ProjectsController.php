@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -24,7 +25,6 @@ class ProjectsController extends Controller
        // print_r(Auth::user()->id) ;
        // die();
     	$projects = Project::paginate(8);
-
         foreach ($projects as $project) {
             $teamleads   = array();
             foreach ($project->teamlead as $teamlead) {
@@ -40,19 +40,29 @@ class ProjectsController extends Controller
         }
 
         $hours = Hour::all();
-
-//    	 $user = "CEO";
-
         $user   = Auth::user();
 
-    	if($user->hasRole("engineer"))
-    	{
-    		return view('project.eng_view', compact('projects')) ;
-    	}
-    	else
-    	{
-    		return view('project.index', compact('projects','hours')) ;
-    	}   	
+
+        $view   = View::make('project.index');
+        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        {
+            $view->nest('project', 'project.engineers', compact('projects'));
+        }
+        else
+        {
+            $view->nest('project', 'project.sales', compact('projects','hours'));
+        }
+
+        return $view;
+
+//    	if($user->hasRole("engineer"))
+//    	{
+//    		return view('project.eng_view', compact('projects')) ;
+//    	}
+//    	else
+//    	{
+//    		return view('project.index', compact('projects','hours')) ;
+//    	}
     }
 
     public function show(Project $project)

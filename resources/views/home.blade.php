@@ -19,4 +19,5 @@
 @else('sales')
     @yield('sales')
 @endrole
+    @include('dashboard.resources')
 @endsection

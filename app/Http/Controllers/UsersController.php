@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Http\Requests;
+use Illuminate\Support\Facades\View;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +29,8 @@ class UsersController extends Controller
         // $user->revokePermissionTo('edit articles');
         // echo $user->hasPermissionTo('edit articles');
         $users = User::all();
-        return view('/users.index')->with('users', $users);
+        $view   = View::make('users.index', compact('users'));
+        return $view;
     }
 
     /**
