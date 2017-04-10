@@ -12,6 +12,9 @@
 */
 
 Route::get('/pages', 'PagesController@showPage');
+Route::get('/resources', function(){
+    return view('resources');
+});
 
 Route::auth();
 

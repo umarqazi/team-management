@@ -96,6 +96,7 @@ class ProjectsController extends Controller
 
             $rules = array(
                 'name'       => 'required|unique:projects|max:255',
+                'status' => 'required',
 //                'teamlead'   => 'required',
 //                'developer'  => 'required'
             );
@@ -114,6 +115,7 @@ class ProjectsController extends Controller
             // $project->teamlead = $request->teamlead;
             // $project->developer = $request->developer;
             $project->description = $request->description;
+            $project->status = $request->status;
 
             $project->save();
             // $project->users()->attach(Auth::user()->id);
@@ -147,7 +149,8 @@ class ProjectsController extends Controller
         $rules = array(
             'name'       => 'required|unique:projects,name,'.$project->id.'|max:255',
             'teamlead'   => 'required',
-            'developer'  => 'required'
+            'developer'  => 'required',
+            'status'     => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -161,6 +164,7 @@ class ProjectsController extends Controller
         $project->name = $request->name;
         $project->technology = $request->technology;
         $project->description = $request->description;
+        $project->status = $request->status;
         $project->update();
         $project->users()->detach();
         $project->users()->attach($request->teamlead);

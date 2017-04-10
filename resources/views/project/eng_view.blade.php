@@ -16,6 +16,7 @@
         <th>Technology</th>
         <th>Team lead</th>
         <th>Developer</th>
+        <th>Status</th>
         <th>View</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -28,6 +29,12 @@
         <td>{{$project->technology}}</td>
         <td>{{$project->teamlead}}</td>
         <td>{{$project->developers}}</td>
+        <td> @if( $project->status == "1")
+            Active
+             @else
+                 Inactive
+             @endif
+        </td>
        
         <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
         <td><a href="/project/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>

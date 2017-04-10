@@ -13,7 +13,7 @@
                     </ul>
                 </div>
             @endif
-            <div class="text-right" style="margin-top:20px;">
+            <div class="text-right" style="margin:20px;">
                 <a href="/users/create" class="btn btn-primary">Create User</a>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#role-modal">Add Role
                 </button>
@@ -47,7 +47,7 @@
                             <td>{{ $user->created_at }}</td>
                             <td><a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
                             <td>
-                                {{ Form::open(array('url' => '/users/' . $user->id, 'class' => 'pull-right')) }}
+                                {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
                                     {{ Form::hidden('_method', 'DELETE') }}
                                     <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i>Delete</button>
                                 {{ Form::close() }}

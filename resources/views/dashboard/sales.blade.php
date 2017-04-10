@@ -23,12 +23,16 @@
                                     <tr>
                                         <td>{{$project->name}}</td>
                                         <td>{{$project->technology}}</td>
+                                        <td>
                                         @foreach($project->teamlead as $teamlead)
-                                            <td>{{$teamlead->name}}</td>
+                                            {{$teamlead->name}}
                                         @endforeach
+                                        </td>
+                                        <td>
                                         @foreach($project->developers as $developer)
-                                            <td>{{$developer->name}}</td>
+                                            {{$developer->name}}
                                         @endforeach
+                                        </td>
 
                                         <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
                                     </tr>

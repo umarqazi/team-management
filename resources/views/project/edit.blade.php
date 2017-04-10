@@ -59,7 +59,11 @@
 		   <div class="form-group">
 		   <textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description.">{{$project->description}}</textarea>
 		  </div>
-		  
+			<div class="form-group">
+				<label for="sel1">Status:</label> <br>
+				<input type="radio" name="status" value="1" class="radio-inline" checked> Active
+				<input type="radio" name="status" value="0" class="radio-inline"> Inactive<br>
+			</div>
 		  <div class="text-right">
 		  <button type="submit" class="btn btn-primary">Submit</button>
 		  <a href="/projects" class="btn btn-default">Go Back</a>

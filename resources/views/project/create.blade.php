@@ -54,8 +54,14 @@
 		    </select>
 		  </div>
 		   <div class="form-group">
+			   <label for="sel1">Description:</label> <br>
 		   <textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description."></textarea>
 		  </div>
+			<div class="form-group">
+				<label for="sel1">Status:</label> <br>
+				<input type="radio" name="status" value="1" class="radio-inline" checked> Active
+				<input type="radio" name="status" value="0" class="radio-inline"> Inactive<br>
+			</div>
 		  <input type="hidden" name="_token" value="{{ csrf_token() }}">
 		  <div class="text-right">
 		  <button type="submit" class="btn btn-primary">Submit</button>
@@ -66,8 +72,5 @@
 	<div class="col-md-3"></div>
 </div>
 </div></div></div>
-
-
-
 
 @endsection
