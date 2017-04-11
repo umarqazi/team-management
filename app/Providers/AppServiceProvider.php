@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
 //            })->havingRaw('active > 0')->get());
 //        });
 
-        $this->resources['allocated']  = User::whereHas('roles', function($r){
+        /*$this->resources['allocated']  = User::whereHas('roles', function($r){
             $r->whereIn('name', array('teamlead', 'developer'));
         })->whereHas('projects', function($p){
             $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active >= 1');
@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             $r->whereIn('name', array('teamlead', 'developer'));
         })->whereHas('projects', function($p){
             $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active = 0');
-        })->get();
+        })->get();*/
 
 //        foreach($resources['allocated'] as $user) {
 //                var_dump($user->name);
