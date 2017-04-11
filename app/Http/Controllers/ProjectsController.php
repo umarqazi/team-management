@@ -54,15 +54,6 @@ class ProjectsController extends Controller
         }
 
         return $view;
-
-//    	if($user->hasRole("engineer"))
-//    	{
-//    		return view('project.eng_view', compact('projects')) ;
-//    	}
-//    	else
-//    	{
-//    		return view('project.index', compact('projects','hours')) ;
-//    	}
     }
 
     public function show(Project $project)
@@ -103,7 +94,6 @@ class ProjectsController extends Controller
    
     public function store(Request $request)
         {
-
             $rules = array(
                 'name'       => 'required|unique:projects|max:255',
                 'status' => 'required',

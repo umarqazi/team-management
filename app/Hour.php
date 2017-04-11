@@ -7,7 +7,7 @@ use App\Project;
 
 class Hour extends Model
 {
-    public function Project()
+    public function project()
     {
         return $this->belongsTo('App\Project');
     }

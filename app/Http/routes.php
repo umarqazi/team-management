@@ -33,7 +33,7 @@ Route::group( ['middleware'  => 'auth'], function(){
 
     Route::get('/project/{project}', 'ProjectsController@show');
 
-    Route::post('/project/{project}', 'HoursController@store');
+    Route::post('/hour/{project}', 'HoursController@store');
 
     Route::post('/projects', 'ProjectsController@store');
 
@@ -42,5 +42,8 @@ Route::group( ['middleware'  => 'auth'], function(){
     Route::put('/projects/{project}', 'ProjectsController@update');
 
     Route::delete('/projects/{project}', 'ProjectsController@destroy');
+
+//    ********************************************************************
+    Route::get('/hour/{project}', 'HoursController@show');
 });
 

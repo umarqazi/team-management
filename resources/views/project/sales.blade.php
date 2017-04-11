@@ -1,6 +1,8 @@
 @extends('project.index')
 
 @section('sales')
+  <div class="container">
+    <div class="row">
 
             <div class="content" style="margin-top: 20px;">
               <table class="table">
@@ -10,6 +12,7 @@
                     <th>Team lead</th>
                     <th>Developer</th>
                      <th>Productive Hours</th>
+                    <th>View</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -17,10 +20,11 @@
                   <tr>
                     <td>{{$project->name}}</td>
                     <td>{{$project->teamlead}}</td>
-                    <td>{{$project->developer}}</td>
+                    <td>{{$project->developers}}</td>
                     <td>
                       {{$project->hours->sum('productive_hours')}}
                     </td>
+                    <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
                   </tr>
               @endforeach
                 </tbody> 
@@ -28,4 +32,6 @@
             </div>
 
           </div>
+    </div>
+  </div>
 @endsection          
