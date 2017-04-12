@@ -64,6 +64,15 @@
 				<input type="radio" name="status" value="1" class="radio-inline" checked> Active
 				<input type="radio" name="status" value="0" class="radio-inline"> Inactive<br>
 			</div>
+			<br>
+			<div class="form-group">
+				<label for="internal_deadline">Internal Deadline:</label> <br>
+				<input type="datetime-local" class="form-control" name="internal_deadline"><br>
+			</div>
+			<div class="form-group">
+				<label for="external_deadline">External Deadline:</label> <br>
+				<input type="datetime-local" class="form-control" name="external_deadline"><br>
+			</div>
 		  <div class="text-right">
 		  <button type="submit" class="btn btn-primary">Submit</button>
 		  <a href="/projects" class="btn btn-default">Go Back</a>

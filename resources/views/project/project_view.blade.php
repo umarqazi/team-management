@@ -6,6 +6,9 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
         <h2>{{$project->name}}</h2>
+            <p class="text-right" style="color: #ff0000;">External Deadline:  &nbsp; {{\Carbon\Carbon::parse($project->external_deadline)->format('d F, Y -- H : i: s')}}</p>
+
+            <p class="text-right"">Internal Deadline: &nbsp; {{\Carbon\Carbon::parse($project->internal_deadline)->format('d F, Y -- H : i: s')}}</p>
           <div class="content" style="margin-top: 40px;">
           
             <table class="table">
@@ -48,7 +51,7 @@
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
 
     <!-- Modal content-->
       <div class="modal-content">
@@ -96,11 +99,9 @@
     }
 </script>
 
-<div id="msg"></div>
-
 <!-- Modal 2-->
 <div id="myModal2" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
         <div class="modal-content">

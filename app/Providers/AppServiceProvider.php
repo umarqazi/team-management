@@ -38,18 +38,6 @@ class AppServiceProvider extends ServiceProvider
             $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active = 0');
         })->get();
 
-//        foreach($resources['allocated'] as $user) {
-//                var_dump($user->name);
-//            echo "<br>";
-//        }
-//        foreach($resources['free'] as $user) {
-//            var_dump($user->name);
-//
-//            echo "<br>";
-//        }
-//        echo "</pre>";
-//        die();
-
         view()->composer(['users.index','home'], function ($view) {
             $view->with('resources', $this->resources);
         });

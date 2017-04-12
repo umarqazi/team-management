@@ -58,9 +58,18 @@
 		   <textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description."></textarea>
 		  </div>
 			<div class="form-group">
-				<label for="sel1">Status:</label> <br>
+				<label for="status">Status:</label> <br>
 				<input type="radio" name="status" value="1" class="radio-inline" checked> Active
 				<input type="radio" name="status" value="0" class="radio-inline"> Inactive<br>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="internal_deadline">Internal Deadline:</label> <br>
+				<input type="datetime-local" class="form-control" name="internal_deadline"><br>
+			</div>
+			<div class="form-group">
+				<label for="external_deadline">External Deadline:</label> <br>
+				<input type="datetime-local" class="form-control" name="external_deadline" ><br>
 			</div>
 		  <input type="hidden" name="_token" value="{{ csrf_token() }}">
 		  <div class="text-right">

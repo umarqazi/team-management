@@ -39,7 +39,7 @@ class ProjectsController extends Controller
             $project->developers    = implode(", ", $developers);
         }
 
-        $hours = Hour::all();
+//        $hours = Hour::all();
         $user   = Auth::user();
 
 
@@ -50,7 +50,7 @@ class ProjectsController extends Controller
         }
         else
         {
-            $view->nest('project', 'project.sales', compact('projects','hours'));
+            $view->nest('project', 'project.sales', compact('projects'));
         }
 
         return $view;
@@ -58,6 +58,10 @@ class ProjectsController extends Controller
 
     public function show(Project $project)
     {
+//        echo "<pre>";
+//        print_r($project->all());
+//        echo "</pre>";
+//        die();
         $hours = array();
 
         foreach ($project->hours->groupBy(function($d) {
@@ -116,6 +120,8 @@ class ProjectsController extends Controller
             // $project->developer = $request->developer;
             $project->description = $request->description;
             $project->status = $request->status;
+        $project->internal_deadline = $request->internal_deadline;
+        $project->external_deadline = $request->external_deadline;
 
             $project->save();
             // $project->users()->attach(Auth::user()->id);
@@ -137,10 +143,6 @@ class ProjectsController extends Controller
 
         $project->teamlead  = ! empty ($project->teamlead[0]) ? $project->teamlead[0]: "";
         $project->developer = ! empty ($project->developers[0]) ? $project->developers[0]: "";
-
-//        print_r($project->developer);
-//        die('here');
-
         return view('project.edit', compact('project','teamleads','developers'));
     }
 
@@ -164,11 +166,15 @@ class ProjectsController extends Controller
         $project->name = $request->name;
         $project->technology = $request->technology;
         $project->description = $request->description;
+
         $project->status = $request->status;
+        $project->internal_deadline = $request->internal_deadline;
+        $project->external_deadline = $request->external_deadline;
         $project->update();
         $project->users()->detach();
         $project->users()->attach($request->teamlead);
         $project->users()->attach($request->developer);
+
         return redirect('/projects');
     }
 

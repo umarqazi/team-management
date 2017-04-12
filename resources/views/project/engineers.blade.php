@@ -41,7 +41,8 @@
              @endif
         </td>
        
-        <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td> @role('teamlead')
+        <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
+          @role('teamlead')
         <td><a href="/project/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
        <td>
          {{ Form::open(array('url' => '/projects/' . $project->id)) }}

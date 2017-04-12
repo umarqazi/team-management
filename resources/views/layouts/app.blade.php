@@ -79,18 +79,11 @@
             </div>
         </div>
     </nav>
-    {{--<pre>--}}
-                        {{--{{ print_r($resources['free']) }}--}}
-    {{--</pre>--}}
 
-    {{--@foreach($resources['free'] as $resource)--}}
-           {{--{{$resource['name']}}--}}
-    {{--@endforeach--}}
 
     @yield('content')
     {{--@include('dashboard.resources')--}}
 
-   <footer style="margin-top: 50px; height: 100px;">
 
    </footer>
 
@@ -100,23 +93,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
-<script>
-//    $(document).ready(function(){
-//        $('#myTable').DataTable();
-//
-//    });
-
-$(document).ready(function() {
-    $('#myTable').dataTable({
-        "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
-    });
-});
-    $(document).ready(function(){
-        $('#myTable2').dataTable({
-            "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
-        });
-    });
-
-</script>
 </body>
 </html>
