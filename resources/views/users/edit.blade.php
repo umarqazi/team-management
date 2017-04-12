@@ -44,7 +44,7 @@
                             <div class="col-md-6">
                                 <select name="role-name" class="form-control" required>
                                     @foreach($roles as $role)
-                                        <option value="{{$role->name}}" @if( $role->name == $user->roles()->pluck('name')[0] ) {{"selected"}} @endif>{{$role->name}}</option>
+                                        <option value="{{$role->name}}" @if( ! empty($user->roles()->pluck('name')) && in_array($role->name, $user->roles()->pluck('name')->toArray()) ) {{"selected"}} @endif>{{ucwords($role->name)}}</option>
                                     @endforeach
                                 </select>
 

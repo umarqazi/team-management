@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
 //        echo "</pre>";
 //        die();
 
-        view()->composer(['users.index','home'], function ($view) {
+        view()->composer(['users.index','home', 'project.index'], function ($view) {
             $view->with('resources', $this->resources);
         });
     }

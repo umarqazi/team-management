@@ -73,7 +73,7 @@
                                 <select name="role-name" class="form-control" required>
                                     <option value="">Select a Role</option>
                                     @foreach($roles as $role)
-                                        <option value="{{$role->name}}">{{$role->name}}</option>
+                                        <option value="{{$role->name}}">{{ucwords($role->name)}}</option>
                                     @endforeach
                                 </select>
 

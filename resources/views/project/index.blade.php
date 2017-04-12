@@ -2,12 +2,12 @@
 @extends('layouts.app')
 
 @section('content')
-
   @hasrole(['developer', 'teamlead', 'engineer'])
-  @yield('engineers')
+    @yield('engineers')
   @else('sales')
     @yield('sales')
-    @endrole
+  @endrole
+  @include('dashboard.resources')
 
 
 @endsection

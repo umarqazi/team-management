@@ -1,4 +1,4 @@
-@hasrole(['sales', 'teamlead'])
+@hasrole(['sales', 'teamlead', 'admin'])
 <div class="col-md-12" style="margin-top: 20px; margin-bottom: 40px;">
     <div class="row">
         <div class="col-md-6">

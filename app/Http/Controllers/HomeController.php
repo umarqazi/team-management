@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Project;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\User;
-use App\Project;
 
 class HomeController extends Controller
 {
@@ -27,7 +27,14 @@ class HomeController extends Controller
     {
         $user   = Auth::user();
 
-        $projects   = Project::all();
+        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        {
+            $projects   = $user->projects()->paginate(10);
+        }
+        else
+        {
+            $projects   = Project::paginate(10);
+        }
 
         /*if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
@@ -41,7 +48,11 @@ class HomeController extends Controller
         $view   = View::make('home');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
-            $view->nest('dashboard', 'dashboard.engineers', compact('user'));
+            $view->nest('dashboard', 'dashboard.engineers', compact('projects'));
+        }
+        elseif($user->hasRole('admin'))
+        {
+            $view->nest('dashboard', 'dashboard.admin', compact('projects'));
         }
         else
         {

@@ -34,12 +34,13 @@
                                         @endforeach
                                         </td>
 
-                                        <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
+                                        <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                             <div id="paginator" class="text-center">
+                                {{ $projects->links() }}
 
                             </div>
                         </div>

@@ -16,15 +16,22 @@ use \App\Hour;
 use \App\User;
 use Carbon\Carbon;
 use Auth;
-// use Session;
+use Session;
 
 class ProjectsController extends Controller
 {
     public function index()
     {
-       // print_r(Auth::user()->id) ;
-       // die();
-    	$projects = Project::paginate(8);
+        $user   = Auth::user();
+
+        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        {
+            $projects   = $user->projects()->paginate(10);
+        }
+        else
+        {
+            $projects = Project::paginate(10);
+        }
         foreach ($projects as $project) {
             $teamleads   = array();
             foreach ($project->teamlead as $teamlead) {
@@ -40,7 +47,6 @@ class ProjectsController extends Controller
         }
 
         $hours = Hour::all();
-        $user   = Auth::user();
 
 
         $view   = View::make('project.index');
@@ -81,85 +87,85 @@ class ProjectsController extends Controller
         }
         $project->developers    = implode(", ", $developers);
 
-    	return view('project.project_view', compact('project', 'hours'));
+    	return view('project.view', compact('project', 'hours'));
     }
 
     public function create()
     {
-        $developers = Role::findByName('developer')->users;
-        $teamleads  = Role::findByName('teamlead')->users;
+        $developers = User::whereHas('roles', function($r){
+            return $r->whereIn('name', ['developer', 'teamlead']);
+        })->get();
+        $teamleads  = Role::findByName(['teamlead'])->users;
         return view("project.create", compact('developers', 'teamleads'));
     }
 
    
     public function store(Request $request)
+    {
+        $rules = array(
+            'name'       => 'required|unique:projects|max:255',
+            'status' => 'required',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('/project/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $project = new Project;
+        $project->name = $request->name;
+        $project->technology = $request->technology;
+        $project->description = $request->description;
+        $project->status = $request->status;
+
+        $project->save();
+        // $project->users()->attach(Auth::user()->id);
+
+        if( !empty($request->teamlead) ) {
+            $project->users()->attach($request->teamlead);
+        }
+        if  (!empty($request->developer))
         {
-            $rules = array(
-                'name'       => 'required|unique:projects|max:255',
-                'status' => 'required',
-//                'teamlead'   => 'required',
-//                'developer'  => 'required'
-            );
-            $validator = Validator::make(Input::all(), $rules);
+            $project->users()->attach($request->developer);
+        }
 
-            // process the login
-            if ($validator->fails()) {
-                return Redirect::to('/project/create')
-                    ->withErrors($validator)
-                    ->withInput();
-            }
-
-            $project = new Project;
-            $project->name = $request->name;
-            $project->technology = $request->technology;
-            // $project->teamlead = $request->teamlead;
-            // $project->developer = $request->developer;
-            $project->description = $request->description;
-            $project->status = $request->status;
-
-            $project->save();
-            // $project->users()->attach(Auth::user()->id);
-
-            if( !empty($request->teamlead) ) {
-                $project->users()->attach($request->teamlead);
-            }
-            if  (!empty($request->developer))
-            {
-                $project->users()->attach($request->developer);
-            }
-                return redirect('/projects');
+        return redirect('/projects');
     }
 
-    public function edit(Project $project)
+    public function edit($project)
     {
-        $developers = Role::findByName('developer')->users;
+        $project    = Project::find($project);
+
+        $developers = User::whereHas('roles', function($r){
+            return $r->whereIn('name', ['developer', 'teamlead']);
+        })->get();
         $teamleads  = Role::findByName('teamlead')->users;
 
         $project->teamlead  = ! empty ($project->teamlead[0]) ? $project->teamlead[0]: "";
         $project->developer = ! empty ($project->developers[0]) ? $project->developers[0]: "";
 
-//        print_r($project->developer);
-//        die('here');
-
         return view('project.edit', compact('project','teamleads','developers'));
     }
 
-    public function update( Request $request , Project $project)
+    public function update( Request $request , $id)
     {
         $rules = array(
-            'name'       => 'required|unique:projects,name,'.$project->id.'|max:255',
-            'teamlead'   => 'required',
-            'developer'  => 'required',
+            'name'       => 'required|unique:projects,name,'.$id.'|max:255',
             'status'     => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('/project/'.$project->id.'/edit')
+            return Redirect::to('/project/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
+
+        $project    = Project::find($id);
 
         $project->name = $request->name;
         $project->technology = $request->technology;
@@ -167,15 +173,25 @@ class ProjectsController extends Controller
         $project->status = $request->status;
         $project->update();
         $project->users()->detach();
-        $project->users()->attach($request->teamlead);
-        $project->users()->attach($request->developer);
+        if(! empty($request->teamlead) )
+        {
+            $project->users()->attach($request->teamlead);
+        }
+        if(! empty($request->developer))
+        {
+            $project->users()->attach($request->developer);
+        }
         return redirect('/projects');
     }
 
-    public function destroy(Project $project)
+    public function destroy($id)
     {   
-         $project->delete();       
-         return redirect('/projects');
+        $project    = Project::find($id);
+        $project->delete();
+
+        Session::flash('message', 'Successfully deleted the Project!');
+        Session::flash('alert-class', 'alert-success');
+        return Redirect::to('/projects');
     }
 
 }

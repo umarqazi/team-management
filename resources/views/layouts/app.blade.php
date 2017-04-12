@@ -29,88 +29,79 @@
     <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
 
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+            <!-- Collapsed Hamburger -->
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
 
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Techverx
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                 @if (Auth::guest())
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-                    @else
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-                     <li><a href="{{ url('/projects') }}">Projects</a></li>
-                     @endif
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
-            </div>
+            <!-- Branding Image -->
+            <a class="navbar-brand" href="{{ url('/') }}">
+                Techverx
+            </a>
         </div>
-    </nav>
-    {{--<pre>--}}
-                        {{--{{ print_r($resources['free']) }}--}}
-    {{--</pre>--}}
 
-    {{--@foreach($resources['free'] as $resource)--}}
-           {{--{{$resource['name']}}--}}
-    {{--@endforeach--}}
+        <div class="collapse navbar-collapse" id="app-navbar-collapse">
+            <!-- Left Side Of Navbar -->
+            <ul class="nav navbar-nav">
+                @if (Auth::guest())
+                    <li><a href="{{ url('/home') }}">Home</a></li>
+                @else
+                    <li><a href="{{ url('/home') }}">Home</a></li>
+                    <li><a href="{{ url('/projects') }}">Projects</a></li>
+                @endif
+            </ul>
 
-    @yield('content')
-    {{--@include('dashboard.resources')--}}
+            <!-- Right Side Of Navbar -->
+            <ul class="nav navbar-nav navbar-right">
+                <!-- Authentication Links -->
+                @if (Auth::guest())
+                    <li><a href="{{ url('/login') }}">Login</a></li>
+                    <li><a href="{{ url('/register') }}">Register</a></li>
+                @else
+                    @hasrole('admin')
+                    <li><a href="{{ url('/users') }}">Users</a></li>
+                    @endrole
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            {{ Auth::user()->name }} <span class="caret"></span>
+                        </a>
 
-   <footer style="margin-top: 50px; height: 100px;">
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                @endif
+            </ul>
+        </div>
+    </div>
+</nav>
 
-   </footer>
+@yield('content')
+
+<footer style="margin-top: 50px; height: 100px;">
+
+</footer>
 
 
-    <!-- JavaScripts -->
+<!-- JavaScripts -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
 <script>
-//    $(document).ready(function(){
-//        $('#myTable').DataTable();
-//
-//    });
 
-$(document).ready(function() {
-    $('#myTable').dataTable({
-        "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
+    $(document).ready(function() {
+        $('#myTable').dataTable({
+            "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
+        });
     });
-});
     $(document).ready(function(){
         $('#myTable2').dataTable({
             "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]

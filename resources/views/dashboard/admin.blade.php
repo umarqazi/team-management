@@ -1,6 +1,6 @@
 @extends('home')
 
-@section('engineers')
+@section('admin')
     <div class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
@@ -67,7 +67,6 @@
                             </table>
                             <div id="paginator" class="text-center">
                                 {{ $projects->links() }}
-
                             </div>
                         </div>
                     </div>
