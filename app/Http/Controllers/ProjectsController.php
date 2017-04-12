@@ -46,9 +46,6 @@ class ProjectsController extends Controller
             $project->developers    = implode(", ", $developers);
         }
 
-        $hours = Hour::all();
-
-
         $view   = View::make('project.index');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
@@ -56,14 +53,15 @@ class ProjectsController extends Controller
         }
         else
         {
-            $view->nest('project', 'project.sales', compact('projects','hours'));
+            $view->nest('project', 'project.sales', compact('projects'));
         }
 
         return $view;
     }
 
-    public function show(Project $project)
+    public function show($id)
     {
+        $project    = Project::find($id);
         $hours = array();
 
         foreach ($project->hours->groupBy(function($d) {
@@ -120,6 +118,8 @@ class ProjectsController extends Controller
         $project->technology = $request->technology;
         $project->description = $request->description;
         $project->status = $request->status;
+        $project->internal_deadline = $request->internal_deadline;
+        $project->external_deadline = $request->external_deadline;
 
         $project->save();
         // $project->users()->attach(Auth::user()->id);
@@ -170,7 +170,10 @@ class ProjectsController extends Controller
         $project->name = $request->name;
         $project->technology = $request->technology;
         $project->description = $request->description;
+
         $project->status = $request->status;
+        $project->internal_deadline = $request->internal_deadline;
+        $project->external_deadline = $request->external_deadline;
         $project->update();
         $project->users()->detach();
         if(! empty($request->teamlead) )

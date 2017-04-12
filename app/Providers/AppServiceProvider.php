@@ -19,13 +19,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // Using Closure based composers...
 
-//        view()->composer('layouts.app', function ($view) {
-//            $view->with('resources', User::with(['projects', function($p){
-//                $p->select('count(*) as active');
-//            }])->whereHas('projects', function($p){
-//                $p->where('status', '=', 1);
-//            })->havingRaw('active > 0')->get());
-//        });
 
         $this->resources['allocated']  = User::whereHas('roles', function($r){
             $r->whereIn('name', array('teamlead', 'developer'));
@@ -37,18 +30,6 @@ class AppServiceProvider extends ServiceProvider
         })->whereHas('projects', function($p){
             $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active = 0');
         })->get();
-
-//        foreach($resources['allocated'] as $user) {
-//                var_dump($user->name);
-//            echo "<br>";
-//        }
-//        foreach($resources['free'] as $user) {
-//            var_dump($user->name);
-//
-//            echo "<br>";
-//        }
-//        echo "</pre>";
-//        die();
 
         view()->composer(['users.index','home', 'project.index'], function ($view) {
             $view->with('resources', $this->resources);

@@ -85,9 +85,7 @@
 
 @yield('content')
 
-<footer style="margin-top: 50px; height: 100px;">
-
-</footer>
+<footer style="margin-top: 50px; height: 100px;"></footer>
 
 
 <!-- JavaScripts -->
