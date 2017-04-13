@@ -24,6 +24,23 @@
         .fa-btn {
             margin-right: 6px;
         }
+        .no_button {
+            background: none;
+            border: none;
+            color: #337ab9;
+            padding: 0px !important;
+        }
+        .no_button:hover {
+            color: #23527c !important;
+            text-decoration: underline;
+            font-weight: 400 !important;
+        }
+        .link{
+            color: #337ab7 !important;
+        }
+        .link:hover{
+            color: #23527c !important;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
@@ -105,7 +122,38 @@
             "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
         });
     });
-
+    function showform(elem) {
+        var id = $(elem).attr("id");
+        var res = id.split("_");
+        id = res[2];
+        document.getElementById("tr_hours_"+id).classList.add("hidden");
+        document.getElementById("tr_hours_form_"+id+"_1").classList.remove("hidden");
+        document.getElementById("tr_hours_form_"+id+"_2").classList.remove("hidden");
+    }
+    function submitform(elem) {
+        var id = $(elem).attr("id");
+        var res = id.split("_");
+        id = res[2];
+        
+        var actual_hours = $('input[name*=actual-hours]')[id];
+        var productive_hours = $('input[name*=productive-hours]')[id];
+        var details = $('input[name*=details]')[id];
+        var token = $('input[name*=token]')[id];
+        var data = { actual_hours: actual_hours, productive_hours: productive_hours, details: details, _token: token };
+        console.log(token);
+        $.ajax({
+            url : "/hour/update/"+id,
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            processData: false
+        }).done(function( data ) {
+                alert( "Data Loaded: " + data );
+                document.getElementById("tr_hours_"+id).classList.remove("hidden");
+                document.getElementById("tr_hours_form_"+id+"_1").classList.add("hidden");
+                document.getElementById("tr_hours_form_"+id+"_2").classList.add("hidden");
+        });
+    }
 </script>
 </body>
 </html>

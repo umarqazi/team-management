@@ -37,6 +37,7 @@ Route::group( ['middleware'  => 'auth'], function(){
 //    Route::get('/project/{project}', 'ProjectsController@show');
 
     Route::post('/hour', 'HoursController@store');
+    Route::post('/hour/update/{id}', 'HoursController@update');
 
 //    Route::post('/projects', 'ProjectsController@store');
 

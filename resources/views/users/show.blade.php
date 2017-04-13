@@ -14,8 +14,8 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Created At</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th>Action</th>
+                            <!-- <th>Delete</th> -->
                           </tr>
                         </thead>
                         <tbody>
@@ -24,13 +24,13 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at }}</td>
-                            <td><a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
                             <td>
-                                {{ Form::open(array('url' => '/users/' . $user->id, 'class' => 'pull-right')) }}
+                                {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
                                     {{ Form::hidden('_method', 'DELETE') }}
-                                    <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i>Delete</button>
+                                    <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> | <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button>
                                 {{ Form::close() }}
                             </td>
+                            <!-- <td></td> -->
                           </tr>
                         </tbody>
                     </table>

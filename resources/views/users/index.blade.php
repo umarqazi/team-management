@@ -37,9 +37,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Created At</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                                <th>View</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -49,14 +47,14 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->created_at }}</td>
-                                    <td><a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
                                     <td>
                                         {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
                                         {{ Form::hidden('_method', 'DELETE') }}
-                                        <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i>Delete</button>
-                                        {{ Form::close() }}
+                                        <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> | 
+                                        <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button>
+                                         | <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                         {{ Form::close() }}
                                     </td>
-                                    <td><a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
                                 </tr>
                             @endforeach
                             </tbody>

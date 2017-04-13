@@ -29,6 +29,13 @@ class HoursController extends Controller
 		return response()->json(array('success' => true, 'html'=>$returnHTML));
 
 	}
-
-
+	public function update($id)
+	{
+	    $hour = Hour::findOrFail($id);
+	    $hour->actual_hours     = Input::get('actual_hours');
+	    $hour->productive_hours = Input::get('productive_hours');
+	    $hour->details          = Input::get('details');
+	    $hour->save();
+	    return response()->json(array('success' => true));
+	}
 }
