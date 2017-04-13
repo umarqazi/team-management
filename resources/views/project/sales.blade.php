@@ -50,6 +50,10 @@
           @endforeach
           </tbody>
         </table>
+        <div id="paginator" class="text-center">
+
+          {{ $projects->links() }}
+        </div>
       </div>
 
     </div>
