@@ -31,11 +31,11 @@ class HoursController extends Controller
 	}
 	public function update($id)
 	{
-	    $hour = Hour::findOrFail($id);
-	    $hour->actual_hours     = Input::get('actual_hours');
-	    $hour->productive_hours = Input::get('productive_hours');
-	    $hour->details          = Input::get('details');
-	    $hour->save();
+	    // $hour = Hour::findOrFail($id);
+	    // $hour->actual_hours     = Input::get('actual_hours');
+	    // $hour->productive_hours = Input::get('productive_hours');
+	    // $hour->details          = Input::get('details');
+	    // $hour->save();
 	    return response()->json(array('success' => true));
 	}
 }

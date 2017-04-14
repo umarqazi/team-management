@@ -146,6 +146,7 @@
             type: 'POST',
             dataType: 'json',
             data: data,
+            headers: {'X-CSRF-TOKEN': token},
             processData: false
         }).done(function( data ) {
                 alert( "Data Loaded: " + data );
