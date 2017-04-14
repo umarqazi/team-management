@@ -30,9 +30,9 @@
                                 <td>{{$project->teamlead}}</td>
                                 <td>{{$project->developers}}</td>
                                 @hasrole(['developer', 'teamlead', 'admin'])
-                                <td><a href="javascript:void(0)" onclick="getHoursDetail()" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
+                                <td><a href="javascript:void(0)" onclick="getHoursDetail( {{!!$hour['month']!!}}  )" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
                                 @endrole
-                                <td><a href="javascript:void(0)" onclick="getHoursDetail()" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>
+                                <td><a href="javascript:void(0)" onclick="getHoursDetail( {{!!$hour['month']!!}} )" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -62,6 +62,10 @@
                 <form action="/hour" method="POST">
                     <div class="modal-body">
                         <div class="form-group">
+                            <label for="date">Date:</label>
+                            <input type="date" name="date" class="form-control" id="date">
+                        </div>
+                        <div class="form-group">
                             <label for="actual_hours">Actual Hours:</label>
                             <input type="text" name="actual_hours" class="form-control" id="actual_hours">
                         </div>
@@ -86,12 +90,14 @@
         </div>
     </div>
     <script>
-        function getHoursDetail(){
+        function getHoursDetail(month){
+            console.log(month);
             $.ajax({
                 type:'GET',
-                url:'/hour/{{$project->id}}',
+                url:'/hour/{{$project->id}}/'+month,
                 success: function(response){
-                    $("#myModal2 .modal-body").html(response.html);
+                    console.log(response);
+                    // $("#myModal2 .modal-body").html(response.html);
                 }
             });
         }

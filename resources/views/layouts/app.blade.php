@@ -135,24 +135,38 @@
         var res = id.split("_");
         id = res[2];
         
-        var actual_hours = $('input[name*=actual-hours]')[id];
-        var productive_hours = $('input[name*=productive-hours]')[id];
-        var details = $('input[name*=details]')[id];
-        var token = $('input[name*=token]')[id];
-        var data = { actual_hours: actual_hours, productive_hours: productive_hours, details: details, _token: token };
-        console.log(token);
+        var actual_hours = parseInt($('input[name*=actual-hours]')[id-1].value);
+        var productive_hours = parseInt($('input[name*=productive-hours]')[id-1].value);
+        var details = $('input[name*=details]')[id-1].value;
+        var $_token = "{{ csrf_token() }}";
+        var data = { actual_hours: actual_hours,
+                     productive_hours: productive_hours,
+                     details: details
+                 };
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $_token
+                // 'ContentType' : 'application/x-www-form-urlencoded',
+                // 'Accept'      : 'application/json'
+            }
+        });
         $.ajax({
             url : "/hour/update/"+id,
             type: 'POST',
-            dataType: 'json',
+            //data: {id: "10"},
             data: data,
-            headers: {'X-CSRF-TOKEN': token},
-            processData: false
-        }).done(function( data ) {
-                alert( "Data Loaded: " + data );
-                document.getElementById("tr_hours_"+id).classList.remove("hidden");
-                document.getElementById("tr_hours_form_"+id+"_1").classList.add("hidden");
-                document.getElementById("tr_hours_form_"+id+"_2").classList.add("hidden");
+            cache: false,
+            //dataType: 'json',
+            //contentType: 'charset=UTF-8',
+            // processData: false,
+            success: function(response){
+                $("#td_actual_hours_"+id).html(response.hours.actual_hours);
+                $("#td_productive_hours_"+id).html(response.hours.productive_hours);
+                $("#td_details_"+id).html(response.hours.details);
+                $('#tr_hours_'+id).removeClass("hidden");
+                $('#tr_hours_form_'+id+'_1').addClass("hidden");
+                $('#tr_hours_form_'+id+'_2').addClass("hidden");
+            }
         });
     }
 </script>

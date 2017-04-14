@@ -48,6 +48,6 @@ Route::group( ['middleware'  => 'auth'], function(){
 //    Route::delete('/projects/{project}', 'ProjectsController@destroy');
 
 //    ********************************************************************
-    Route::get('/hour/{project}', 'HoursController@show');
+    Route::get('/hour/{project}/{month}', 'HoursController@show');
 });
 
