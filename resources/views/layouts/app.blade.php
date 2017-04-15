@@ -13,6 +13,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
@@ -26,6 +27,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 </head>
 <body id="app-layout">
@@ -94,6 +96,28 @@
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
 <script>
+
+    var technologies    = [{id: "PHP", text: 'PHP'}, {id: "Ruby on Rails", text: 'Ruby on Rails'}, {id: "iOS", text: 'iOS'}, {id: "Android", text: 'Android'}, {id: "Node.JS", text: "Node.JS"}, {id: "React.JS", text: "React.JS"}, {id: "Angular.JS", text: "Angular.JS"}, {id: "Wordpress", text: "Wordpress"}, {id: "Magento", text: "Magento"}];
+
+    $(document).ready(function(){
+        $('select.form-control[name^="technology"]').select2({
+            placeholder: "Select Technologies",
+            data: technologies
+        });
+    });
+
+    $(document).ready(function(){
+        $('select.form-control[name="teamlead"]').select2({
+            placeholder: "Select Teamlead",
+            theme: "classic"
+        });
+    });
+
+    $(document).ready(function(){
+        $('select.form-control[name^="developer"]').select2({
+            placeholder: "Select Developers"
+        });
+    });
 
     $(document).ready(function() {
         $('#myTable').dataTable({

@@ -16,7 +16,7 @@
                             <th>Month</th>
                             <th>Team lead</th>
                             <th>Developer</th>
-                            @hasrole(['developer', 'teamlead', 'admin'])
+                            @hasrole(['developer', 'teamlead', 'engineer', 'admin'])
                             <th>Actual Hours</th>
                             @endrole
                             <th>Productive Hours</th>
@@ -27,9 +27,9 @@
                         @foreach($hours as $hour)
                             <tr>
                                 <td>{{$hour['month']}}</td>
-                                <td>{{$project->teamlead}}</td>
-                                <td>{{$project->developers}}</td>
-                                @hasrole(['developer', 'teamlead', 'admin'])
+                                <td>{!! $project->teamlead !!}</td>
+                                <td>{!! $project->developers !!}</td>
+                                @hasrole(['developer', 'teamlead', 'engineer', 'admin'])
                                 <td><a href="javascript:void(0)" onclick="getHoursDetail()" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
                                 @endrole
                                 <td><a href="javascript:void(0)" onclick="getHoursDetail()" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>

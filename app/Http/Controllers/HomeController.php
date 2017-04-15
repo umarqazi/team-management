@@ -36,14 +36,19 @@ class HomeController extends Controller
             $projects   = Project::paginate(10);
         }
 
-        /*if($user->hasRole(['developer', 'teamlead', 'engineer']))
-        {
-            $projects   = $user->projects;
+        foreach ($projects as $project) {
+            $teamleads   = array();
+            foreach ($project->teamlead as $teamlead) {
+                $teamleads[]  = $teamlead->name;
+            }
+            $project->teamlead  = implode('<br />', $teamleads);
+
+            $developers = array();
+            foreach ($project->developers as $developer) {
+                $developers[]    = $developer->name;
+            }
+            $project->developers    = implode('<br />', $developers);
         }
-        else
-        {
-            $projects   = Project::all();
-        }*/
 
         $view   = View::make('home');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))

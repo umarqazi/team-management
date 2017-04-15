@@ -31,26 +31,32 @@
 					</div>
 					<div class="form-group">
 						<label for="technology">Technology:</label>
-						<input type="text" name="technology" value="{{$project->technology}}" class="form-control" id="technology">
+						<select id="technology" class="form-control" name="technology[]" multiple>
+							@if(is_array(json_decode($project->technology)))
+							@foreach(json_decode($project->technology) as $technology))
+								<option value="{{$technology}}" {{"selected"}}>{{$technology}}</option>
+							@endforeach
+							@else
+								<option value="{{ $project->technology }}" {{"selected"}}>{{ $project->technology }}</option>
+							@endif
+						</select>
 					</div>
 					<div class="form-group">
-						<label for="sel1">Team Lead:</label>
+						<label for="teamlead">Team Lead:</label>
 						<select class="form-control" id="teamlead" name="teamlead">
-							<option value="">Select Teamlead</option>
+							<option value="">Select Team Lead</option>
 							@foreach($teamleads as $teamlead)
-								<option value="{{$teamlead->id}}" @if( ! empty($project->teamlead) && $teamlead->id == $project->teamlead->id) {{"selected"}} @endif >{{$teamlead->name}}</option>
-								{{--<option value="{{$teamlead->id}}">{{$teamlead->name}}</option>--}}
+								<option value="{{$teamlead->id}}" @if( ! empty($project->teamlead) && in_array($teamlead->id, $project->teamlead)) {{"selected"}} @endif >{{$teamlead->name}}</option>
 							@endforeach
 						</select>
 					</div>
 
 					<div class="form-group">
-						<label for="sel1">Developer:</label>
-						<select class="form-control" id="developer" name="developer">
+						<label for="developer">Developer:</label>
+						<select class="form-control" id="developer" name="developer[]" multiple>
 							<option value="">Select Developer</option>
 							@foreach($developers as $developer)
-								<option value="{{$developer->id}}" @if( ! empty($project->developer) && $developer->id == $project->developer->id) {{"selected"}} @endif >{{$developer->name}}</option>
-								{{--<option value="{{$developer->id}}" >{{$developer->name}}</option>--}}
+								<option value="{{$developer->id}}" @if( ! empty($project->developers) && in_array($developer->id, $project->developers)) {{"selected"}} @endif >{{$developer->name}}</option>
 							@endforeach
 						</select>
 					</div>
@@ -58,9 +64,9 @@
 						<textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description.">{{$project->description}}</textarea>
 					</div>
 					<div class="form-group">
-						<label for="sel1">Status:</label> <br>
-						<input type="radio" name="status" value="1" class="radio-inline" checked> Active
-						<input type="radio" name="status" value="0" class="radio-inline"> Inactive<br>
+						<label for="status">Status:</label> <br>
+						<input type="radio" name="status" value="1" class="radio-inline" @if($project->status == "1") {{ "checked" }} @endif> Active
+						<input type="radio" name="status" value="0" class="radio-inline" @if($project->status == "0") {{ "checked" }} @endif> Inactive
 					</div>
 					<br>
 					<div class="form-group">

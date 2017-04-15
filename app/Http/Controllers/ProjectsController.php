@@ -37,13 +37,13 @@ class ProjectsController extends Controller
             foreach ($project->teamlead as $teamlead) {
                 $teamleads[]  = $teamlead->name;
             }
-            $project->teamlead  = implode(", ", $teamleads);
+            $project->teamlead  = implode('<br />', $teamleads);
 
             $developers = array();
             foreach ($project->developers as $developer) {
                 $developers[]    = $developer->name;
             }
-            $project->developers    = implode(", ", $developers);
+            $project->developers    = implode('<br />', $developers);
         }
 
         $view   = View::make('project.index');
@@ -77,13 +77,13 @@ class ProjectsController extends Controller
         foreach ($project->teamlead as $teamlead) {
             $teamleads[]  = $teamlead->name;
         }
-        $project->teamlead  = implode(", ", $teamleads);
+        $project->teamlead  = implode('<br />', $teamleads);
 
         $developers = array();
         foreach ($project->developers as $developer) {
             $developers[]    = $developer->name;
         }
-        $project->developers    = implode(", ", $developers);
+        $project->developers    = implode('<br />', $developers);
 
     	return view('project.view', compact('project', 'hours'));
     }
@@ -106,7 +106,6 @@ class ProjectsController extends Controller
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('/projects/create')
                 ->withErrors($validator)
@@ -115,21 +114,23 @@ class ProjectsController extends Controller
 
         $project = new Project;
         $project->name = $request->name;
-        $project->technology = $request->technology;
+        $project->technology = json_encode($request->technology);
         $project->description = $request->description;
         $project->status = $request->status;
         $project->internal_deadline = $request->internal_deadline;
         $project->external_deadline = $request->external_deadline;
 
         $project->save();
-        // $project->users()->attach(Auth::user()->id);
 
         if( !empty($request->teamlead) ) {
             $project->users()->attach($request->teamlead);
         }
-        if  (!empty($request->developer))
+        if  ( !empty($request->developer) )
         {
-            $project->users()->attach($request->developer);
+            foreach($request->developer as $developer)
+            {
+                $project->users()->attach($developer);
+            }
         }
 
         return redirect('/projects');
@@ -144,8 +145,8 @@ class ProjectsController extends Controller
         })->get();
         $teamleads  = Role::findByName('teamlead')->users;
 
-        $project->teamlead  = ! empty ($project->teamlead[0]) ? $project->teamlead[0]: "";
-        $project->developer = ! empty ($project->developers[0]) ? $project->developers[0]: "";
+        $project->teamlead  = ! empty ($project->teamlead) ? $project->teamlead->pluck('id')->toArray(): array();
+        $project->developers = ! empty ($project->developers) ? $project->developers->pluck('id')->toArray(): array();
 
         return view('project.edit', compact('project','teamleads','developers'));
     }
@@ -168,7 +169,7 @@ class ProjectsController extends Controller
         $project    = Project::find($id);
 
         $project->name = $request->name;
-        $project->technology = $request->technology;
+        $project->technology = json_encode($request->technology);
         $project->description = $request->description;
 
         $project->status = $request->status;
@@ -182,7 +183,10 @@ class ProjectsController extends Controller
         }
         if(! empty($request->developer))
         {
-            $project->users()->attach($request->developer);
+            foreach($request->developer as $developer)
+            {
+                $project->users()->attach($developer);
+            }
         }
         return redirect('/projects');
     }
