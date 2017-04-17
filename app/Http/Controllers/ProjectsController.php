@@ -86,7 +86,9 @@ class ProjectsController extends Controller
         }
         $project->developers    = implode(", ", $developers);
 
-    	return view('project.view', compact('project', 'hours'));
+        $users = $project->users;
+
+    	return view('project.view', compact('project', 'hours', 'users'));
     }
 
     public function create()

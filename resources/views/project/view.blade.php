@@ -73,6 +73,14 @@
                             <input type="text" name="productive_hours" class="form-control" id="productive_hours">
                         </div>
                         <div class="form-group">
+                            <label for="resource">Resource:</label>
+                            <select class="form-control" id="resource" name="resource">
+                            @foreach($users as $user)
+                                <option value="{{$user['id']}}">{{$user["name"]}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="details">Task Details:</label>
                             <textarea name="details" class="form-control" rows="5" id="details"></textarea>
                         </div>

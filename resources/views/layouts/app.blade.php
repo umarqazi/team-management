@@ -122,6 +122,11 @@
             "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
         });
     });
+    $(document).on("change","#td_select select",function(){
+      $("option[value=" + this.value + "]", this)
+      .attr("selected", true).siblings()
+      .removeAttr("selected")
+    });
     function showform(elem) {
         var id = $(elem).attr("id");
         var res = id.split("_");
@@ -134,13 +139,16 @@
         var id = $(elem).attr("id");
         var res = id.split("_");
         id = res[2];
-        
-        var actual_hours = parseInt($('input[name*=actual-hours]')[id-1].value);
-        var productive_hours = parseInt($('input[name*=productive-hours]')[id-1].value);
-        var details = $('input[name*=details]')[id-1].value;
+        console.log(id);
+        var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
+        var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
+        var user_id = $('select[name=resource_'+id+']').val();
+        console.log(user_id);
+        var details = $('input[name=details_'+id+']').val();
         var $_token = "{{ csrf_token() }}";
         var data = { actual_hours: actual_hours,
                      productive_hours: productive_hours,
+                     resource: user_id,
                      details: details
                  };
         $.ajaxSetup({
@@ -160,8 +168,10 @@
             //contentType: 'charset=UTF-8',
             // processData: false,
             success: function(response){
+                console.log(response);
                 $("#td_actual_hours_"+id).html(response.hours.actual_hours);
                 $("#td_productive_hours_"+id).html(response.hours.productive_hours);
+                $("#td_user_id_"+id).html(response.hours.user_name);
                 $("#td_details_"+id).html(response.hours.details);
                 $('#tr_hours_'+id).removeClass("hidden");
                 $('#tr_hours_form_'+id+'_1').addClass("hidden");

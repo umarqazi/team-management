@@ -30,4 +30,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Project');
     }
+
+    public function hours()
+    {
+        return $this->hasMany('App\Hour');
+    }
 }
