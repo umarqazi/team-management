@@ -23,16 +23,15 @@
                         </tr>
                         </thead>
                         <tbody>
-
                         @foreach($hours as $hour)
                             <tr>
                                 <td>{{$hour['month']}}</td>
                                 <td>{{$project->teamlead}}</td>
                                 <td>{{$project->developers}}</td>
                                 @hasrole(['developer', 'teamlead', 'admin'])
-                                <td><a href="javascript:void(0)" onclick="getHoursDetail( {{!!$hour['month']!!}}  )" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
+                                <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}'  )" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
                                 @endrole
-                                <td><a href="javascript:void(0)" onclick="getHoursDetail( {{!!$hour['month']!!}} )" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>
+                                <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -90,14 +89,13 @@
         </div>
     </div>
     <script>
-        function getHoursDetail(month){
+        function getHoursDetail(month, year){
             console.log(month);
             $.ajax({
                 type:'GET',
-                url:'/hour/{{$project->id}}/'+month,
+                url:'/hour/{{$project->id}}/'+month+'_'+year,
                 success: function(response){
-                    console.log(response);
-                    // $("#myModal2 .modal-body").html(response.html);
+                    $("#myModal2 .modal-body").html(response.html);
                 }
             });
         }

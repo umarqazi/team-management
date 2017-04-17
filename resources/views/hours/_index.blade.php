@@ -32,7 +32,6 @@
         <td><input type="text" class="form-control" name="details[{{$hrs->id}}]" value="{{$hrs->details}}"></td>
         <td class="link">  <span id="hours_save_{{$hrs->id}}" class="glyphicon glyphicon-save" onclick="submitform(this)"></span>  </td>
     </tr>
-        </form>
     @endforeach
     </tbody>
 </table>

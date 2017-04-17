@@ -28,15 +28,14 @@ class HoursController extends Controller
 		return redirect('/projects');
     }
 
-	public function show(Project $project, $month)
+	public function show(Project $project, $month_year)
 	{
-		$hrs = $project->hours()->get();
-		/*foreach ($hrs as $hour) {
-        	if(Carbon::parse($hour[0]['created_at'])->format('F') == $month)
-            
-        }*/
-		// $returnHTML = View::make('hours._index',compact('hrs_details'))->render();
-		return response()->json(array('success' => true, 'hrs'=>$hrs, 'month'=>$month));
+		$strg_break = explode("_", $month_year);
+		$month = intval(date('m', strtotime($strg_break[0])));
+		$year = $strg_break[1];
+		$hrs_details = $project->hours()->whereBetween("created_at", [Carbon::parse($year."-".$month)->startOfMonth(), Carbon::parse($year."-".$month)->endOfMonth()])->get();
+		$returnHTML = View::make('hours._index')->with('hrs_details', $hrs_details)->render();
+		return response()->json(array('success' => true, 'html'=>$returnHTML));
 
 	}
 	public function update(Request $request, $id)
