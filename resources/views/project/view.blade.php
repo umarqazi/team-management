@@ -29,7 +29,7 @@
                                 <td>{!! $project->teamlead !!}</td>
                                 <td>{!! $project->developers !!}</td>
                                 @hasrole(['developer', 'teamlead', 'engineer', 'admin'])
-                                <td><a href="javascript:void(0)" onclick="getHoursDetail()" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
+                                <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
                                 @endrole
                                 <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>
                             </tr>
