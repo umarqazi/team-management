@@ -69,6 +69,7 @@ class ProjectsController extends Controller
         }) as $hour) {
             $hours[]    = array(
                 'month'             => Carbon::parse($hour[0]['created_at'])->format('F'),
+                'year'              => Carbon::parse($hour[0]['created_at'])->format('Y'),
                 'actual_hours'      => $hour->sum('actual_hours'),
                 'productive_hours'  => $hour->sum('productive_hours')
                 );
@@ -85,7 +86,9 @@ class ProjectsController extends Controller
         }
         $project->developers    = implode(", ", $developers);
 
-    	return view('project.view', compact('project', 'hours'));
+        $users = $project->users;
+
+    	return view('project.view', compact('project', 'hours', 'users'));
     }
 
     public function create()

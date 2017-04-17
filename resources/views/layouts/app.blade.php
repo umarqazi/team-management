@@ -24,6 +24,23 @@
         .fa-btn {
             margin-right: 6px;
         }
+        .no_button {
+            background: none;
+            border: none;
+            color: #337ab9;
+            padding: 0px !important;
+        }
+        .no_button:hover {
+            color: #23527c !important;
+            text-decoration: underline;
+            font-weight: 400 !important;
+        }
+        .link{
+            color: #337ab7 !important;
+        }
+        .link:hover{
+            color: #23527c !important;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
@@ -105,7 +122,63 @@
             "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]]
         });
     });
-
+    $(document).on("change","#td_select select",function(){
+      $("option[value=" + this.value + "]", this)
+      .attr("selected", true).siblings()
+      .removeAttr("selected")
+    });
+    function showform(elem) {
+        var id = $(elem).attr("id");
+        var res = id.split("_");
+        id = res[2];
+        document.getElementById("tr_hours_"+id).classList.add("hidden");
+        document.getElementById("tr_hours_form_"+id+"_1").classList.remove("hidden");
+        document.getElementById("tr_hours_form_"+id+"_2").classList.remove("hidden");
+    }
+    function submitform(elem) {
+        var id = $(elem).attr("id");
+        var res = id.split("_");
+        id = res[2];
+        console.log(id);
+        var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
+        var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
+        var user_id = $('select[name=resource_'+id+']').val();
+        console.log(user_id);
+        var details = $('input[name=details_'+id+']').val();
+        var $_token = "{{ csrf_token() }}";
+        var data = { actual_hours: actual_hours,
+                     productive_hours: productive_hours,
+                     resource: user_id,
+                     details: details
+                 };
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $_token
+                // 'ContentType' : 'application/x-www-form-urlencoded',
+                // 'Accept'      : 'application/json'
+            }
+        });
+        $.ajax({
+            url : "/hour/update/"+id,
+            type: 'POST',
+            //data: {id: "10"},
+            data: data,
+            cache: false,
+            //dataType: 'json',
+            //contentType: 'charset=UTF-8',
+            // processData: false,
+            success: function(response){
+                console.log(response);
+                $("#td_actual_hours_"+id).html(response.hours.actual_hours);
+                $("#td_productive_hours_"+id).html(response.hours.productive_hours);
+                $("#td_user_id_"+id).html(response.hours.user_name);
+                $("#td_details_"+id).html(response.hours.details);
+                $('#tr_hours_'+id).removeClass("hidden");
+                $('#tr_hours_form_'+id+'_1').addClass("hidden");
+                $('#tr_hours_form_'+id+'_2').addClass("hidden");
+            }
+        });
+    }
 </script>
 </body>
 </html>

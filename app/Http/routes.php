@@ -37,6 +37,7 @@ Route::group( ['middleware'  => 'auth'], function(){
 //    Route::get('/project/{project}', 'ProjectsController@show');
 
     Route::post('/hour', 'HoursController@store');
+    Route::post('/hour/update/{id}', 'HoursController@update');
 
 //    Route::post('/projects', 'ProjectsController@store');
 
@@ -47,6 +48,6 @@ Route::group( ['middleware'  => 'auth'], function(){
 //    Route::delete('/projects/{project}', 'ProjectsController@destroy');
 
 //    ********************************************************************
-    Route::get('/hour/{project}', 'HoursController@show');
+    Route::get('/hour/{project}/{month}', 'HoursController@show');
 });
 
