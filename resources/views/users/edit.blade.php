@@ -56,6 +56,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('permissions') ? ' has-error' : '' }}">
+                            <label for="permissions" class="col-md-4 control-label">Permissions:</label>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @foreach($permissions as $permission)
+                                        <div class="col-md-4">
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="checkbox-inline" @if( !empty($user->permissions()->pluck('name')) && in_array($permission->name, $user->permissions()->pluck('name')->toArray())) {{ "checked" }} @endif> {{ ucwords($permission->name) }}
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                @if ($errors->has('permissions'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('permissions') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

@@ -42,12 +42,19 @@
 
 						<div class="form-group">
 							<label for="teamlead">Team Lead:</label>
+							@hasrole('teamlead')
+							<input type="hidden" name="teamlead" value="{{ Auth::user()->id }}" />
+							<select class="form-control" id="teamlead" name="teamlead" disabled>
+								<option value="{{ Auth::user()->id }}" selected>{{ Auth::user()->name }}</option>
+							</select>
+							@else
 							<select class="form-control" id="teamlead" name="teamlead">
 								<option value="">Select Team Lead</option>
 								@foreach($teamleads as $teamlead)
 									<option value="{{$teamlead->id}}" @if(old("teamlead") == $teamlead->id) {{ "selected" }} @endif>{{$teamlead->name}}</option>
 								@endforeach
 							</select>
+							@endif
 						</div>
 
 						<div class="form-group">

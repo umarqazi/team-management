@@ -40,7 +40,9 @@ class UsersController extends Controller
     public function create()
     {
         $roles  = Role::all();
-        return view('/users.create')->with(array('roles' => $roles));
+        $permissions    = Permission::all();
+        $view   = View::make('users.create', compact('roles', 'permissions'));
+        return $view;
     }
 
     /**
@@ -56,13 +58,14 @@ class UsersController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:users',
-            'password' => 'required'
+            'password'  => 'required',
+            'role-name'  => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('/users.create')
+            return Redirect::to('users/create')
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         } else {
@@ -74,6 +77,14 @@ class UsersController extends Controller
             $user->save();
 
             $user->assignRole(Input::get('role-name'));
+
+            if( ! empty( Input::get( 'permissions' ) ) )
+            {
+                foreach(Input::get('permissions') as $permission)
+                {
+                    $user->givePermissionTo($permission);
+                }
+            }
 
             // redirect
             Session::flash('message', 'Successfully created a user!');
@@ -105,9 +116,10 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $roles  = Role::all();
+        $permissions    = Permission::all();
 
         // show the edit form and pass the nerd
-        return view('/users.edit')->with('user', $user)->with('roles', $roles);
+        return view('/users.edit')->with('user', $user)->with('roles', $roles)->with('permissions', $permissions);
     }
 
     /**
@@ -141,6 +153,15 @@ class UsersController extends Controller
 
             $user->removeRole(Role::all());
             $user->assignRole(Input::get('role-name'));
+
+            $user->revokePermissionTo(Permission::all());
+            if( ! empty( Input::get('permissions') ) )
+            {
+                foreach(Input::get('permissions') as $permission)
+                {
+                    $user->givePermissionTo($permission);
+                }
+            }
 
             // redirect
             Session::flash('message', 'Successfully updated the User!');

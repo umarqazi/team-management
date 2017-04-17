@@ -90,10 +90,11 @@ class ProjectsController extends Controller
 
     public function create()
     {
-        $developers = User::whereHas('roles', function($r){
+        /*$developers = User::whereHas('roles', function($r){
             return $r->whereIn('name', ['developer', 'teamlead']);
-        })->get();
-        $teamleads  = Role::findByName(['teamlead'])->users;
+        })->get();*/
+        $developers = Role::findByName('developer')->users;
+        $teamleads  = Role::findByName('teamlead')->users;
         return view("project.create", compact('developers', 'teamleads'));
     }
 
@@ -140,9 +141,10 @@ class ProjectsController extends Controller
     {
         $project    = Project::find($project);
 
-        $developers = User::whereHas('roles', function($r){
+        /*$developers = User::whereHas('roles', function($r){
             return $r->whereIn('name', ['developer', 'teamlead']);
-        })->get();
+        })->get();*/
+        $developers = Role::findByName('developer')->users;
         $teamleads  = Role::findByName('teamlead')->users;
 
         $project->teamlead  = ! empty ($project->teamlead) ? $project->teamlead->pluck('id')->toArray(): array();
