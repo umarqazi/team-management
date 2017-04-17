@@ -32,13 +32,19 @@
                         @foreach($projects as $project)
                             <tr>
                                 <td>{{$project->name}}</td>
-                                <td>{{$project->technology}}</td>
-                                <td>{{$project->teamlead}}</td>
-                                <td>{{$project->developers}}</td>
-                                <td> @if( $project->status == "1")
-                                        Active
+                                <td>
+                                    @if(is_array(json_decode($project->technology)))
+                                        {{ @implode(", ", json_decode($project->technology)) }}
                                     @else
-                                        Inactive
+                                        {{ $project->technology }}
+                                    @endif
+                                </td>
+                                <td>{!! $project->teamlead !!}</td>
+                                <td>{!! $project->developers !!}</td>
+                                <td> @if( $project->status == "1")
+                                        <b>Active</b>
+                                    @else
+                                        <b>Inactive</b>
                                     @endif
                                 </td>
 

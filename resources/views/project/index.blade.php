@@ -4,7 +4,8 @@
 @section('content')
   @hasrole(['developer', 'teamlead', 'engineer'])
     @yield('engineers')
-  @else('sales')
+  @endrole
+  @hasrole(['admin', 'sales'])
     @yield('sales')
   @endrole
   @include('dashboard.resources')

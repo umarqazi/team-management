@@ -73,13 +73,32 @@
                                 <select name="role-name" class="form-control" required>
                                     <option value="">Select a Role</option>
                                     @foreach($roles as $role)
-                                        <option value="{{$role->name}}">{{ucwords($role->name)}}</option>
+                                        <option value="{{$role->name}}" @if(!empty(old("role-name")) && $role->name == old("role-name")) {{ "selected" }} @endif>{{ucwords($role->name)}}</option>
                                     @endforeach
                                 </select>
 
                                 @if ($errors->has('role-name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('role-name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('permissions') ? ' has-error' : '' }}">
+                            <label for="permissions" class="col-md-4 control-label">Permissions:</label>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @foreach($permissions as $permission)
+                                        <div class="col-md-4">
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="checkbox-inline" @if( !empty(old("permissions")) && in_array($permission->name, old("permissions"))) {{ "checked" }} @endif> {{ ucwords($permission->name) }}
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                @if ($errors->has('permissions'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('permissions') }}</strong>
                                     </span>
                                 @endif
                             </div>
