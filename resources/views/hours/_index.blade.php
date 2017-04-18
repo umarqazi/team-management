@@ -8,7 +8,10 @@
         <th>Productive Hours</th>
         <th>Developer</th>
         <th>Details</th>
-        <th>Action</th>
+        @hasrole('developer')
+        @else
+            <th>Action</th>
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -27,9 +30,13 @@
         @endforeach
         </td>
         <td id="td_details_{{$hrs->id}}" >{{$hrs->details}}</td>
+        @hasrole('developer')
+        @else
         <td class="link">
             <span class="glyphicon glyphicon-edit" id="hours_edit_{{$hrs->id}}" onclick="showform(this)"></span> | <span id="hours_delete_{{$hrs->id}}" class="glyphicon glyphicon-trash" onclick="delete_hour(this)"></span>
         </td>
+        @endif
+       
     </tr>
     <tr id="tr_hours_form_{{$hrs->id}}_1" class="hidden"></tr>
     <tr id="tr_hours_form_{{$hrs->id}}_2" class="hidden">

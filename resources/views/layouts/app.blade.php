@@ -176,7 +176,12 @@
         console.log(id);
         var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
         var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
-        var user_id = $('select[name=resource_'+id+']').val();
+        if($('select[name=resource_'+id+']').prop('disabled') == true){
+            var user_id = $('input[name=resource_'+id+']').val();
+        }
+        else{
+            var user_id = $('select[name=resource_'+id+']').val();
+        }
         console.log(user_id);
         var details = $('input[name=details_'+id+']').val();
         var $_token = "{{ csrf_token() }}";

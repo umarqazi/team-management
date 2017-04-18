@@ -74,11 +74,18 @@
                         </div>
                         <div class="form-group">
                             <label for="resource">Resource:</label>
-                            <select class="form-control" id="resource" name="resource">
-                            @foreach($users as $user)
-                                <option value="{{$user['id']}}">{{$user["name"]}}</option>
-                            @endforeach
+                            @hasrole('developer')
+                            <input type="hidden" name="resource" value="{{ Auth::user()->id }}">
+                            <select class="form-control" name="resource" disabled="disabled">
+                                <option value="{{ Auth::user()->id }}" selected = "selected">{{ Auth::user()->name }}</option>
                             </select>
+                            @else
+                                <select class="form-control" id="resource" name="resource">
+                                @foreach($users as $user)
+                                    <option value="{{$user['id']}}">{{$user["name"]}}</option>
+                                @endforeach
+                                </select>
+                            @endif
                         </div>
                         <div class="form-group">
                             <label for="details">Task Details:</label>

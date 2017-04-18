@@ -28,7 +28,7 @@ class HoursController extends Controller
 		}
     	$hour->save();
     	// echo("<pre>");
-    	// print_r($hour->id);
+    	// print_r($request);
     	// echo("</pre>");
     	// die();
 		return redirect('/projects');
