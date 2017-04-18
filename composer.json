@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "spatie/laravel-permission": "^1.4",
         "laravelcollective/html": "^5.2.0",
-        "sven/artisan-view": "^1.3"
+        "sven/artisan-view": "^1.3",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

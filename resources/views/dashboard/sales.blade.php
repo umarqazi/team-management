@@ -22,17 +22,15 @@
                                 @foreach($projects as $project)
                                     <tr>
                                         <td>{{$project->name}}</td>
-                                        <td>{{$project->technology}}</td>
                                         <td>
-                                        @foreach($project->teamlead as $teamlead)
-                                            {{$teamlead->name}}
-                                        @endforeach
+                                            @if(is_array(json_decode($project->technology)))
+                                                {{ @implode(", ", json_decode($project->technology)) }}
+                                            @else
+                                                {{ $project->technology }}
+                                            @endif
                                         </td>
-                                        <td>
-                                        @foreach($project->developers as $developer)
-                                            {{$developer->name}}
-                                        @endforeach
-                                        </td>
+                                        <td>{!! $project->teamlead !!}</td>
+                                        <td>{!! $project->developers !!}</td>
 
                                         <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
                                     </tr>

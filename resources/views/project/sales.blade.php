@@ -13,15 +13,16 @@
           <thead>
           <tr>
             <th>Name</th>
+            <th>Technology</th>
             <th>Team lead</th>
             <th>Developer</th>
-            <th>Productive Hours</th>
+            <th>Status</th>
             <th>View</th>
             @if(Auth::user()->can('edit project'))
-            <th>Edit</th>
+              <th>Edit</th>
             @endif
             @if(Auth::user()->can('delete project'))
-            <th>Delete</th>
+              <th>Delete</th>
             @endif
           </tr>
           </thead>
@@ -29,27 +30,41 @@
           @foreach($projects as $project)
             <tr>
               <td>{{$project->name}}</td>
-              <td>{{$project->teamlead}}</td>
-              <td>{{$project->developers}}</td>
               <td>
-                {{$project->hours->sum('productive_hours')}}
+                @if(is_array(json_decode($project->technology)))
+                  {{ @implode(", ", json_decode($project->technology)) }}
+                @else
+                  {{ $project->technology }}
+                @endif
+              </td>
+              <td>{!! $project->teamlead !!}</td>
+              <td>{!! $project->developers !!}</td>
+              <td> @if( $project->status == "1")
+                  <b>Active</b>
+                @else
+                  <b>Inactive</b>
+                @endif
               </td>
               <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
               @if(Auth::user()->can('edit project'))
-              <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
+                <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
               @endif
               @if(Auth::user()->can('delete project'))
-              <td>
-                {{ Form::open(array('url' => '/projects/' . $project->id)) }}
-                {{ Form::hidden('_method', 'DELETE') }}
-                <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-                {{ Form::close() }}
-              </td>
+                <td>
+                  {{ Form::open(array('url' => '/projects/' . $project->id)) }}
+                  {{ Form::hidden('_method', 'DELETE') }}
+                  <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+                  {{ Form::close() }}
+                </td>
               @endif
             </tr>
           @endforeach
           </tbody>
         </table>
+        <div id="paginator" class="text-center">
+
+          {{ $projects->links() }}
+        </div>
       </div>
 
     </div>
