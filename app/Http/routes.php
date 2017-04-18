@@ -28,8 +28,22 @@ Route::group( ['middleware'  => 'auth'], function(){
 
     Route::get( '/', 'HomeController@index' );
 
-    Route::resource('projects', 'ProjectsController');
+    Route::group(['middleware'  => 'permission:create project'], function(){
 
+        Route::get( 'projects/create', 'ProjectsController@create' );
+        Route::post( 'projects', 'ProjectsController@store' );
+    });
+    Route::group(['middleware'  => 'permission:edit project'], function(){
+
+        Route::get( 'projects/{project}/edit', 'ProjectsController@edit' );
+        Route::post( 'projects/{id}', 'ProjectsController@update' );
+    });
+    Route::group(['middleware'  => 'permission:delete project'], function(){
+
+        Route::post( 'projects/{id}', 'ProjectsController@destroy' );
+    });
+
+    Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
 //    Route::get('/projects', 'ProjectsController@index');
 
 //    Route::get('/project/create', 'ProjectsController@create');
@@ -38,6 +52,7 @@ Route::group( ['middleware'  => 'auth'], function(){
 
     Route::post('/hour', 'HoursController@store');
     Route::post('/hour/update/{id}', 'HoursController@update');
+    Route::post('/hour/delete/{id}', 'HoursController@delete');
 
 //    Route::post('/projects', 'ProjectsController@store');
 

@@ -138,9 +138,9 @@ class ProjectsController extends Controller
         return redirect('/projects');
     }
 
-    public function edit($project)
+    public function edit(Project $project)
     {
-        $project    = Project::find($project);
+        // $project    = Project::find($project);
 
         $developers = User::whereHas('roles', function($r){
             return $r->whereIn('name', ['developer', 'teamlead']);

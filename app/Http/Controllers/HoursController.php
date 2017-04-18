@@ -65,4 +65,10 @@ class HoursController extends Controller
 	    }
 	    return response()->json(array('success' => true, 'hours' => $hour));
 	}
+	public function delete($id){
+        $hour= Hour::find($id);
+        $hour->delete();
+        return response()->json(array('success' => true));
+        
+    }
 }
