@@ -44,6 +44,7 @@ Route::group( ['middleware'  => 'auth'], function(){
     });
 
     Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
+    Route::get('/downloadExcel_project_by_months/{id}/{type}', 'ProjectsController@downloadExcel');
 //    Route::get('/projects', 'ProjectsController@index');
 
 //    Route::get('/project/create', 'ProjectsController@create');
@@ -53,6 +54,8 @@ Route::group( ['middleware'  => 'auth'], function(){
     Route::post('/hour', 'HoursController@store');
     Route::post('/hour/update/{id}', 'HoursController@update');
     Route::post('/hour/delete/{id}', 'HoursController@delete');
+    Route::get('/downloadExcel_hour_by_months/{project}/{year_month}/', 'HoursController@downloadExcel');
+    Route::post('/downloadExcel_hour_by_filter/{project}/', 'HoursController@downloadExcelfilter');
 
 //    Route::post('/projects', 'ProjectsController@store');
 
@@ -63,6 +66,6 @@ Route::group( ['middleware'  => 'auth'], function(){
 //    Route::delete('/projects/{project}', 'ProjectsController@destroy');
 
 //    ********************************************************************
-    Route::get('/hour/{project}/{month}', 'HoursController@show');
+    Route::get('/hour/{project}/{year_month}', 'HoursController@show');
 });
 

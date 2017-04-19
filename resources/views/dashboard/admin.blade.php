@@ -17,7 +17,7 @@
                     <div class="panel-heading">Projects</div>
                     <div class="panel-body">
                         <div class="content" style="margin-top: 20px;">
-                            <table class="table">
+                            <table class="table table-striped">
                                 <thead>
                                 <tr>
                                     <th>Name</th>

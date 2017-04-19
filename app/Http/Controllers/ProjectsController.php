@@ -17,6 +17,7 @@ use \App\User;
 use Carbon\Carbon;
 use Auth;
 use Session;
+use Excel;
 
 class ProjectsController extends Controller
 {
@@ -90,7 +91,49 @@ class ProjectsController extends Controller
 
     	return view('project.view', compact('project', 'hours', 'users'));
     }
+    public function downloadExcel($id, $type)
+    {
+        $project    = Project::find($id);
+        $hours = array();
+        $user   = Auth::user();
+        foreach ($project->teamlead as $teamlead) {
+            $teamleads[]  = $teamlead->name;
+        }
+        $project->teamlead  = implode(', ', $teamleads);
 
+        $developers = array();
+        foreach ($project->developers as $developer) {
+            $developers[]    = $developer->name;
+        }
+        $project->developers    = implode(', ', $developers);
+        foreach ($project->hours->groupBy(function($d) {
+             return Carbon::parse($d->created_at)->format('m');
+        }) as $hour) {
+            if($user->hasRole(['sales']))
+            {
+                $hours[]    = array(
+                    'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
+                    'Teamlead'          => $project->teamlead,
+                    'Developer'         => $project->developers,
+                    'Hours'             => $hour->sum('productive_hours')
+                    );
+            } else{
+                $hours[]    = array(
+                    'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
+                    'Teamlead'          => $project->teamlead,
+                    'Developer'         => $project->developers,
+                    'Actual hours'      => $hour->sum('actual_hours'),
+                    'Productive hours'  => $hour->sum('productive_hours')
+                    );
+            }
+        }
+        return Excel::create('hours', function($excel) use ($hours) {
+            $excel->sheet('mySheet', function($sheet) use ($hours)
+            {
+                $sheet->fromArray($hours);
+            });
+        })->download($type);
+    }
     public function create()
     {
         /*$developers = User::whereHas('roles', function($r){

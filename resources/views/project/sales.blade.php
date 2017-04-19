@@ -9,7 +9,7 @@
         </div>
       @endif
       <div class="content" style="margin: 20px;">
-        <table class="table">
+        <table class="table table-striped">
           <thead>
           <tr>
             <th>Name</th>
