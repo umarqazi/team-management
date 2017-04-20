@@ -37,7 +37,7 @@ return [
     'google' => [
         'client_id' => '396323223676-83aeebqbg12vc7fv8ia76e0pdb1l2cm5.apps.googleusercontent.com',
         'client_secret' => 'kNzuA3_sD0RaXw95S3ka8j83',
-        'redirect' => 'http://localhost:8000/callback/google',
+        'redirect' => 'http://tm.techverx.com/callback/google',
     ],
 
 ];
