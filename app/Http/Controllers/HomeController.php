@@ -26,7 +26,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         $user = Auth::user();
         if ($user->hasRole(['developer', 'teamlead', 'engineer'])) {
             $projects = $user->projects()->where('status', 1)->orderBy('created_at','desc')->paginate(10);
@@ -74,4 +73,5 @@ class HomeController extends Controller
 
         return $view;
     }
+
 }
