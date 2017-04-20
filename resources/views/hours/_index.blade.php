@@ -8,7 +8,10 @@
         <th>Productive Hours</th>
         <th>Developer</th>
         <th>Details</th>
-        <th>Edit</th>
+        @hasrole('developer')
+        @else
+            <th>Action</th>
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -19,15 +22,21 @@
         <td id="td_actual_hours_{{$hrs->id}}" >{{$hrs->actual_hours}}</td>
         @endrole
         <td id="td_productive_hours_{{$hrs->id}}" >{{$hrs->productive_hours}}</td>
+        <td id="td_user_id_{{$hrs->id}}" >
         @foreach($users as $user)
             @if($hrs->user_id == $user->id )
-                <td id="td_user_id_{{$hrs->id}}" >{{$user->name}}</td>
+                {{$user->name}}
             @endif
         @endforeach
-        <td id="td_details_{{$hrs->id}}" >{{$hrs->details}}</td>
-        <td class="link">
-            <span class="glyphicon glyphicon-edit" id="hours_edit_{{$hrs->id}}" onclick="showform(this)"></span>
         </td>
+        <td id="td_details_{{$hrs->id}}" >{{$hrs->details}}</td>
+        @hasrole('developer')
+        @else
+        <td class="link">
+            <span class="glyphicon glyphicon-edit" id="hours_edit_{{$hrs->id}}" onclick="showform(this)"></span> | <span id="hours_delete_{{$hrs->id}}" class="glyphicon glyphicon-trash" onclick="delete_hour(this)"></span>
+        </td>
+        @endif
+       
     </tr>
     <tr id="tr_hours_form_{{$hrs->id}}_1" class="hidden"></tr>
     <tr id="tr_hours_form_{{$hrs->id}}_2" class="hidden">
@@ -52,7 +61,7 @@
             <input type="text" class="form-control" name="details_{{$hrs->id}}" value="{{$hrs->details}}">
         </td>
         <td class="link">
-            <span id="hours_save_{{$hrs->id}}" class="glyphicon glyphicon-save" onclick="submitform(this)"></span>
+            <span id="hours_save_{{$hrs->id}}" class="glyphicon glyphicon-save" onclick="submitform(this)"></span> 
         </td>
     </tr>
     @endforeach

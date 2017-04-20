@@ -53,8 +53,10 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-btn fa-sign-in"></i> Login
                                 </button>
+                                <a href="{{ url('redirect/google') }}" class="btn btn-danger btn-social btn-google"><span class="fa fa-google"></span> | Sign in with Google</a>
 
                                 <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+
                             </div>
                         </div>
                     </form>

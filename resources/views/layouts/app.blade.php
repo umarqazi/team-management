@@ -104,7 +104,17 @@
         </div>
     </div>
 </nav>
-
+@if(Session::has('msgerror'))
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert {{ Session::get('alert-class', 'alert-info') }}">
+                {{ Session::get('msgerror') }}
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @yield('content')
 
 <footer style="margin-top: 50px; height: 100px;"></footer>
@@ -170,7 +180,12 @@
         console.log(id);
         var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
         var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
-        var user_id = $('select[name=resource_'+id+']').val();
+        if($('select[name=resource_'+id+']').prop('disabled') == true){
+            var user_id = $('input[name=resource_'+id+']').val();
+        }
+        else{
+            var user_id = $('select[name=resource_'+id+']').val();
+        }
         console.log(user_id);
         var details = $('input[name=details_'+id+']').val();
         var $_token = "{{ csrf_token() }}";
@@ -182,19 +197,13 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $_token
-                // 'ContentType' : 'application/x-www-form-urlencoded',
-                // 'Accept'      : 'application/json'
             }
         });
         $.ajax({
             url : "/hour/update/"+id,
             type: 'POST',
-            //data: {id: "10"},
             data: data,
             cache: false,
-            //dataType: 'json',
-            //contentType: 'charset=UTF-8',
-            // processData: false,
             success: function(response){
                 console.log(response);
                 $("#td_actual_hours_"+id).html(response.hours.actual_hours);
@@ -206,6 +215,34 @@
                 $('#tr_hours_form_'+id+'_2').addClass("hidden");
             }
         });
+    }
+    function delete_hour(elem) {
+        if (confirm("Are you sure?")) {
+            var id = $(elem).attr("id");
+            var res = id.split("_");
+            id = res[2];
+            console.log(id);
+            var $_token = "{{ csrf_token() }}";
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $_token
+                }
+            });
+            $.ajax({
+                url : "/hour/delete/"+id,
+                type: 'POST',
+                cache: false,
+                success: function(response){
+                    //console.log(response);
+                    $("#tr_hours_"+id).remove();
+                    $("#tr_hours_form_"+id+"_1").remove();
+                    $("#tr_hours_form_"+id+"_2").remove();
+                }
+            });
+        }
+        else{
+            return false;
+        }
     }
 </script>
 </body>

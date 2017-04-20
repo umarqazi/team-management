@@ -7,7 +7,7 @@
                 <div class="panel-heading">Users</div>
 
                 <div class="panel-body">
-                   <table class="table table-hover">
+                   <table class="table table-hover table-striped">
                         <thead>
                           <tr>
                             <th>Id</th>

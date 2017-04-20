@@ -30,7 +30,7 @@
                                 <strong>Success!</strong> {{ Session::get('message') }}
                             </div>
                         @endif
-                        <table class="table table-hover">
+                        <table class="table table-hover table-striped">
                             <thead>
                             <tr>
                                 <th>Id</th>
