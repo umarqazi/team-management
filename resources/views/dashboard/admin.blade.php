@@ -24,34 +24,6 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="row">
-                           <form style="margin-left: 15px;">
-                             <label>Select Project:</label>
-                               <select id="project-charts">
-                                   @foreach($projects as $project)
-                                        <option value="{{$project->id}}">{{$project->name}}</option>
-                                   @endforeach
-                               </select>
-                           </form>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div id="chartContainer3" style="height: 300px; width: 100%;">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div id="chartContainerMonthly" style="height: 300px; width: 100%;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 @if(Auth::user()->can('create project'))
                     <div class="row">
@@ -122,13 +94,6 @@
         </div>
     </div>
     <script type="text/javascript">
-
-        var selected_project = $("#project-charts").val();
-        console.log(selected_project);
-        $( "#project-charts" ).change(function() {
-            var selected_project = $("#project-charts").val();
-            console.log(selected_project);
-        });
 
         var data = {!! json_encode($datapoints, JSON_NUMERIC_CHECK) !!}
          var data2 = {!! json_encode($datapoints2, JSON_NUMERIC_CHECK) !!}
