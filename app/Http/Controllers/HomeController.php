@@ -32,6 +32,8 @@ class HomeController extends Controller
         } else {
             $projects = Project::where('status', 1)->orderBy('created_at','desc')->paginate(10);
         }
+        $datapoints = array();
+        $datapoints2    = array();
         foreach ($projects as $project) {
             $teamleads = array();
             foreach ($project->teamlead as $teamlead) {
