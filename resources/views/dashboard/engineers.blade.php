@@ -96,14 +96,11 @@
     </div>
     <script type="text/javascript">
 
-        var data = {!! json_encode($datapoints, JSON_NUMERIC_CHECK) !!}
-         var data2 = {!! json_encode($datapoints2, JSON_NUMERIC_CHECK) !!}
-
 //        General Chart
 
                 window.onload = function () {
                     var chart = new CanvasJS.Chart("chartContainerGeneral", {
-                        theme: "theme2",//theme1
+                        theme: "theme3",//theme1
                         title:{
                             text: "Projects Overview - General"
                         },
@@ -117,13 +114,13 @@
                                 type: "column",
                                 showInLegend: true,
                                 legendText: "Actual Hours",
-                                dataPoints: data,
+                                dataPoints: {!! json_encode($datapoints[1], JSON_NUMERIC_CHECK) !!}
                             },
                             {
                                 showInLegend: true,
                                 legendText: "Productive Hours",
                                 type: "column",
-                                dataPoints: data2
+                                dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
                             }
                         ]
                     });

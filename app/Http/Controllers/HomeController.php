@@ -32,8 +32,7 @@ class HomeController extends Controller
         } else {
             $projects = Project::where('status', 1)->orderBy('created_at','desc')->paginate(10);
         }
-        $datapoints = array();
-        $datapoints2    = array();
+        $datapoints = array( 0 => array(), 1 => array());
         foreach ($projects as $project) {
             $teamleads = array();
             foreach ($project->teamlead as $teamlead) {
@@ -55,22 +54,25 @@ class HomeController extends Controller
             if ( empty($productive_hours)) {
                 $productive_hours = 0;
             }
-            $datapoints[] = array("y"=> $actual_hours, "label" => ucwords($project->name) );
-            $datapoints2[] = array("y"=> $productive_hours, "label" => ucwords($project->name));
+            $datapoints[0][] = array("y"=> $productive_hours, "label" => ucwords($project->name));
+            if( !$user->hasRole('sales'))
+            {
+                $datapoints[1][] = array("y"=> $actual_hours, "label" => ucwords($project->name) );
+            }
         }
 
         $view   = View::make('home');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
-            $view->nest('dashboard', 'dashboard.engineers', compact('projects','datapoints','datapoints2'));
+            $view->nest('dashboard', 'dashboard.engineers', compact('projects','datapoints'));
         }
         elseif($user->hasRole('admin'))
         {
-            $view->nest('dashboard', 'dashboard.admin', compact('projects','datapoints','datapoints2'));
+            $view->nest('dashboard', 'dashboard.admin', compact('projects','datapoints'));
         }
         else
         {
-            $view->nest('dashboard', 'dashboard.sales', compact('projects','datapoints2'));
+            $view->nest('dashboard', 'dashboard.sales', compact('projects','datapoints'));
         }
 
         return $view;

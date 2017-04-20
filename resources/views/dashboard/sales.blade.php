@@ -71,13 +71,11 @@
     </div>
     <script type="text/javascript">
 
-        var data = {!! json_encode($datapoints2, JSON_NUMERIC_CHECK) !!}
-        
 //        General Chart
 
                 window.onload = function () {
                     var chart = new CanvasJS.Chart("chartContainerGeneral", {
-                        theme: "theme2",//theme1
+                        theme: "theme3",//theme1
                         title:{
                             text: "Projects Overview - General"
                         },
@@ -89,7 +87,7 @@
                             {
                                 // Change type to "bar", "area", "spline", "pie",etc.
                                 type: "column",
-                                dataPoints: data,
+                                dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
                             }
                         ]
                     });
