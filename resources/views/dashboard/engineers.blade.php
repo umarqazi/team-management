@@ -1,7 +1,29 @@
 @extends('home')
-
 @section('engineers')
     <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dashboard</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="chartContainer2" style="height: 300px; width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="chartContainerGeneral" style="height: 300px; width: 100%;">
+                                </div>
+                                <div class="pagination pull-right">
+                                     {{ $projects->links() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 @if(Auth::user()->can('create project'))
@@ -65,7 +87,6 @@
                             </table>
                             <div id="paginator" class="text-center">
                                 {{ $projects->links() }}
-
                             </div>
                         </div>
                     </div>
@@ -73,4 +94,38 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+
+//        General Chart
+
+                window.onload = function () {
+                    var chart = new CanvasJS.Chart("chartContainerGeneral", {
+                        theme: "theme3",//theme1
+                        title:{
+                            text: "Projects Overview - General"
+                        },
+                        animationEnabled: false,   // change to true
+                        axisY:{
+                            title:"Hours",
+                        },
+                        data: [
+                            {
+                                // Change type to "bar", "area", "spline", "pie",etc.
+                                type: "column",
+                                showInLegend: true,
+                                legendText: "Actual Hours",
+                                dataPoints: {!! json_encode($datapoints[1], JSON_NUMERIC_CHECK) !!}
+                            },
+                            {
+                                showInLegend: true,
+                                legendText: "Productive Hours",
+                                type: "column",
+                                dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
+                            }
+                        ]
+                    });
+                    chart.render();
+
+                }
+    </script>
 @endsection
