@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
+    {{--Flatly Theme--}}
+    {{--<link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.css">--}}
+    {{--<link rel="stylesheet" href="https://bootswatch.com/assets/css/custom.min.css">--}}
     <style>
         body {
             font-family: 'Lato';
@@ -111,6 +114,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <script>
 
