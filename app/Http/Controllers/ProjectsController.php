@@ -134,8 +134,8 @@ class ProjectsController extends Controller
                     );
             }
         }
-        return Excel::create('hours', function($excel) use ($hours) {
-            $excel->sheet('mySheet', function($sheet) use ($hours)
+        return Excel::create($project->name, function($excel) use ($hours, $project) {
+            $excel->sheet($project->name, function($sheet) use ($hours)
             {
                 $sheet->fromArray($hours);
             });
