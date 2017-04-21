@@ -108,7 +108,11 @@ class ProjectsController extends Controller
         foreach ($project->developers as $developer) {
             $developers[]    = $developer->name;
         }
-        $project->developers    = implode(', ', $developers);
+        if(!empty($developers)){
+            $project->developers    = implode(', ', $developers);
+        }else{
+            $project->developers  = "N/A";
+        }
         foreach ($project->hours->groupBy(function($d) {
              return Carbon::parse($d->created_at)->format('m');
         }) as $hour) {
