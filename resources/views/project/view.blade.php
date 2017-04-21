@@ -41,6 +41,7 @@
                             </table>
                         </div>
                     </div>
+                    @hasrole(['admin','sales','teamlead'])
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <form class="form-inline" action="{{ URL::to('/downloadExcel_hour_by_filter/'.$project->id) }}" method="POST">
@@ -71,6 +72,7 @@
                             @endif
                         </div>
                     </div>
+                    @endrole
                     <div class="row">
                         <div class="col-md-12">
                             <!-- Trigger the modal with a button -->
