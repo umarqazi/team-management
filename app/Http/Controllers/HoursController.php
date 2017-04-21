@@ -75,36 +75,36 @@ class HoursController extends Controller
     }
     public function downloadExcel(Project $project, $year_month)
     {
-        $year_month = Carbon::parse($year_month)->format("Y-m");
-        // echo("<pre>");
-        // print_r($year_month);
-        // die();
-        $user   = Auth::user();
-		$users = $project->users;
-		$hours = array();
-		$hrs_details = $project->hours()->whereBetween("created_at", [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->get();
+        $user   		= Auth::user();
+        $year_month 	= Carbon::parse($year_month)->format("Y-m");
+		$users 			= $project->users;
+		$hours 			= array();
+		$hrs_details 	= $project->hours()->whereBetween("created_at", [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->get();
 
         foreach ($hrs_details as $hr) {
         	$user_id = $hr->user_id;
-        	if($user->hasRole(['sales']))
+        	if($user->hasRole(['admin', 'teamlead']))
             {
 	            $hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
 	                'Actual hours'      => $hr->actual_hours,
 	                'Productive hours'  => $hr->productive_hours,
-	                'Developer'			=> $user_id,
+	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );
-	        } else{
+	        }elseif($user->hasRole('sales')){
 	        	$hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Hours'  => $hr->productive_hours,
-	                'Developer'			=> $user_id,
+	                'Hours'  			=> $hr->productive_hours,
+	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );
+	        }else
+	        {
+	        	$hours 	= array();
 	        }
         }
-        return Excel::create('hours', function($excel) use ($hours) {
+        return Excel::create('hours '.$year_month, function($excel) use ($hours) {
             $excel->sheet('mySheet', function($sheet) use ($hours)
             {
                 $sheet->fromArray($hours);
@@ -113,20 +113,25 @@ class HoursController extends Controller
     }
     public function downloadExcelfilter(Request $request, Project $project)
     {
-        $user   	= Auth::user();
-		$users 		= $project->users;
-		$hours 		= array();
-		$resource 	= $request->resource;
-		$from 		= $request->from;
-		$to			= $request->to;
-		if(!empty($to) && !empty($from) && !empty($resource)){
-			$hrs_details = $project->hours()->whereBetween("created_at", [Carbon::parse($to)->format("Y-m-d"), Carbon::parse($from)->format("Y-m-d")])->where("user_id", $resource)->get();
+        $user   		= Auth::user();
+		$users 			= $project->users;
+		$resource		= "";
+		if( ! empty($request->resource))
+		{
+			$resource	= User::find($request->resource)->name;
 		}
-		elseif(!empty($to) && !empty($from) && empty($resource)){
-			$hrs_details = $project->hours()->whereBetween("created_at", [Carbon::parse($to)->format("Y-m-d"), Carbon::parse($from)->format("Y-m-d")])->get();
+		$hours 			= array();
+		if(!empty($request->to) && !empty($request->from) && !empty($request->resource)){
+			$hrs_details = $project->hours()->whereBetween("created_at", [Carbon::parse($request->from." 00:00:00")->format("Y-m-d"), Carbon::parse($request->to." 23:59:59")->format("Y-m-d")])->where("user_id", $request->resource)->get();
+			$file_name = "hours-".$project->name."-".Carbon::parse($request->to)->format("d-m")."-".Carbon::parse($request->from)->format("d-m")."-".$resource;
+		}
+		elseif(!empty($request->to) && !empty($request->from) && empty($request->resource)){
+			$hrs_details = $project->hours()->whereBetween("created_at", [Carbon::parse($request->from." 00:00:00")->format("Y-m-d"), Carbon::parse($request->to." 23:59:59")->format("Y-m-d")])->get();
+			$file_name = "hours-".$project->name."-".Carbon::parse($request->to)->format("d-m")."-".Carbon::parse($request->from)->format("d-m");
 		}
 		elseif(empty($request->to) && empty($request->from) && !empty($request->resource)){
-			$hrs_details = $project->hours()->where("user_id", $resource)->get();
+			$hrs_details = $project->hours()->where("user_id", $request->resource)->get();
+			$file_name = "hours-".$project->name."-".$resource;
 		}
 		else{
 			Session::flash('export_msg', 'All fields empty!');
@@ -135,27 +140,32 @@ class HoursController extends Controller
 		}
 
         foreach ($hrs_details as $hr) {
-        	$user_id = $hr->user_id;
-        	if($user->hasRole(['sales']))
+        	if($user->hasRole(['admin', 'teamlead']))
             {
 	            $hours[]    = array(
-	                'Date'				=> $hr->created_at->format('d-M'),
+	                'Date'				=> Carbon::parse($hr->created_at)->format('d-M'),
 	                'Actual hours'      => $hr->actual_hours,
 	                'Productive hours'  => $hr->productive_hours,
-	                'Developer'			=> $user_id,
-	                'Details'			=> $hr->details
+	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
+	                'Task'				=> $hr->details
 	                );
-	        } else{
+	        } 
+	        elseif($user->hasRole('sales'))
+	        {
 	        	$hours[]    = array(
-	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Hours'  => $hr->productive_hours,
-	                'Developer'			=> $user_id,
-	                'Details'			=> $hr->details
+	                'Date'				=> Carbon::parse($hr->created_at)->format('d-M'),
+	                'Hours'  			=> $hr->productive_hours,
+	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
+	                'Task'				=> $hr->details
 	                );
 	        }
+	        else
+	        {
+	        	$hours 	= array();
+	        }
         }
-        return Excel::create('hours', function($excel) use ($hours) {
-            $excel->sheet('mySheet', function($sheet) use ($hours)
+        return Excel::create($file_name, function($excel) use ($hours, $project) {
+            $excel->sheet($project->name, function($sheet) use ($hours)
             {
                 $sheet->fromArray($hours);
             });

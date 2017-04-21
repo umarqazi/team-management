@@ -99,8 +99,11 @@ class ProjectsController extends Controller
         foreach ($project->teamlead as $teamlead) {
             $teamleads[]  = $teamlead->name;
         }
-        $project->teamlead  = implode(', ', $teamleads);
-
+        if(!empty($teamleads)){
+            $project->teamlead  = implode(', ', $teamleads);
+        }else{
+            $project->teamlead  = "N/A";
+        }
         $developers = array();
         foreach ($project->developers as $developer) {
             $developers[]    = $developer->name;
