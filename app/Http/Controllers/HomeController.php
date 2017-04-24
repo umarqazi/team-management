@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Project;
+use App\Hour;
 use App\Http\Requests;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -56,7 +57,6 @@ class HomeController extends Controller
             $datapoints[] = array("y"=> $actual_hours, "label" => ucwords($project->name) );
             $datapoints2[] = array("y"=> $productive_hours, "label" => ucwords($project->name));
         }
-
         $view   = View::make('home');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
@@ -72,6 +72,30 @@ class HomeController extends Controller
         }
 
         return $view;
+    }
+
+    public function getHours(Request $request ,$id)
+    {
+//        if($request->ajax()) {
+//            return response()->json(array('success' => true, 'response' => $id));
+//        }
+
+        $project    = Project::find($id);
+        $hours = array();
+
+        foreach ($project->hours->groupBy(function($d) {
+            return Carbon::parse($d->created_at)->format('m');
+        }) as $hour) {
+            $hours[]    = array(
+                'month'             => Carbon::parse($hour[0]['created_at'])->format('F'),
+                'year'              => Carbon::parse($hour[0]['created_at'])->format('Y'),
+                'actual_hours'      => $hour->sum('actual_hours'),
+                'productive_hours'  => $hour->sum('productive_hours')
+            );
+        }
+        return response()->json(array('success' => true, 'response' => $hours));
+
+//        return view('project.view', compact('project', 'hours', 'users'));
     }
 
 }
