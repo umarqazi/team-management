@@ -7,11 +7,7 @@
                     <div class="panel-heading">Dashboard</div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div id="chartContainer2" style="height: 300px; width: 100%;">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div id="chartContainerGeneral" style="height: 300px; width: 100%;">
                                 </div>
                                 <div class="pagination pull-right">
@@ -19,27 +15,25 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="row">
-                           <form style="margin-left: 15px;">
-                             <label>Select Project:</label>
-                               <select id="project-charts">
-                                   @foreach($projects as $project)
-                                        <option value="{{$project->id}}">{{$project->name}}</option>
-                                   @endforeach
-                               </select>
-                           </form>
+                        <div class="row" style="margin-top: 50px;">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <form style="margin-left: 15px;">
+                                        <label>Select Project: </label>
+                                        <select id="project-charts">
+                                            @foreach($projects as $project)
+                                                <option value="{{$project->id}}">{{$project->name}}</option>
+                                            @endforeach
+                                        </select> <br><br>
+                                        <label>Month: </label>
+                                        <input type="month" id="proj_month" name="proj_month" value={{\Carbon\Carbon::today()->format('Y-m')}}>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <div id="chartContainer3" style="height: 300px; width: 100%;">
+                                <div id="chartContainerResources" style="height: 300px; width: 100%; margin-top: 20px;">
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -51,6 +45,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 @if(Auth::user()->can('create project'))
@@ -123,24 +118,7 @@
     </div>
     <script type="text/javascript">
 
-//  Ajax Request
-        var selected_project = $("#project-charts").val();
-        console.log(selected_project);
-        $( "#project-charts" ).change(function() {
-            var selected_project = $("#project-charts").val();
-            console.log(selected_project);
-            $.ajax({
-                type:'GET',
-                url:'/home/'+selected_project,
-                success: function(response){
-//                    $("#adeel").html(response.html);
-                    console.log(response);
-                }
-            });
-        });
-
-//        end ajax request
-//        General Chart
+//  ***************************    General Chart For All Projects  ****************************
 
         window.onload = function () {
             var chart = new CanvasJS.Chart("chartContainerGeneral", {
@@ -148,7 +126,7 @@
                 title:{
                     text: "Projects Overview - General"
                 },
-                animationEnabled: false,   // change to true
+                animationEnabled: true,   // change to true
                 axisY:{
                     title:"Hours",
                 },
@@ -170,50 +148,109 @@
             });
             chart.render();
 
-//            Chart Container 2
 
-//            Chart Containter 2 end
+// ************************ Project Chart Monthly Detailed Hours  ***************************
 
-//            Chart Monthly
+            var default_loaded = $("#project-charts").val();
+            console.log('Default Loaded Project');
+            console.log(default_loaded);
+            $( "#project-charts" ).ready(function() {
+                var default_loaded = $("#project-charts").val();
+                var proj_month = $('#proj_month').val();
+                console.log(proj_month);
+                $.ajax({
+                    type:'GET',
+                    url:'/home/'+selected_project+'/'+proj_month,
+                    success: function(response){
+                        console.log(JSON.parse(response));
+                        var chart = new CanvasJS.Chart("chartContainerMonthly", {
+                            theme: "theme2",//theme1
+                            title:{
+                                text: "Project Hours - Monthly"
+                            },
+                            animationEnabled: true,   // change to true
+                            axisY:{
+                                title:"Hours",
+                            },
+                            data: [
+                                {
+                                    // Change type to "bar", "area", "spline", "pie",etc.
+                                    type: "line",
+                                    dataPoints: JSON.parse(response)
+                                }
+                            ]
+                        });
+                        chart.render();
+                    }
+                });
+            });
+//      Resources Chart
+            var chart = new CanvasJS.Chart("chartContainerResources",
+                    {
+                        data: [
+                            {
+                                type: "column",
+                                dataPoints: [
+                                    { x: 10, y: 71 },
+                                    { x: 20, y: 55 },
+                                    { x: 30, y: 50 },
+                                    { x: 40, y: 65 },
+                                    { x: 50, y: 95 },
+                                    { x: 60, y: 68 },
+                                    { x: 70, y: 28 },
+                                    { x: 80, y: 34 },
+                                    { x: 90, y: 14 }
+                                ]
+                            }
+                        ]
+                    });
+
+            chart.render();
+
+        } // end of window.onload
+
+// **************************** Ajax Request For Updating Graph **************************
+
+    var selected_project = $("#project-charts").val();
+        console.log('i am monthly updated ajax behaviour');
+        console.log(selected_project);
+
+//  OnChange Function
+    $( "#project-charts, #proj_month" ).change(function() {
+     var selected_project = $("#project-charts").val();
+        console.log(selected_project);
+        var proj_month = $('#proj_month').val();
+
+        $.ajax({
+        type:'GET',
+        url:'/home/'+selected_project+'/'+proj_month,
+        success: function(response){
+//                    $("#adeel").html(response.html);
+            console.log(response);
 
             var chart = new CanvasJS.Chart("chartContainerMonthly", {
                 theme: "theme2",//theme1
                 title:{
-                    text: "Project Report - Monthly"
+                    text: "Updated - Monthly"
                 },
-                animationEnabled: false,   // change to true
-                axisX: {
-                    valueFormatString: "MMM",
-                    interval:1,
-                    intervalType: "month"
-                },
+                animationEnabled: false,
                 axisY:{
                     title:"Hours",
                 },
                 data: [
                     {
                         // Change type to "bar", "area", "spline", "pie",etc.
-
                         type: "line",
-                        dataPoints: [
-                            { x: new Date(2012, 00, 1), y: 45 },
-                            { x: new Date(2012, 01, 1), y: 100 },
-                            { x: new Date(2012, 02, 1), y: 20 },
-                            { x: new Date(2012, 03, 1), y: 40 },
-                            { x: new Date(2012, 04, 1), y: 40 },
-                            { x: new Date(2012, 05, 1), y: 50 },
-                            { x: new Date(2012, 06, 1), y: 80 },
-                            { x: new Date(2012, 07, 1), y: 60 },
-                            { x: new Date(2012, 08, 1), y: 110 },
-                            { x: new Date(2012, 09, 1), y: 100 },
-                            { x: new Date(2012, 10, 1), y: 20 },
-                            { x: new Date(2012, 11, 1), y: 50 }
-                        ]
+                        dataPoints: JSON.parse(response)
                     }
                 ]
-
             });
             chart.render();
-        }
+          }
+         });
+    }); // OnChange function end
+
+//        end ajax request
+
     </script>
 @endsection

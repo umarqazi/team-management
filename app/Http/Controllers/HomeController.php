@@ -78,28 +78,30 @@ class HomeController extends Controller
         return $view;
     }
 
-    public function getHours(Request $request ,$id)
+    public function getHours(Request $request ,$id, $proj_month)
     {
 //        if($request->ajax()) {
-//            return response()->json(array('success' => true, 'response' => $id));
+//            return response()->json(array('success' => true, 'response' => $proj_month));
 //        }
 
-        $project    = Project::find($id);
-        $hours = array();
 
-        foreach ($project->hours->groupBy(function($d) {
-            return Carbon::parse($d->created_at)->format('m');
-        }) as $hour) {
-            $hours[]    = array(
-                'month'             => Carbon::parse($hour[0]['created_at'])->format('F'),
-                'year'              => Carbon::parse($hour[0]['created_at'])->format('Y'),
-                'actual_hours'      => $hour->sum('actual_hours'),
-                'productive_hours'  => $hour->sum('productive_hours')
+        $hours 			= array();
+        $project    = Project::find($id);
+        $year_month 	= Carbon::parse($proj_month)->format("Y-m");
+        $hrs_details 	= $project->hours()->whereBetween("created_at", [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->get();
+
+        $hours_details  = array();
+        foreach($hrs_details as $hr_detail)
+        {
+            $hours_details[]  = array(
+                'label' => Carbon::parse($hr_detail->created_at)->format("Y, m, d"),
+                'y' => $hr_detail->productive_hours
             );
         }
-        return response()->json(array('success' => true, 'response' => $hours));
+
+//        return response()->json(array('success' => true, 'response' => $hours));
+        echo json_encode($hours_details, JSON_NUMERIC_CHECK);
 
 //        return view('project.view', compact('project', 'hours', 'users'));
     }
-
 }
