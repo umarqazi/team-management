@@ -216,7 +216,7 @@ class ProjectsController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('/project/'.$id.'/edit')
+            return Redirect::to('/projects/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
