@@ -39,11 +39,11 @@ Route::group( ['middleware'  => 'auth'], function(){
     Route::group(['middleware'  => 'permission:edit project'], function(){
 
         Route::get( 'projects/{project}/edit', 'ProjectsController@edit' );
-        Route::post( 'projects/{id}', 'ProjectsController@update' );
+        Route::put( 'projects/{project}', 'ProjectsController@update' );
     });
     Route::group(['middleware'  => 'permission:delete project'], function(){
 
-        Route::post( 'projects/{id}', 'ProjectsController@destroy' );
+        Route::delete( 'projects/{id}', 'ProjectsController@destroy' );
     });
 
     Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
