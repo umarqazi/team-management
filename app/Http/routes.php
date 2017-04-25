@@ -39,7 +39,7 @@ Route::group( ['middleware'  => 'auth'], function(){
     Route::group(['middleware'  => 'permission:edit project'], function(){
 
         Route::get( 'projects/{project}/edit', 'ProjectsController@edit' );
-        Route::put( 'projects/{project}', 'ProjectsController@update' );
+        Route::put( 'projects/{id}', 'ProjectsController@update' );
     });
     Route::group(['middleware'  => 'permission:delete project'], function(){
 
