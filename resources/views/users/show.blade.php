@@ -39,7 +39,7 @@
         </div>
     </div>
 </div>
-@if(! @empty( $user->projects ))
+@if(! @empty( $projects ))
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -60,7 +60,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($user->projects as $project)
+                            @foreach($projects as $project)
                                 <tr>
                                     <td>{{$project->name}}</td>
                                     <td>
@@ -70,18 +70,10 @@
                                         {{ $project->technology }}
                                     @endif
                                     </td>
-                                    <td>
-                                        @foreach($project->teamlead as $teamlead)
-                                            {{$teamlead->name}}
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach($project->developers as $developer)
-                                            {{$developer->name}}
-                                        @endforeach
-                                    </td>
-                                    <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
-                                    <td><a href="/project/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
+                                    <td>{!! $project->teamlead !!}</td>
+                                    <td>{!! $project->developers !!}</td>
+                                    <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
+                                    <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
                                     {{--<td>
                                         {{ Form::open(array('url' => '/projects/' . $project->id)) }}
                                         {{ Form::hidden('_method', 'DELETE') }}
@@ -93,7 +85,7 @@
                             </tbody>
                         </table>
                         <div id="paginator" class="text-center">
-
+                            {{ $projects->links() }}
                         </div>
                     </div>
                 </div>

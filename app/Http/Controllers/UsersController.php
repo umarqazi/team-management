@@ -103,7 +103,23 @@ class UsersController extends Controller
     {
         $user = User::find($id);
 
-        return view('/users.show' , compact('user'));
+        $projects   = $user->projects()->paginate(10);
+
+        foreach ($projects as $project) {
+            $teamleads   = array();
+            foreach ($project->teamlead as $teamlead) {
+                $teamleads[]  = $teamlead->name;
+            }
+            $project->teamlead  = implode('<br />', $teamleads);
+
+            $developers = array();
+            foreach ($project->developers as $developer) {
+                $developers[]    = $developer->name;
+            }
+            $project->developers    = implode('<br />', $developers);
+        }
+
+        return view('/users.show' , compact('user', 'projects'));
     }
 
     /**
