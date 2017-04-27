@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Redirect;
 use Session;
+use Illuminate\Routing\Route;
 
-class RoleMiddleware
+class PermissionMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,10 +16,11 @@ class RoleMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    
+    public function handle($request, Closure $next, $permission)
     {
-        if( ! $request->user()->hasRole($role)){
-            Session::flash('msgerror', '403 - Access Forbidden!');
+        if( ! $request->user()->can($permission)){
+            Session::flash('msgerror', '401 - Unauthorized Access!');
             Session::flash('alert-class', 'alert-danger'); 
             return Redirect::to('home');
         }

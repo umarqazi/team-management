@@ -161,6 +161,13 @@ return [
         // laravel-permissions package
         Spatie\Permission\PermissionServiceProvider::class,
 
+        // Maatwebsite Laravel-Excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        //Socialite
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
+
     ],
 
     /*
@@ -208,7 +215,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

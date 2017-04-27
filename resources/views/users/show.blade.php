@@ -7,7 +7,7 @@
                 <div class="panel-heading">Users</div>
 
                 <div class="panel-body">
-                   <table class="table table-hover">
+                   <table class="table table-hover table-striped">
                         <thead>
                           <tr>
                             <th>Id</th>
@@ -39,7 +39,7 @@
         </div>
     </div>
 </div>
-@if(! @empty( $user->projects ))
+@if(! @empty( $projects ))
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -60,19 +60,20 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($user->projects as $project)
+                            @foreach($projects as $project)
                                 <tr>
                                     <td>{{$project->name}}</td>
-                                    <td>{{$project->technology}}</td>
-                                    @foreach($project->teamlead as $teamlead)
-                                    <td>{{$teamlead->name}}</td>
-                                    @endforeach
-                                    @foreach($project->developers as $developer)
-                                    <td>{{$developer->name}}</td>
-                                    @endforeach
-
-                                    <td><a href="/project/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
-                                    <td><a href="/project/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
+                                    <td>
+                                    @if(is_array(json_decode($project->technology)))
+                                        {{ @implode(", ", json_decode($project->technology)) }}
+                                    @else
+                                        {{ $project->technology }}
+                                    @endif
+                                    </td>
+                                    <td>{!! $project->teamlead !!}</td>
+                                    <td>{!! $project->developers !!}</td>
+                                    <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
+                                    <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
                                     {{--<td>
                                         {{ Form::open(array('url' => '/projects/' . $project->id)) }}
                                         {{ Form::hidden('_method', 'DELETE') }}
@@ -84,7 +85,7 @@
                             </tbody>
                         </table>
                         <div id="paginator" class="text-center">
-
+                            {{ $projects->links() }}
                         </div>
                     </div>
                 </div>

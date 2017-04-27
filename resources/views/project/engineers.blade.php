@@ -10,7 +10,7 @@
                 </div>
                 @endif
                 <div class="content" style="margin-top: 20px;">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>Name</th>
@@ -56,7 +56,7 @@
                                 <td>
                                     {{ Form::open(array('url' => '/projects/' . $project->id)) }}
                                     {{ Form::hidden('_method', 'DELETE') }}
-                                    <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+                                    <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i> </button>
                                     {{ Form::close() }}
                                 </td>
                                 @endif

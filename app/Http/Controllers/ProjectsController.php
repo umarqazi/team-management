@@ -17,6 +17,7 @@ use \App\User;
 use Carbon\Carbon;
 use Auth;
 use Session;
+use Excel;
 
 class ProjectsController extends Controller
 {
@@ -90,7 +91,56 @@ class ProjectsController extends Controller
 
     	return view('project.view', compact('project', 'hours', 'users'));
     }
-
+    public function downloadExcel($id, $type)
+    {
+        $project    = Project::find($id);
+        $hours = array();
+        $user   = Auth::user();
+        foreach ($project->teamlead as $teamlead) {
+            $teamleads[]  = $teamlead->name;
+        }
+        if(!empty($teamleads)){
+            $project->teamlead  = implode(', ', $teamleads);
+        }else{
+            $project->teamlead  = "N/A";
+        }
+        $developers = array();
+        foreach ($project->developers as $developer) {
+            $developers[]    = $developer->name;
+        }
+        if(!empty($developers)){
+            $project->developers    = implode(', ', $developers);
+        }else{
+            $project->developers  = "N/A";
+        }
+        foreach ($project->hours->groupBy(function($d) {
+             return Carbon::parse($d->created_at)->format('m');
+        }) as $hour) {
+            if($user->hasRole(['sales']))
+            {
+                $hours[]    = array(
+                    'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
+                    'Teamlead'          => $project->teamlead,
+                    'Developer'         => $project->developers,
+                    'Hours'             => $hour->sum('productive_hours')
+                    );
+            } else{
+                $hours[]    = array(
+                    'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
+                    'Teamlead'          => $project->teamlead,
+                    'Developer'         => $project->developers,
+                    'Actual hours'      => $hour->sum('actual_hours'),
+                    'Productive hours'  => $hour->sum('productive_hours')
+                    );
+            }
+        }
+        return Excel::create($project->name, function($excel) use ($hours, $project) {
+            $excel->sheet($project->name, function($sheet) use ($hours)
+            {
+                $sheet->fromArray($hours);
+            });
+        })->download($type);
+    }
     public function create()
     {
         /*$developers = User::whereHas('roles', function($r){
@@ -140,9 +190,9 @@ class ProjectsController extends Controller
         return redirect('/projects');
     }
 
-    public function edit($project)
+    public function edit(Project $project)
     {
-        $project    = Project::find($project);
+        // $project    = Project::find($project);
 
         /*$developers = User::whereHas('roles', function($r){
             return $r->whereIn('name', ['developer', 'teamlead']);
@@ -166,7 +216,7 @@ class ProjectsController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('/project/'.$id.'/edit')
+            return Redirect::to('/projects/'.$id.'/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
