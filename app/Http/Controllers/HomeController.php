@@ -91,13 +91,6 @@ class HomeController extends Controller
             $project_hours = Hour::select(array(DB::Raw('project_id'), DB::Raw('sum(productive_hours) as productive_hours'), DB::Raw('sum(actual_hours) as actual_hours'), DB::Raw('DATE(created_at) as day')))->where('project_id', $id)->where('user_id',$resource)->whereBetween('created_at', [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->groupBy('day')->get();
             $resources   = $project->hours()->selectRaw('sum(actual_hours) as actual_hours, sum(productive_hours) as productive_hours ,user_id')->where('user_id', $resource)->groupBy('user_id')->get();
 
-//            $hours_details = array(0 => array(), 1 => array());
-//            foreach($project_hours as $pr_hrs)
-//            {
-//                $hours_details[0][] = array('label' => $pr_hrs->day , 'y' => $pr_hrs->actual_hours);
-//                $hours_details[1][] = array('label' => $pr_hrs->day , 'y' => $pr_hrs->productive_hours);
-//            }
-//            echo json_encode($hours_details ,JSON_NUMERIC_CHECK);
         }
         elseif( $resource == 0 )
         {
@@ -112,9 +105,6 @@ class HomeController extends Controller
             $resource_hours[] = array('user' => User::find($pr_resource->user_id),'actual_hours' => $pr_resource->actual_hours, 'productive_hours' => $pr_resource->productive_hours );
         }
 
-//        $project_hours = Hour::select(array(DB::Raw('project_id'), DB::Raw('sum(productive_hours) as productive_hours'), DB::Raw('sum(actual_hours) as actual_hours'), DB::Raw('DATE(created_at) as day')))->where('project_id', $id)->whereBetween('created_at', [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->groupBy('day')->get();
-
-//        $hours_details  = array();
           $hours_details = array(0 => array(), 1 => array());
 
         foreach($project_hours as $project_hour)
