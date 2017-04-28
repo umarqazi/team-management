@@ -18,19 +18,24 @@
                         <div class="row" style="margin-top: 30px;">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <form style="margin-left: 15px;">
-                                        <label>Select Project: </label>
-                                        <select id="project-charts">
-                                            @foreach($projects as $project)
-                                                <option value="{{$project->id}}">{{$project->name}}</option>
-                                            @endforeach
-                                        </select> &nbsp;&nbsp;
-                                        {{--<label>Select Resource: </label>--}}
-                                        <select id="project-resource">
-
-                                        </select> <br><br>
-                                        <label>Month: </label>
-                                        <input type="month" id="proj_month" name="proj_month" value={{\Carbon\Carbon::today()->format('Y-m')}}>
+                                    <form class="form-group form-horizontal">
+                                        <div class="col-md-4">
+                                            <label>Select Project</label>
+                                            <select id="project-charts" class="form-control">
+                                                @foreach($projects as $project)
+                                                    <option value="{{$project->id}}">{{$project->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Select Resource</label>
+                                            <select id="project-resource" class="form-control">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Month: </label>
+                                            <input type="month" id="proj_month" class="form-control" name="proj_month" value={{\Carbon\Carbon::today()->format('Y-m')}}>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

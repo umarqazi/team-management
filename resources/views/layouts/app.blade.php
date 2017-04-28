@@ -125,6 +125,14 @@
     });
 
     $(document).ready(function(){
+        $('#project-charts').select2({
+            theme: "classic"
+        });
+        $('#project-resource').select2({
+            theme: "classic"
+        });
+    });
+    $(document).ready(function(){
         $('select.form-control[name="teamlead"]').select2({
             placeholder: "Select Teamlead",
             theme: "classic"
