@@ -15,7 +15,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 50px;">
+                        <div class="row" style="margin-top: 30px;">
                             <div class="col-md-12">
                                 <div class="row">
                                     <form style="margin-left: 15px;">
@@ -24,6 +24,10 @@
                                             @foreach($projects as $project)
                                                 <option value="{{$project->id}}">{{$project->name}}</option>
                                             @endforeach
+                                        </select> &nbsp;&nbsp;
+                                        {{--<label>Select Resource: </label>--}}
+                                        <select id="project-resource">
+
                                         </select> <br><br>
                                         <label>Month: </label>
                                         <input type="month" id="proj_month" name="proj_month" value={{\Carbon\Carbon::today()->format('Y-m')}}>
@@ -148,109 +152,320 @@
             });
             chart.render();
 
-
 // ************************ Project Chart Monthly Detailed Hours  ***************************
 
             var default_loaded = $("#project-charts").val();
-            console.log('Default Loaded Project');
-            console.log(default_loaded);
             $( "#project-charts" ).ready(function() {
                 var default_loaded = $("#project-charts").val();
                 var proj_month = $('#proj_month').val();
-                console.log(proj_month);
+                var selected_project = $("#project-charts").val();
                 $.ajax({
                     type:'GET',
                     url:'/home/'+selected_project+'/'+proj_month,
                     success: function(response){
-                        console.log(JSON.parse(response));
+                        response    = JSON.parse(response);
+                        var ProductiveHourdataPoints = [];
+                        var ActualHoursDataPoints = [];
+                        $(response.hours[0]).each(function(){
+                            p = { x: new Date($(this).get(0).label), y: $(this).get(0).y}
+                            ProductiveHourdataPoints.push(p);
+//                            console.log($(this).get(0).label);
+                        });
+                        $(response.hours[1]).each(function(){
+                            ac = { x: new Date($(this).get(0).label), y: $(this).get(0).y}
+                            ActualHoursDataPoints.push(ac);
+//                            console.log($(this).get(0).label);
+                        });
+                        var options = "<option value='0'>Select a Resource</option>";
+//                        dataPoint for Resources Pie Chart
+                        var dataPoint_actual = [];
+                        var dataPoint_prod = [];
+                        $(response.resources).each(function(){
+//                            console.log(response.resources)
+                            a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                            dataPoint_actual.push(a);
+                            b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                            dataPoint_prod.push(b);
+                           var project_resource_name = $(this).get(0).user['name'];
+                            var project_resource_id = $(this).get(0).user['id'];
+                            options += "<option value='"+ project_resource_id+"'>" + project_resource_name + "</option>";
+                        });
+                        $('#project-resource').html(options);
+                        var resources = response.resources;
+
                         var chart = new CanvasJS.Chart("chartContainerMonthly", {
                             theme: "theme2",//theme1
                             title:{
                                 text: "Project Hours - Monthly"
                             },
                             animationEnabled: true,   // change to true
+                            axisX: {
+                                valueFormatString: "DD/MMM"
+                            },
                             axisY:{
                                 title:"Hours",
                             },
                             data: [
                                 {
+                                    showInLegend: true,
+                                    legendText: "Actual Hours",
                                     // Change type to "bar", "area", "spline", "pie",etc.
                                     type: "line",
-                                    dataPoints: JSON.parse(response)
+                                    dataPoints: ActualHoursDataPoints
+                                },
+                                {
+                                    showInLegend: true,
+                                    legendText: "Productive Hours",
+                                    // Change type to "bar", "area", "spline", "pie",etc.
+                                    type: "line",
+                                    dataPoints: ProductiveHourdataPoints
                                 }
                             ]
                         });
                         chart.render();
+
+                        //      Resources Chart
+                        var chart = new CanvasJS.Chart("chartContainerResources",
+                                {
+                                    title:{
+                                        text: "Resource Hours"
+                                    },
+                                    legend: {
+                                        maxWidth: 350,
+                                        itemWidth: 120
+                                    },
+                                    data: [
+                                        {
+                                            type: "column",
+                                            showInLegend: true,
+                                            legendText: "Actual Hours",
+                                            dataPoints: dataPoint_actual
+                                        },
+                                        {
+                                            type: "column",
+                                            showInLegend: true,
+                                            legendText: "Productive Hours",
+                                            dataPoints: dataPoint_prod
+                                        }
+                                    ]
+                                });
+                        chart.render();
                     }
                 });
             });
-//      Resources Chart
-            var chart = new CanvasJS.Chart("chartContainerResources",
-                    {
-                        data: [
-                            {
-                                type: "column",
-                                dataPoints: [
-                                    { x: 10, y: 71 },
-                                    { x: 20, y: 55 },
-                                    { x: 30, y: 50 },
-                                    { x: 40, y: 65 },
-                                    { x: 50, y: 95 },
-                                    { x: 60, y: 68 },
-                                    { x: 70, y: 28 },
-                                    { x: 80, y: 34 },
-                                    { x: 90, y: 14 }
-                                ]
-                            }
-                        ]
-                    });
-
-            chart.render();
-
         } // end of window.onload
 
 // **************************** Ajax Request For Updating Graph **************************
 
     var selected_project = $("#project-charts").val();
-        console.log('i am monthly updated ajax behaviour');
-        console.log(selected_project);
-
 //  OnChange Function
     $( "#project-charts, #proj_month" ).change(function() {
      var selected_project = $("#project-charts").val();
-        console.log(selected_project);
         var proj_month = $('#proj_month').val();
-
         $.ajax({
         type:'GET',
         url:'/home/'+selected_project+'/'+proj_month,
         success: function(response){
-//                    $("#adeel").html(response.html);
-            console.log(response);
+            response    = JSON.parse(response);
+            var ProductiveHourdataPoints = [];
+            var ActualHoursDataPoints = [];
+            $(response.hours[0]).each(function(){
+                p = { x: new Date($(this).get(0).label), y: $(this).get(0).y}
+                ProductiveHourdataPoints.push(p);
+//                console.log($(this).get(0).label);
+            });
+            $(response.hours[1]).each(function(){
+                ac = { x: new Date($(this).get(0).label), y: $(this).get(0).y}
+                ActualHoursDataPoints.push(ac);
+//                console.log($(this).get(0).label);
+            });
+
+            var options = "<option value='0'>Select a Resource</option>";
+//            DataPoints For Resources Pie Chart
+            var dataPoint_actual = [];
+            var dataPoint_prod = [];
+            $(response.resources).each(function(){
+                a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                 dataPoint_actual.push(a);
+                b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                dataPoint_prod.push(b);
+                var project_resource_name = $(this).get(0).user['name'];
+                var project_resource_id = $(this).get(0).user['id'];
+                options += "<option value='"+ project_resource_id+"'>" + project_resource_name + "</option>";
+            });
+            $('#project-resource').html(options);
 
             var chart = new CanvasJS.Chart("chartContainerMonthly", {
                 theme: "theme2",//theme1
                 title:{
-                    text: "Updated - Monthly"
+                    text: "Project Hours - Monthly"
                 },
                 animationEnabled: false,
+                axisX: {
+                    valueFormatString: "DD/MMM"
+                },
                 axisY:{
                     title:"Hours",
                 },
                 data: [
                     {
+                        showInLegend: true,
+                        legendText: "Actual Hours",
                         // Change type to "bar", "area", "spline", "pie",etc.
                         type: "line",
-                        dataPoints: JSON.parse(response)
+                        dataPoints: ActualHoursDataPoints
+                    },
+                    {
+                        showInLegend: true,
+                        legendText: "Productive Hours",
+                        // Change type to "bar", "area", "spline", "pie",etc.
+                        type: "line",
+                        dataPoints: ProductiveHourdataPoints
                     }
                 ]
             });
+            chart.render();
+
+
+//            Resources Pie Graph onchange
+
+            var chart = new CanvasJS.Chart("chartContainerResources",
+                    {
+                        title:{
+                            text: "Resource Hours"
+                        },
+                        legend: {
+                            maxWidth: 350,
+                            itemWidth: 120
+                        },
+                        data: [
+                            {
+                                type: "column",
+                                showInLegend: true,
+                                legendText: "Actual Hours",
+                                dataPoints: dataPoint_actual
+                            },
+                            {
+                                type: "column",
+                                showInLegend: true,
+                                legendText: "Productive Hours",
+                                dataPoints: dataPoint_prod
+                            }
+                        ]
+                    });
             chart.render();
           }
          });
     }); // OnChange function end
 
+// Individual Resource Hours Graph Onchange
+
+    $( "#project-resource").change(function() {
+        var resource = $('#project-resource').val();
+        var selected_project  = $('#project-charts').val();
+        var proj_month        = $('#proj_month').val();
+
+//        console.log(resource);
+
+            $.ajax({
+                type: 'GET',
+                url: '/home/' + selected_project + '/' + proj_month + '/' + resource,
+                success: function (response) {
+                    response = JSON.parse(response);
+
+                    var ProductiveHourdataPoints = [];
+                    var ActualHoursDataPoints = [];
+                    $(response.hours[0]).each(function(){
+                        p = { x: new Date($(this).get(0).label), y: $(this).get(0).y}
+                        ProductiveHourdataPoints.push(p);
+//                console.log($(this).get(0).label);
+                    });
+                    $(response.hours[1]).each(function(){
+                        ac = { x: new Date($(this).get(0).label), y: $(this).get(0).y}
+                        ActualHoursDataPoints.push(ac);
+//                console.log($(this).get(0).label);
+                    });
+//            DataPoints For Resources Pie Chart
+                    var dataPoint_actual = [];
+                    var dataPoint_prod = [];
+                    $(response.resources).each(function(){
+                        a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                        dataPoint_actual.push(a);
+                        b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                        dataPoint_prod.push(b);
+                    });
+
+                    //    Selected  Resources Graph
+
+                    var chart = new CanvasJS.Chart("chartContainerMonthly", {
+                        theme: "theme2",//theme1
+                        title: {
+                            text: "Resource Hours - Monthly"
+                        },
+                        animationEnabled: false,
+                        axisX: {
+                            valueFormatString: "DD/MMM"
+                        },
+                        axisY: {
+                            title: "Hours",
+                        },
+                        data: [
+                            {
+                                showInLegend: true,
+                                legendText: "Actual Hours",
+                                // Change type to "bar", "area", "spline", "pie",etc.
+                                type: "line",
+                                dataPoints: ActualHoursDataPoints
+                            },
+                            {
+                                showInLegend: true,
+                                legendText: "Productive Hours",
+                                // Change type to "bar", "area", "spline", "pie",etc.
+                                type: "line",
+                                dataPoints: ProductiveHourdataPoints
+                            }
+                        ]
+                    });
+
+                    chart.render();
+
+
+//            Resources Pie Graph onchange
+
+                    var chart = new CanvasJS.Chart("chartContainerResources",
+                            {
+                                title:{
+                                    text: "Resource Hours"
+                                },
+                                legend: {
+                                    maxWidth: 350,
+                                    itemWidth: 120
+                                },
+                                data: [
+                                    {
+                                        type: "column",
+                                        showInLegend: true,
+                                        legendText: "Actual Hours",
+                                        dataPoints: dataPoint_actual
+                                    },
+                                    {
+                                        type: "column",
+                                        showInLegend: true,
+                                        legendText: "Productive Hours",
+                                        dataPoints: dataPoint_prod
+                                    }
+                                ]
+                            });
+                    chart.render();
+
+                }
+            });
+
+
+    });
+
 //        end ajax request
+
 
     </script>
 @endsection

@@ -8,6 +8,7 @@ use App\Hour;
 use App\Http\Requests;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -78,30 +79,66 @@ class HomeController extends Controller
         return $view;
     }
 
-    public function getHours(Request $request ,$id, $proj_month)
+    public function getHours(Request $request ,$id, $proj_month, $resource = 0)
     {
-//        if($request->ajax()) {
-//            return response()->json(array('success' => true, 'response' => $proj_month));
-//        }
-
-
-        $hours 			= array();
         $project    = Project::find($id);
         $year_month 	= Carbon::parse($proj_month)->format("Y-m");
-        $hrs_details 	= $project->hours()->whereBetween("created_at", [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->get();
+        $project_hours = array();
+        $resource_hours = array();
 
-        $hours_details  = array();
-        foreach($hrs_details as $hr_detail)
+        if($request->ajax() && ! empty($resource))
         {
-            $hours_details[]  = array(
-                'label' => Carbon::parse($hr_detail->created_at)->format("Y, m, d"),
-                'y' => $hr_detail->productive_hours
-            );
+            $project_hours = Hour::select(array(DB::Raw('project_id'), DB::Raw('sum(productive_hours) as productive_hours'), DB::Raw('sum(actual_hours) as actual_hours'), DB::Raw('DATE(created_at) as day')))->where('project_id', $id)->where('user_id',$resource)->whereBetween('created_at', [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->groupBy('day')->get();
+            $resources   = $project->hours()->selectRaw('sum(actual_hours) as actual_hours, sum(productive_hours) as productive_hours ,user_id')->where('user_id', $resource)->groupBy('user_id')->get();
+
+//            $hours_details = array(0 => array(), 1 => array());
+//            foreach($project_hours as $pr_hrs)
+//            {
+//                $hours_details[0][] = array('label' => $pr_hrs->day , 'y' => $pr_hrs->actual_hours);
+//                $hours_details[1][] = array('label' => $pr_hrs->day , 'y' => $pr_hrs->productive_hours);
+//            }
+//            echo json_encode($hours_details ,JSON_NUMERIC_CHECK);
+        }
+        elseif( $resource == 0 )
+        {
+            $project_hours = Hour::select(array(DB::Raw('project_id'), DB::Raw('sum(productive_hours) as productive_hours'), DB::Raw('sum(actual_hours) as actual_hours'), DB::Raw('DATE(created_at) as day')))->where('project_id', $id)->whereBetween('created_at', [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->groupBy('day')->get();
+
+            $resources   = $project->hours()->selectRaw('sum(actual_hours) as actual_hours, sum(productive_hours) as productive_hours ,user_id')->whereIn('user_id', $project->users->pluck('id')->toArray())->groupBy('user_id')->get();
         }
 
-//        return response()->json(array('success' => true, 'response' => $hours));
-        echo json_encode($hours_details, JSON_NUMERIC_CHECK);
+        foreach($resources as $pr_resource)
+        {
+            //We need to add below whereBetween for the above recieved $proj_month
+            $resource_hours[] = array('user' => User::find($pr_resource->user_id),'actual_hours' => $pr_resource->actual_hours, 'productive_hours' => $pr_resource->productive_hours );
+        }
 
-//        return view('project.view', compact('project', 'hours', 'users'));
+//        $project_hours = Hour::select(array(DB::Raw('project_id'), DB::Raw('sum(productive_hours) as productive_hours'), DB::Raw('sum(actual_hours) as actual_hours'), DB::Raw('DATE(created_at) as day')))->where('project_id', $id)->whereBetween('created_at', [Carbon::parse($year_month)->startOfMonth(), Carbon::parse($year_month)->endOfMonth()])->groupBy('day')->get();
+
+//        $hours_details  = array();
+          $hours_details = array(0 => array(), 1 => array());
+
+        foreach($project_hours as $project_hour)
+        {
+            $hours_details[0][] = array(
+               'label' => $project_hour->day,
+               'y' => $project_hour->productive_hours
+           );
+
+            $hours_details[1][] = array(
+                'label' => $project_hour->day,
+                'y' => $project_hour->actual_hours
+            );
+        }
+//        return response()->json(array('success' => true, 'response' => $hours));
+        echo json_encode(array('hours' => $hours_details, 'resources' => $resource_hours),JSON_NUMERIC_CHECK);
+
+        }
+
+
+    public function getUserHours(Request $request,$id,$resource_id)
+    {
+        $project    = Project::find($id);
+        $resource_hours = $project->hours()->where("user_id",$resource_id)->get();
+        echo json_encode($resource_hours ,JSON_NUMERIC_CHECK);
     }
 }
