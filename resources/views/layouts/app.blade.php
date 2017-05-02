@@ -42,6 +42,9 @@
         .link:hover{
             color: #23527c !important;
         }
+        .canvasjs-chart-credit {
+            display: none;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -212,6 +215,16 @@
             }
         });
     }
+
+    $(document).ready(function() {
+        $('#eng_projects').DataTable();
+    } );
+    $(document).ready(function() {
+        $('#inactive_projects').DataTable();
+    } );
+    $(document).ready(function() {
+        $('#active_projects').DataTable();
+    } );
 </script>
 </body>
 </html>
