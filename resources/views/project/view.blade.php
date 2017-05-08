@@ -21,7 +21,7 @@
                                     <th>Actual Hours</th>
                                     @endrole
                                     <th>Productive Hours</th>
-                                    <th>Import</th>
+                                    <th>Export</th>
                                 </tr>
                                 </thead>
                                 <tbody>
