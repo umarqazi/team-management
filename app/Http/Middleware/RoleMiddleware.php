@@ -17,7 +17,7 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, $role)
     {
-        if( ! $request->user()->hasRole($role)){
+        if( ! $request->user()->hasRole($role) ){
             Session::flash('msgerror', '403 - Access Forbidden!');
             Session::flash('alert-class', 'alert-danger'); 
             return Redirect::to('home');
