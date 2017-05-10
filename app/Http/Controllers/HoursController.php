@@ -31,10 +31,6 @@ class HoursController extends Controller
 			$hour->created_at = $request->date;
 		}
     	$hour->save();
-    	// echo("<pre>");
-    	// print_r($request);
-    	// echo("</pre>");
-    	// die();
 		return redirect('/projects');
     }
 

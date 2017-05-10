@@ -24,27 +24,56 @@ class ProjectsController extends Controller
     public function index()
     {
         $user   = Auth::user();
+        $projects = array();
 
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
-            $projects   = $user->projects()->paginate(10);
+            $projects   = $user->projects()->get();
+            foreach ($projects as $project) {
+                $teamleads = array();
+                foreach ($project->teamlead as $teamlead) {
+                    $teamleads[] = $teamlead->name;
+                }
+                $project->teamlead = implode('<br />', $teamleads);
+                $developers = array();
+                foreach ($project->developers as $developer) {
+                    $developers[] = $developer->name;
+                }
+                $project->developers = implode('<br />', $developers);
+            }
         }
         else
         {
-            $projects = Project::paginate(10);
-        }
-        foreach ($projects as $project) {
-            $teamleads   = array();
-            foreach ($project->teamlead as $teamlead) {
-                $teamleads[]  = $teamlead->name;
-            }
-            $project->teamlead  = implode('<br />', $teamleads);
+            $projects['active'] = Project::where('status', 1)->get();
+            $projects['inactive'] = Project::where('status', 0)->get();
 
-            $developers = array();
-            foreach ($project->developers as $developer) {
-                $developers[]    = $developer->name;
+            foreach ($projects['active'] as $project) {
+                $teamleads = array();
+                foreach ($project->teamlead as $teamlead) {
+                    $teamleads[] = $teamlead->name;
+                }
+                $project->teamlead = implode('<br />', $teamleads);
+
+                $developers = array();
+                foreach ($project->developers as $developer) {
+                    $developers[] = $developer->name;
+                }
+                $project->developers = implode('<br />', $developers);
             }
-            $project->developers    = implode('<br />', $developers);
+
+            foreach ($projects['inactive'] as $project) {
+                $teamleads = array();
+                foreach ($project->teamlead as $teamlead) {
+                    $teamleads[] = $teamlead->name;
+                }
+                $project->teamlead = implode('<br />', $teamleads);
+
+                $developers = array();
+                foreach ($project->developers as $developer) {
+                    $developers[] = $developer->name;
+                }
+                $project->developers = implode('<br />', $developers);
+            }
         }
 
         $view   = View::make('project.index');

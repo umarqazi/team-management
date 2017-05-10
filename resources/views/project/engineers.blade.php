@@ -10,7 +10,7 @@
                 </div>
                 @endif
                 <div class="content" style="margin-top: 20px;">
-                    <table class="table table-striped">
+                    <table id="eng_projects" class="display" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>Name</th>
@@ -20,14 +20,31 @@
                             <th>Status</th>
                             <th>View</th>
                             @if(Auth::user()->can('edit project'))
-                            <th>Edit</th>
+                                <th>Edit</th>
                             @endif
                             @if(Auth::user()->can('delete project'))
-                            <th>Delete</th>
+                                <th>Delete</th>
                             @endif
 
                         </tr>
                         </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Technology</th>
+                            <th>Team lead</th>
+                            <th>Developer</th>
+                            <th>Status</th>
+                            <th>View</th>
+                            @if(Auth::user()->can('edit project'))
+                                <th>Edit</th>
+                            @endif
+                            @if(Auth::user()->can('delete project'))
+                                <th>Delete</th>
+                            @endif
+
+                        </tr>
+                        </tfoot>
                         <tbody>
                         @foreach($projects as $project)
                             <tr>
@@ -50,24 +67,21 @@
 
                                 <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
                                 @if(Auth::user()->can('edit project'))
-                                <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
+                                    <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
                                 @endif
                                 @if(Auth::user()->can('delete project'))
-                                <td>
-                                    {{ Form::open(array('url' => '/projects/' . $project->id)) }}
-                                    {{ Form::hidden('_method', 'DELETE') }}
-                                    <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i> </button>
-                                    {{ Form::close() }}
-                                </td>
+                                    <td>
+                                        {{ Form::open(array('url' => '/projects/' . $project->id)) }}
+                                        {{ Form::hidden('_method', 'DELETE') }}
+                                        <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i> </button>
+                                        {{ Form::close() }}
+                                    </td>
                                 @endif
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
-                    <div id="paginator" class="text-center">
 
-                        {{ $projects->links() }}
-                    </div>
                 </div>
             </div>
         </div>

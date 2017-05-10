@@ -7,11 +7,7 @@
                     <div class="panel-heading">Dashboard</div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div id="chartContainer2" style="height: 300px; width: 100%;">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div id="chartContainerGeneral" style="height: 300px; width: 100%;">
                                 </div>
                                 <div class="pagination pull-right">
@@ -19,10 +15,46 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <form class="form-group form-horizontal">
+                                        <div class="col-md-4">
+                                            <label>Select Project</label>
+                                            <select id="project-charts" class="form-control">
+                                                @foreach($projects as $project)
+                                                    <option value="{{$project->id}}">{{$project->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Select Resource</label>
+                                            <select id="project-resource" class="form-control">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                        <label>Month: </label>
+                                        <input type="month" id="proj_month" class="form-control" name="proj_month" value={{\Carbon\Carbon::today()->format('Y-m')}}>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="chartContainerResources" style="height: 300px; width: 100%; margin-top: 20px;">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="chartContainerMonthly" style="height: 300px; width: 100%;">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 @if(Auth::user()->can('create project'))
@@ -93,82 +125,5 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-
-//        General Chart
-
-        window.onload = function () {
-            var chart = new CanvasJS.Chart("chartContainerGeneral", {
-                theme: "theme3",//theme1
-                title:{
-                    text: "Projects Overview - General"
-                },
-                animationEnabled: false,   // change to true
-                axisY:{
-                    title:"Hours",
-                },
-                data: [
-                    {
-                        showInLegend: true,
-                        legendText: "Actual Hours",
-                        // Change type to "bar", "area", "spline", "pie",etc.
-                        type: "column",
-                        dataPoints: {!! json_encode($datapoints[1], JSON_NUMERIC_CHECK) !!}
-                    },
-                    {
-                        showInLegend: true,
-                        legendText: "Productive Hours",
-                        type: "column",
-                        dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
-                    }
-                ]
-            });
-            chart.render();
-
-//            Chart Container 2
-
-//            Chart Containter 2 end
-
-//            Chart Monthly
-
-            var chart = new CanvasJS.Chart("chartContainerMonthly", {
-                theme: "theme2",//theme1
-                title:{
-                    text: "Project Report - Monthly"
-                },
-                animationEnabled: false,   // change to true
-                axisX: {
-                    valueFormatString: "MMM",
-                    interval:1,
-                    intervalType: "month"
-                },
-                axisY:{
-                    title:"Hours",
-                },
-                data: [
-                    {
-                        // Change type to "bar", "area", "spline", "pie",etc.
-
-                        type: "line",
-                        dataPoints: [
-                            { x: new Date(2012, 00, 1), y: 45 },
-                            { x: new Date(2012, 01, 1), y: 100 },
-                            { x: new Date(2012, 02, 1), y: 20 },
-                            { x: new Date(2012, 03, 1), y: 40 },
-                            { x: new Date(2012, 04, 1), y: 40 },
-                            { x: new Date(2012, 05, 1), y: 50 },
-                            { x: new Date(2012, 06, 1), y: 80 },
-                            { x: new Date(2012, 07, 1), y: 60 },
-                            { x: new Date(2012, 08, 1), y: 110 },
-                            { x: new Date(2012, 09, 1), y: 100 },
-                            { x: new Date(2012, 10, 1), y: 20 },
-                            { x: new Date(2012, 11, 1), y: 50 }
-                        ]
-                    }
-                ]
-
-            });
-            chart.render();
-        }
-    </script>
-@endsection
+    @include('charts')
+   @endsection

@@ -17,8 +17,8 @@
                 <div class="text-right" style="margin:20px;">
                     <a href="/users/create" class="btn btn-primary">Create User</a>
                     @hasrole('admin')
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#role-modal">Add Role
-                    </button>
+                    {{--<button class="btn btn-primary" data-toggle="modal" data-target="#role-modal">Add Role--}}
+                    {{--</button>--}}
                     @endrole
                 </div>
                 @endif
@@ -33,20 +33,18 @@
                         <table class="table table-hover table-striped">
                             <thead>
                             <tr>
-                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Created At</th>
+                                <th>Joined</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ $user->created_at }}</td>
+                                    <td>{{ Carbon\Carbon::parse($user->created_at)->format("dS \of F, Y") }}</td>
                                     <td>
                                         {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
                                         {{ Form::hidden('_method', 'DELETE') }}

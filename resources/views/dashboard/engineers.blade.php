@@ -7,11 +7,7 @@
                     <div class="panel-heading">Dashboard</div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div id="chartContainer2" style="height: 300px; width: 100%;">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div id="chartContainerGeneral" style="height: 300px; width: 100%;">
                                 </div>
                                 <div class="pagination pull-right">

@@ -17,9 +17,6 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-    {{--Flatly Theme--}}
-    {{--<link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.css">--}}
-    {{--<link rel="stylesheet" href="https://bootswatch.com/assets/css/custom.min.css">--}}
     <style>
         body {
             font-family: 'Lato';
@@ -44,6 +41,9 @@
         }
         .link:hover{
             color: #23527c !important;
+        }
+        .canvasjs-chart-credit {
+            display: none;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
@@ -96,6 +96,7 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('/users/'.Auth::user()->id.'/edit') }}"><i class="fa fa-btn fa-user"></i>Profile</a></li>
                             <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
                         </ul>
                     </li>
@@ -104,17 +105,7 @@
         </div>
     </div>
 </nav>
-@if(Session::has('msgerror'))
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="alert {{ Session::get('alert-class', 'alert-info') }}">
-                {{ Session::get('msgerror') }}
-            </div>
-        </div>
-    </div>
-</div>
-@endif
+
 @yield('content')
 
 <footer style="margin-top: 50px; height: 100px;"></footer>
@@ -137,6 +128,14 @@
         });
     });
 
+    $(document).ready(function(){
+        $('#project-charts').select2({
+            theme: "classic"
+        });
+        $('#project-resource').select2({
+            theme: "classic"
+        });
+    });
     $(document).ready(function(){
         $('select.form-control[name="teamlead"]').select2({
             placeholder: "Select Teamlead",
@@ -180,12 +179,7 @@
         console.log(id);
         var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
         var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
-        if($('select[name=resource_'+id+']').prop('disabled') == true){
-            var user_id = $('input[name=resource_'+id+']').val();
-        }
-        else{
-            var user_id = $('select[name=resource_'+id+']').val();
-        }
+        var user_id = $('select[name=resource_'+id+']').val();
         console.log(user_id);
         var details = $('input[name=details_'+id+']').val();
         var $_token = "{{ csrf_token() }}";
@@ -197,13 +191,19 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $_token
+                // 'ContentType' : 'application/x-www-form-urlencoded',
+                // 'Accept'      : 'application/json'
             }
         });
         $.ajax({
             url : "/hour/update/"+id,
             type: 'POST',
+            //data: {id: "10"},
             data: data,
             cache: false,
+            //dataType: 'json',
+            //contentType: 'charset=UTF-8',
+            // processData: false,
             success: function(response){
                 console.log(response);
                 $("#td_actual_hours_"+id).html(response.hours.actual_hours);
@@ -216,34 +216,16 @@
             }
         });
     }
-    function delete_hour(elem) {
-        if (confirm("Are you sure?")) {
-            var id = $(elem).attr("id");
-            var res = id.split("_");
-            id = res[2];
-            console.log(id);
-            var $_token = "{{ csrf_token() }}";
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $_token
-                }
-            });
-            $.ajax({
-                url : "/hour/delete/"+id,
-                type: 'POST',
-                cache: false,
-                success: function(response){
-                    //console.log(response);
-                    $("#tr_hours_"+id).remove();
-                    $("#tr_hours_form_"+id+"_1").remove();
-                    $("#tr_hours_form_"+id+"_2").remove();
-                }
-            });
-        }
-        else{
-            return false;
-        }
-    }
+
+    $(document).ready(function() {
+        $('#eng_projects').DataTable();
+    } );
+    $(document).ready(function() {
+        $('#inactive_projects').DataTable();
+    } );
+    $(document).ready(function() {
+        $('#active_projects').DataTable();
+    } );
 </script>
 </body>
 </html>

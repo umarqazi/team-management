@@ -22,14 +22,19 @@ Route::group( ['middleware'  => 'auth'], function(){
 
     Route::group(['middleware'  => 'role:admin'], function(){
 
-        Route::resource( 'users', 'UsersController' );
+        Route::resource( 'users', 'UsersController', ['except' => ['edit', 'update']] );
 
         Route::resource( 'roles', 'RolesController' );
+    });
+
+    Route::group(['middleware' => 'profile:admin'], function(){
+        Route::resource( 'users', 'UsersController', ['only' => ['edit', 'update']] );
     });
 
     Route::get( 'home', 'HomeController@index' );
 
     Route::get( '/', 'HomeController@index' );
+    Route::get( '/home/{id}/{proj_month}/{resource?}', 'HomeController@getHours' );
 
     Route::group(['middleware'  => 'permission:create project'], function(){
 

@@ -1,5 +1,4 @@
 @extends('home')
-
 @section('sales')
     <div class="container">
         <div class="row">
@@ -8,15 +7,46 @@
                     <div class="panel-heading">Dashboard</div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div id="chartContainer2" style="height: 300px; width: 100%;">
-                                </div>
-                            </div>
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div id="chartContainerGeneral" style="height: 300px; width: 100%;">
                                 </div>
                                 <div class="pagination pull-right">
                                     {{ $projects->links() }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 30px;">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <form class="form-group form-horizontal">
+                                        <div class="col-md-4">
+                                            <label>Select Project</label>
+                                            <select id="project-charts" class="form-control">
+                                                @foreach($projects as $project)
+                                                    <option value="{{$project->id}}">{{$project->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Select Resource</label>
+                                            <select id="project-resource" class="form-control">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Month: </label>
+                                            <input type="month" id="proj_month" class="form-control" name="proj_month" value={{\Carbon\Carbon::today()->format('Y-m')}}>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div id="chartContainerResources" style="height: 300px; width: 100%; margin-top: 20px;">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="chartContainerMonthly" style="height: 300px; width: 100%;">
                                 </div>
                             </div>
                         </div>
@@ -69,30 +99,5 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-
-//        General Chart
-
-                window.onload = function () {
-                    var chart = new CanvasJS.Chart("chartContainerGeneral", {
-                        theme: "theme3",//theme1
-                        title:{
-                            text: "Projects Overview - General"
-                        },
-                        animationEnabled: false,   // change to true
-                        axisY:{
-                            title:"Hours",
-                        },
-                        data: [
-                            {
-                                // Change type to "bar", "area", "spline", "pie",etc.
-                                type: "column",
-                                dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
-                            }
-                        ]
-                    });
-                    chart.render();
-
-                }
-    </script>
+   @include('charts')
 @endsection

@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 use Session;
 
 class UsersController extends Controller
@@ -23,11 +24,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        // $user   = User::where('email', 'shaban@gems.techverx.com')->first();
-
-        // $user->revokePermissionTo('edit articles');
-        // echo $user->hasPermissionTo('edit articles');
-        $users = User::all();
+        $users = User::whereHas('roles', function($r){
+            $r->where('name', '<>', 'admin');
+        })->get();
         $view   = View::make('users.index', compact('users'));
         return $view;
     }
@@ -167,15 +166,18 @@ class UsersController extends Controller
             $user->email      = Input::get('email');
             $user->save();
 
-            $user->removeRole(Role::all());
-            $user->assignRole(Input::get('role-name'));
-
-            $user->revokePermissionTo(Permission::all());
-            if( ! empty( Input::get('permissions') ) )
+            if( Auth::user()->hasRole('admin') )
             {
-                foreach(Input::get('permissions') as $permission)
+                $user->removeRole(Role::all());
+                $user->assignRole(Input::get('role-name'));
+
+                $user->revokePermissionTo(Permission::all());
+                if( ! empty( Input::get('permissions') ) )
                 {
-                    $user->givePermissionTo($permission);
+                    foreach(Input::get('permissions') as $permission)
+                    {
+                        $user->givePermissionTo($permission);
+                    }
                 }
             }
 

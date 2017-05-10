@@ -38,6 +38,7 @@
                             </div>
                         </div>
 
+                        @hasrole('admin')
                         <div class="form-group{{ $errors->has('role-name') ? ' has-error' : '' }}">
                             <label for="role-name" class="col-md-4 control-label">Role:</label>
 
@@ -55,7 +56,9 @@
                                 @endif
                             </div>
                         </div>
+                        @endrole
 
+                        @hasrole('admin')
                         <div class="form-group{{ $errors->has('permissions') ? ' has-error' : '' }}">
                             <label for="permissions" class="col-md-4 control-label">Permissions:</label>
                             <div class="col-md-6">
@@ -74,6 +77,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endrole
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
