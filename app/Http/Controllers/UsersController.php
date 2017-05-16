@@ -179,12 +179,19 @@ class UsersController extends Controller
                         $user->givePermissionTo($permission);
                     }
                 }
-            }
 
-            // redirect
-            Session::flash('message', 'Successfully updated the User!');
-            Session::flash('alert-class', 'alert-success'); 
-            return Redirect::to('/users');
+                // redirect
+                Session::flash('message', 'Successfully updated the User!');
+                Session::flash('alert-class', 'alert-success');
+                return Redirect::to('/users');
+            }
+            else
+            {
+                // redirect
+                Session::flash('message', 'Successfully updated the User!');
+                Session::flash('alert-class', 'alert-success');
+                return Redirect::to('/home');
+            }
         }
     }
 
