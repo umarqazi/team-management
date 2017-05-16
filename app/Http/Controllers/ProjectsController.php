@@ -205,10 +205,13 @@ class ProjectsController extends Controller
 
         $project->save();
 
-        if( !empty($request->teamlead) ) {
-            $project->users()->attach($request->teamlead);
+        if( ! empty($request->teamlead) ) {
+            foreach($request->teamlead as $teamlead)
+            {
+                $project->users()->attach($teamlead);
+            }
         }
-        if  ( !empty($request->developer) )
+        if  ( ! empty($request->developer) )
         {
             foreach($request->developer as $developer)
             {
@@ -261,11 +264,14 @@ class ProjectsController extends Controller
         $project->external_deadline = $request->external_deadline;
         $project->update();
         $project->users()->detach();
-        if(! empty($request->teamlead) )
+        if( ! empty($request->teamlead) )
         {
-            $project->users()->attach($request->teamlead);
+            foreach($request->teamlead as $teamlead)
+            {
+                $project->users()->attach($teamlead);
+            }
         }
-        if(! empty($request->developer))
+        if( ! empty($request->developer) )
         {
             foreach($request->developer as $developer)
             {
