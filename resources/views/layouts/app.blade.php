@@ -229,7 +229,7 @@
             url : "/hour/update/"+id,
             type: 'POST',
             //data: {id: "10"},
-            // data: data,
+            data: data,
             cache: false,
             //dataType: 'json',
             //contentType: 'charset=UTF-8',
