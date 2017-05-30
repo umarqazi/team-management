@@ -42,8 +42,8 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="teamlead">Team Lead:</label>
-						<select class="form-control" id="teamlead" name="teamlead">
+						<label for="teamlead">Team Lead(s):</label>
+						<select class="form-control" id="teamlead" name="teamlead[]" multiple>
 							<option value="">Select Team Lead</option>
 							@foreach($teamleads as $teamlead)
 								<option value="{{$teamlead->id}}" @if( ! empty($project->teamlead) && in_array($teamlead->id, $project->teamlead)) {{"selected"}} @endif >{{$teamlead->name}}</option>
@@ -52,7 +52,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="developer">Developer:</label>
+						<label for="developer">Developer(s):</label>
 						<select class="form-control" id="developer" name="developer[]" multiple>
 							<option value="">Select Developer</option>
 							@foreach($developers as $developer)

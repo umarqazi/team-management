@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
     @hasrole(['developer', 'teamlead', 'engineer'])
         @yield('engineers')
     @endrole

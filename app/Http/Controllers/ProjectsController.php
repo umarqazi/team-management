@@ -24,7 +24,11 @@ class ProjectsController extends Controller
     public function index()
     {
         $user   = Auth::user();
+
+        // dd($user);
         $projects = array();
+        
+
 
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
@@ -46,8 +50,8 @@ class ProjectsController extends Controller
         {
             $projects['active'] = Project::where('status', 1)->get();
             $projects['inactive'] = Project::where('status', 0)->get();
-
             foreach ($projects['active'] as $project) {
+
                 $teamleads = array();
                 foreach ($project->teamlead as $teamlead) {
                     $teamleads[] = $teamlead->name;
@@ -75,7 +79,6 @@ class ProjectsController extends Controller
                 $project->developers = implode('<br />', $developers);
             }
         }
-
         $view   = View::make('project.index');
         if($user->hasRole(['developer', 'teamlead', 'engineer']))
         {
@@ -205,10 +208,13 @@ class ProjectsController extends Controller
 
         $project->save();
 
-        if( !empty($request->teamlead) ) {
-            $project->users()->attach($request->teamlead);
+        if( ! empty($request->teamlead) ) {
+            foreach($request->teamlead as $teamlead)
+            {
+                $project->users()->attach($teamlead);
+            }
         }
-        if  ( !empty($request->developer) )
+        if  ( ! empty($request->developer) )
         {
             foreach($request->developer as $developer)
             {
@@ -261,11 +267,14 @@ class ProjectsController extends Controller
         $project->external_deadline = $request->external_deadline;
         $project->update();
         $project->users()->detach();
-        if(! empty($request->teamlead) )
+        if( ! empty($request->teamlead) )
         {
-            $project->users()->attach($request->teamlead);
+            foreach($request->teamlead as $teamlead)
+            {
+                $project->users()->attach($teamlead);
+            }
         }
-        if(! empty($request->developer))
+        if( ! empty($request->developer) )
         {
             foreach($request->developer as $developer)
             {

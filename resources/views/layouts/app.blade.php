@@ -106,6 +106,18 @@
     </div>
 </nav>
 
+@if(Session::has('msgerror'))
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert {{ Session::get('alert-class', 'alert-info') }}">
+                    {{ Session::get('msgerror') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
 @yield('content')
 
 <footer style="margin-top: 50px; height: 100px;"></footer>
@@ -119,7 +131,7 @@
 
 <script>
 
-    var technologies    = [{id: "PHP", text: 'PHP'}, {id: "Ruby on Rails", text: 'Ruby on Rails'}, {id: "iOS", text: 'iOS'}, {id: "Android", text: 'Android'}, {id: "Node.JS", text: "Node.JS"}, {id: "React.JS", text: "React.JS"}, {id: "Angular.JS", text: "Angular.JS"}, {id: "Wordpress", text: "Wordpress"}, {id: "Magento", text: "Magento"}];
+    var technologies    = [{id: "PHP", text: 'PHP'}, {id: "Ruby on Rails", text: 'Ruby on Rails'}, {id: "Laravel", text: 'Laravel'}, {id: "Codeigniter", text: 'Codeigniter'}, {id: "iOS", text: 'iOS'}, {id: "Android", text: 'Android'}, {id: "Node.JS", text: "Node.JS"}, {id: "React.JS", text: "React.JS"}, {id: "Angular.JS", text: "Angular.JS"}, {id: "Wordpress", text: "Wordpress"}, {id: "Magento", text: "Magento"}];
 
     $(document).ready(function(){
         $('select.form-control[name^="technology"]').select2({
@@ -137,15 +149,14 @@
         });
     });
     $(document).ready(function(){
-        $('select.form-control[name="teamlead"]').select2({
-            placeholder: "Select Teamlead",
-            theme: "classic"
+        $('select.form-control[name^="teamlead"]').select2({
+            placeholder: "Select Teamlead(s)"
         });
     });
 
     $(document).ready(function(){
         $('select.form-control[name^="developer"]').select2({
-            placeholder: "Select Developers"
+            placeholder: "Select Developer(s)"
         });
     });
 
@@ -172,6 +183,27 @@
         document.getElementById("tr_hours_form_"+id+"_1").classList.remove("hidden");
         document.getElementById("tr_hours_form_"+id+"_2").classList.remove("hidden");
     }
+    function delete_hour(elem) {
+        var id = $(elem).attr("id");
+        var res = id.split("_");
+        id = res[2];
+        console.log(id);
+        var $_token = "{{ csrf_token() }}";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $_token
+            }
+        });
+        $.ajax({
+            url : "/hour/delete/"+id,
+            type: 'POST',
+            cache: false,
+            success: function(response){
+                console.log(response);
+                $('#tr_hours_'+id).addClass("hidden");
+            }
+        });
+    }
     function submitform(elem) {
         var id = $(elem).attr("id");
         var res = id.split("_");
@@ -191,15 +223,13 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $_token
-                // 'ContentType' : 'application/x-www-form-urlencoded',
-                // 'Accept'      : 'application/json'
             }
         });
         $.ajax({
             url : "/hour/update/"+id,
             type: 'POST',
             //data: {id: "10"},
-            data: data,
+            // data: data,
             cache: false,
             //dataType: 'json',
             //contentType: 'charset=UTF-8',

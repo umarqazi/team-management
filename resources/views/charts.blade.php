@@ -4,7 +4,7 @@
 
     window.onload = function () {
         var chart = new CanvasJS.Chart("chartContainerGeneral", {
-            theme: "theme1",//theme1
+            theme: "theme3",//theme1
             title:{
                 text: "Projects Overview - General"
             },
@@ -106,6 +106,7 @@
                     //      Resources Chart
                     var chart = new CanvasJS.Chart("chartContainerResources",
                             {
+                                theme: "theme3",
                                 title:{
                                     text: "Resource Hours"
                                 },
@@ -215,6 +216,7 @@
 
                 var chart = new CanvasJS.Chart("chartContainerResources",
                         {
+                            theme: "theme3",
                             title:{
                                 text: "Resource Hours"
                             },
@@ -319,6 +321,7 @@
 
                 var chart = new CanvasJS.Chart("chartContainerResources",
                         {
+                            theme: "theme3",
                             title:{
                                 text: "Resource Hours"
                             },
