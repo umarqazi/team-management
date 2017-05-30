@@ -183,6 +183,27 @@
         document.getElementById("tr_hours_form_"+id+"_1").classList.remove("hidden");
         document.getElementById("tr_hours_form_"+id+"_2").classList.remove("hidden");
     }
+    function delete_hour(elem) {
+        var id = $(elem).attr("id");
+        var res = id.split("_");
+        id = res[2];
+        console.log(id);
+        var $_token = "{{ csrf_token() }}";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $_token
+            }
+        });
+        $.ajax({
+            url : "/hour/delete/"+id,
+            type: 'POST',
+            cache: false,
+            success: function(response){
+                console.log(response);
+                $('#tr_hours_'+id).addClass("hidden");
+            }
+        });
+    }
     function submitform(elem) {
         var id = $(elem).attr("id");
         var res = id.split("_");
@@ -202,8 +223,6 @@
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $_token
-                // 'ContentType' : 'application/x-www-form-urlencoded',
-                // 'Accept'      : 'application/json'
             }
         });
         $.ajax({
