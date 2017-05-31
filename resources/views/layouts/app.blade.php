@@ -187,7 +187,6 @@
         var id = $(elem).attr("id");
         var res = id.split("_");
         id = res[2];
-        console.log(id);
         var $_token = "{{ csrf_token() }}";
         $.ajaxSetup({
             headers: {
@@ -199,7 +198,6 @@
             type: 'POST',
             cache: false,
             success: function(response){
-                console.log(response);
                 $('#tr_hours_'+id).addClass("hidden");
             }
         });
@@ -208,11 +206,9 @@
         var id = $(elem).attr("id");
         var res = id.split("_");
         id = res[2];
-        console.log(id);
         var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
         var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
         var user_id = $('select[name=resource_'+id+']').val();
-        console.log(user_id);
         var details = $('input[name=details_'+id+']').val();
         var $_token = "{{ csrf_token() }}";
         var data = { actual_hours: actual_hours,
@@ -228,14 +224,9 @@
         $.ajax({
             url : "/hour/update/"+id,
             type: 'POST',
-            //data: {id: "10"},
             data: data,
             cache: false,
-            //dataType: 'json',
-            //contentType: 'charset=UTF-8',
-            // processData: false,
             success: function(response){
-                console.log(response);
                 $("#td_actual_hours_"+id).html(response.hours.actual_hours);
                 $("#td_productive_hours_"+id).html(response.hours.productive_hours);
                 $("#td_user_id_"+id).html(response.hours.user_name);
