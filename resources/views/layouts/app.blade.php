@@ -206,16 +206,18 @@
         var id = $(elem).attr("id");
         var res = id.split("_");
         id = res[2];
-        var actual_hours = parseInt($('input[name=actual-hours_'+id+']').val());
-        var productive_hours = parseInt($('input[name=productive-hours_'+id+']').val());
-        var user_id = $('select[name=resource_'+id+']').val();
-        var details = $('input[name=details_'+id+']').val();
-        var $_token = "{{ csrf_token() }}";
-        var data = { actual_hours: actual_hours,
-                     productive_hours: productive_hours,
-                     resource: user_id,
-                     details: details
-                 };
+        var created_at          = $('input[name=created_at_'+id+']').val();
+        var actual_hours        = parseInt($('input[name=actual-hours_'+id+']').val());
+        var productive_hours    = parseInt($('input[name=productive-hours_'+id+']').val());
+        var user_id             = $('select[name=resource_'+id+']').val();
+        var details             = $('input[name=details_'+id+']').val();
+        var $_token             = "{{ csrf_token() }}";
+        var data                = { actual_hours    : actual_hours,
+                                    productive_hours: productive_hours,
+                                    resource        : user_id,
+                                    details         : details,
+                                    created_at      : created_at
+                                   };
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $_token
@@ -227,10 +229,13 @@
             data: data,
             cache: false,
             success: function(response){
+                var d = new Date(response.hours.created_at);
+                var months_name = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
                 $("#td_actual_hours_"+id).html(response.hours.actual_hours);
                 $("#td_productive_hours_"+id).html(response.hours.productive_hours);
                 $("#td_user_id_"+id).html(response.hours.user_name);
                 $("#td_details_"+id).html(response.hours.details);
+                $("#td_created_at_"+id).html(d.getDate()+"-"+months_name[d.getMonth()]);
                 $('#tr_hours_'+id).removeClass("hidden");
                 $('#tr_hours_form_'+id+'_1').addClass("hidden");
                 $('#tr_hours_form_'+id+'_2').addClass("hidden");

@@ -146,7 +146,6 @@
     </div>
     <script>
         function getHoursDetail(month, year){
-            console.log(month);
             $.ajax({
                 type:'GET',
                 url:'/hour/{{$project->id}}/'+year+'-'+month,

@@ -41,7 +41,7 @@
     <tr id="tr_hours_form_{{$hrs->id}}_1" class="hidden"></tr>
     <tr id="tr_hours_form_{{$hrs->id}}_2" class="hidden">
         
-        <td style="width: 100px">{{$hrs->created_at->format('d-M')}}</td>
+        <td style="width: 100px"><input type="date" class="form-control" name="created_at_{{$hrs->id}}" value="{{\Carbon\Carbon::parse($hrs->created_at)->format('Y-m-d')}}"></td>
         @hasrole(['developer', 'teamlead', 'admin'])
         <td>
             <input type="number" class="form-control" name="actual-hours_{{$hrs->id}}" value="{{$hrs->actual_hours}}">
