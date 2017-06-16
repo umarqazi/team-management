@@ -11,7 +11,7 @@
 |
 */
 Route::get('/verge', function(){
-    return File::get(public_path(). '../verge/');
+    return File::get(public_path(). '/verge/index.php');
 });
 
 Route::get('/pages', 'PagesController@showPage');
