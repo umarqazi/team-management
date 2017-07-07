@@ -33,6 +33,7 @@ class HomeController extends Controller
             $projects = $user->projects()->where('status', 1)->orderBy('created_at','desc')->paginate(10);
         } else {
             $projects = Project::where('status', 1)->orderBy('created_at','desc')->paginate(10);
+            $allProjects = Project::where('status', 1)->orderBy('created_at','desc')->get();
         }
         $datapoints = array( 0 => array(), 1 => array());
         foreach ($projects as $project) {
@@ -69,7 +70,7 @@ class HomeController extends Controller
         }
         elseif($user->hasRole('admin'))
         {
-            $view->nest('dashboard', 'dashboard.admin', compact('projects','datapoints'));
+            $view->nest('dashboard', 'dashboard.admin', compact('projects','datapoints', 'allProjects'));
         }
         else
         {
