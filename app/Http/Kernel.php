@@ -52,5 +52,6 @@ class Kernel extends HttpKernel
         'role'  => \App\Http\Middleware\RoleMiddleware::class,
         'permission'  => \App\Http\Middleware\PermissionMiddleware::class,
         'profile'   => \App\Http\Middleware\ProfileMiddleware::class,
+        'project'   => \App\Http\Middleware\ProjectMiddleware::class,
     ];
 }
