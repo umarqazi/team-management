@@ -235,7 +235,7 @@
                 $("#td_productive_hours_"+id).html(response.hours.productive_hours);
                 $("#td_user_id_"+id).html(response.hours.user_name);
                 $("#td_details_"+id).html(response.hours.details);
-                $("#td_created_at_"+id).html(d.getDate()+"-"+months_name[d.getMonth()]);
+                $("#td_created_at_"+id).html(("0" +d.getDate()).slice(-2)+"-"+months_name[d.getMonth()]);
                 $('#tr_hours_'+id).removeClass("hidden");
                 $('#tr_hours_form_'+id+'_1').addClass("hidden");
                 $('#tr_hours_form_'+id+'_2').addClass("hidden");
