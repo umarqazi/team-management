@@ -22,7 +22,7 @@
                                         <div class="col-md-4">
                                             <label>Select Project</label>
                                             <select id="project-charts" class="form-control">
-                                                @foreach($projects as $project)
+                                                @foreach($allProjects as $project)
                                                     <option value="{{$project->id}}">{{$project->name}}</option>
                                                 @endforeach
                                             </select>
