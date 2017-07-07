@@ -55,6 +55,7 @@ class HoursController extends Controller
 	    $hour->user_id 			= $request->resource;
 		$hour->created_at 		= $request->created_at;
 	    $hour->update();
+	    $hour->createDate=date('d-M', strtotime($hour->created_at));
 	    $project    = Project::find($hour->project_id);
 	    $users = $project->users;
 	    foreach ($users as $user){
