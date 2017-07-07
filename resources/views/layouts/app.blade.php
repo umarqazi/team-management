@@ -207,8 +207,8 @@
         var res = id.split("_");
         id = res[2];
         var created_at          = $('input[name=created_at_'+id+']').val();
-        var actual_hours        = parseInt($('input[name=actual-hours_'+id+']').val());
-        var productive_hours    = parseInt($('input[name=productive-hours_'+id+']').val());
+        var actual_hours        = $('input[name=actual-hours_'+id+']').val();
+        var productive_hours    = $('input[name=productive-hours_'+id+']').val();
         var user_id             = $('select[name=resource_'+id+']').val();
         var details             = $('input[name=details_'+id+']').val();
         var $_token             = "{{ csrf_token() }}";
