@@ -53,8 +53,10 @@ Route::group( ['middleware'  => 'auth'], function(){
 
         Route::delete( 'projects/{id}', 'ProjectsController@destroy' );
     });
+    Route::group(['middleware'  => 'project'], function(){
 
-    Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
+        Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
+    });
     Route::get('/downloadExcel_project_by_months/{id}/{type}', 'ProjectsController@downloadExcel');
 //    Route::get('/projects', 'ProjectsController@index');
 
