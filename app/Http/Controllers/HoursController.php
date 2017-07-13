@@ -20,11 +20,11 @@ class HoursController extends Controller
     public function store(Request $request)
     {
     	$hour = new Hour;
-    	$hour->project_id = $request->project_id;
-    	$hour->actual_hours = $request->actual_hours;
+    	$hour->project_id   	= $request->project_id;
+    	$hour->actual_hours 	= $request->actual_hours;
     	$hour->productive_hours = $request->productive_hours;
-		$hour->details = $request->details;
-		$hour->user_id = $request->resource;
+		$hour->details 			= $request->details;
+		$hour->user_id 			= $request->resource;
 		if(empty($request->date)){
 			$hour->created_at = Carbon::now()->format('Y-m-d H:i:s');
 		}else{
@@ -53,7 +53,9 @@ class HoursController extends Controller
 	    $hour->productive_hours = $request->productive_hours;
 	    $hour->details          = $request->details;
 	    $hour->user_id 			= $request->resource;
+		$hour->created_at 		= $request->created_at;
 	    $hour->update();
+	    $hour->createDate=date('d-M', strtotime($hour->created_at));
 	    $project    = Project::find($hour->project_id);
 	    $users = $project->users;
 	    foreach ($users as $user){

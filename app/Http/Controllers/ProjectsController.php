@@ -120,8 +120,8 @@ class ProjectsController extends Controller
         $project->developers    = implode('<br />', $developers);
 
         $users = $project->users;
-
-    	return view('project.view', compact('project', 'hours', 'users'));
+        $currentDate=Carbon::now()->format('Y-m-d');
+    	return view('project.view', compact('project', 'hours', 'users', 'currentDate'));
     }
     public function downloadExcel($id, $type)
     {
