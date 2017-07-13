@@ -103,7 +103,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="date">Date:</label>
-                            <input type="date" name="date" class="form-control" id="date">
+                            <input type="date" name="date" class="form-control" value="{{$currentDate}}" id="date">
                         </div>
                         <div class="form-group">
                             <label for="actual_hours">Actual Hours:</label>
