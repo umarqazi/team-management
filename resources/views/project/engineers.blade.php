@@ -30,6 +30,7 @@
                         </thead>
                         <tfoot>
                         <tr>
+                            <th>Key</th>
                             <th>Name</th>
                             <th>Technology</th>
                             <th>Team lead</th>
@@ -48,6 +49,7 @@
                         <tbody>
                         @foreach($projects as $project)
                             <tr>
+                                <td>{{$project->key}}</td>
                                 <td>{{$project->name}}</td>
                                 <td>
                                     @if(is_array(json_decode($project->technology)))
@@ -81,7 +83,6 @@
                         @endforeach
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>

@@ -31,6 +31,17 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Project');
     }
 
+    // Task Relation Established By Umar Farooq
+    /*public function tasks()
+    {
+        return $this->belongsToMany('App\Task');
+    }
+
+    public function subtasks()
+    {
+        return $this->hasMany('App\Subtask');
+    } */
+
     public function hours()
     {
         return $this->hasMany('App\Hour');

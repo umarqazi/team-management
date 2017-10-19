@@ -21,16 +21,16 @@ Route::auth();
 Route::get('/redirect/{provider}', 'SocialAuthController@redirect');
 Route::get('/callback/{provider}', 'SocialAuthController@callback');
 
-Route::group( ['middleware'  => 'auth'], function(){
+Route::group(['middleware'  => 'auth'], function(){
 
-    Route::group(['middleware'  => 'role:admin'], function(){
+    Route::group(['middleware'  => ['role:admin, hr']], function(){
 
         Route::resource( 'users', 'UsersController', ['except' => ['edit', 'update']] );
 
         Route::resource( 'roles', 'RolesController' );
     });
 
-    Route::group(['middleware' => 'profile:admin'], function(){
+    Route::group(['middleware' => ['profile:admin,HR']], function(){
         Route::resource( 'users', 'UsersController', ['only' => ['edit', 'update']] );
     });
 
@@ -53,9 +53,23 @@ Route::group( ['middleware'  => 'auth'], function(){
 
         Route::delete( 'projects/{id}', 'ProjectsController@destroy' );
     });
-    Route::group(['middleware'  => 'project'], function(){
+    // Purpose of this Middleware ??????
 
+    // Opposite
+    Route::group(['middleware'  => ['project:admin,pm,projectlead,frontend,sales']], function(){
+
+        // Why middleware on Projects Route ????
         Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
+
+        // Routes Added By Umar Farooq
+        Route::get('/projectView', [
+           'uses' => 'ProjectsController@getMainView',
+            'as' => 'mainProjectView'
+        ]);
+        Route::get('/taskDetailView', [
+           'uses' => 'ProjectsController@getDetailView',
+           'as' => 'taskDetailView'
+        ]);
     });
     Route::get('/downloadExcel_project_by_months/{id}/{type}', 'ProjectsController@downloadExcel');
 //    Route::get('/projects', 'ProjectsController@index');
@@ -80,5 +94,8 @@ Route::group( ['middleware'  => 'auth'], function(){
 
 //    ********************************************************************
     Route::get('/hour/{project}/{year_month}', 'HoursController@show');
+
+    //Fetch All Project Names of Projects
+    Route::get('/projectKey', 'ProjectsKeyController@getProjectNames');
 });
 

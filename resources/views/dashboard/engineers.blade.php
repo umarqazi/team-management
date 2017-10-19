@@ -22,7 +22,7 @@
         <br>
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                @if(Auth::user()->can('create project'))
+                @if(Auth::user()->can('create project'))        <!--Is 'create project' Permission-->
                     <div class="row">
                         <div class="col-md-2 col-md-offset-10">
                             <div class="text-right" style="margin:20px;">
@@ -65,7 +65,7 @@
                                         <td>{!! $project->teamlead !!}</td>
                                         <td>{!! $project->developers !!}</td>
 
-                                        <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span> </a>  </td>
+                                        <td><a href="/projects/{{$project->id}}"> <span class="glyphicon glyphicon-eye-open"></span></a></td>
                                         @if(Auth::user()->can('edit project'))
                                         <td><a href="/projects/{{$project->id}}/edit"> <span class="glyphicon glyphicon-edit"></span></a></td>
                                         @endif

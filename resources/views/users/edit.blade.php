@@ -38,34 +38,39 @@
                             </div>
                         </div>
 
-                        @hasrole('admin')
-                        <div class="form-group{{ $errors->has('role-name') ? ' has-error' : '' }}">
-                            <label for="role-name" class="col-md-4 control-label">Role:</label>
+                        {{--@hasrole('admin')--}}
+                        @if(Auth::user()->can('edit user') && Auth::user()->id != $user->id)
+                            <div class="form-group{{ $errors->has('role-name') ? ' has-error' : '' }}">
+                                <label for="role-name" class="col-md-4 control-label">Role:</label>
 
-                            <div class="col-md-6">
-                                <select name="role-name" class="form-control" required>
-                                    @foreach($roles as $role)
-                                        <option value="{{$role->name}}" @if( ! empty($user->roles()->pluck('name')) && in_array($role->name, $user->roles()->pluck('name')->toArray()) ) {{"selected"}} @endif>{{ucwords($role->name)}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="col-md-6">
+                                    <select name="role-name" class="form-control" required>
+                                        @foreach($roles as $role)
+                                            <option value="{{$role->name}}" @if( ! empty($user->roles()->pluck('name')) && in_array($role->name, $user->roles()->pluck('name')->toArray()) ) {{"selected"}} @endif>{{ucwords($role->name)}}</option>
+                                        @endforeach
+                                    </select>
 
-                                @if ($errors->has('role-name'))
-                                    <span class="help-block">
+                                    @if ($errors->has('role-name'))
+                                        <span class="help-block">
                                         <strong>{{ $errors->first('role-name') }}</strong>
                                     </span>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                        @endrole
+                        @endif
 
-                        @hasrole('admin')
+                        {{--@endrole--}}
+
+                        {{--@hasrole('admin')--}}
+                        @if(Auth::user()->can('edit user') && Auth::user()->id != $user->id)
                         <div class="form-group{{ $errors->has('permissions') ? ' has-error' : '' }}">
                             <label for="permissions" class="col-md-4 control-label">Permissions:</label>
+
                             <div class="col-md-6">
                                 <div class="row">
                                     @foreach($permissions as $permission)
                                         <div class="col-md-4">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="checkbox-inline" @if( !empty($user->permissions()->pluck('name')) && in_array($permission->name, $user->permissions()->pluck('name')->toArray())) {{ "checked" }} @endif> {{ ucwords($permission->name) }}
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="checkbox-inline" @if( !empty($user->permissions()->pluck('name')) && in_array($permission->name, $role_permissions)) checked disabled @endif  @if( !empty($user->permissions()->pluck('name')) && in_array($permission->name, $user->permissions()->pluck('name')->toArray())) {{ "checked" }} @endif> {{ ucwords($permission->name) }}
                                         </div>
                                     @endforeach
                                 </div>
@@ -77,7 +82,25 @@
                                 @endif
                             </div>
                         </div>
-                        @endrole
+
+                        @endif
+                        {{--@endrole--}}
+
+                        @if(Auth::user()->can('Add Pay'))
+                            <div class="form-group{{ $errors->has('pay') ? ' has-error' : '' }}">
+                                <label for="pay" class="col-md-4 control-label">Add Salery</label>
+
+                                <div class="col-md-6">
+                                    <input id="pay" type="text" class="form-control" name="pay">
+
+                                    @if ($errors->has('pay'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('pay') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
