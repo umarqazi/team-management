@@ -29,7 +29,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if ($user->hasRole(['developer', 'teamlead', 'engineer'])) {
+        if ($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend'])) {
             $projects = $user->projects()->where('status', 1)->orderBy('created_at','desc')->paginate(10);
         } else {
             $projects = Project::where('status', 1)->orderBy('created_at','desc')->paginate(10);
@@ -64,7 +64,7 @@ class HomeController extends Controller
             }
         }
         $view   = View::make('home');
-        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        if($user->hasRole(['developer', 'teamlead', 'engineer','pm', 'frontend']))
         {
             $view->nest('dashboard', 'dashboard.engineers', compact('projects','datapoints'));
         }

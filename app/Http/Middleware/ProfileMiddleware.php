@@ -16,15 +16,29 @@ class ProfileMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next)
     {
-        if( ! $request->user()->hasRole($role) )
+        $roles  = array_slice(func_get_args(), 2);
+
+        if(! in_array($request->user()->roles->pluck('name')[0], $roles))
         {
+            /*
+             if($request->user()->can('edit user')){
+                return $next($request);
+            }
+            */
+
             if( Auth::user()->id != $request->route('users') )
             {
-                Session::flash('msgerror', '401 - Unauthorized Access!');
-                Session::flash('alert-class', 'alert-danger');
-                return Redirect::to('home');
+                if($request->user()->can('edit user')){
+                    return $next($request);
+                }
+                else
+                {
+                    Session::flash('msgerror', '401 - Unauthorized Access!');
+                    Session::flash('alert-class', 'alert-danger');
+                    return Redirect::to('home');
+                }
             }
         }
         return $next($request);

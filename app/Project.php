@@ -22,6 +22,18 @@ class Project extends Model
          return $this->belongsToMany('App\User');
      }
 
+     // Tasks And Components Relation Created By Umar Farooq
+    /*
+    public function tasks()
+    {
+	    return $this->hasMany('App\Task');
+    }
+
+    public function components()
+    {
+        return $this->belongsToMany('App\Component');
+    } */
+
     public function teamlead()
     {
         return $this->belongsToMany('App\User')->whereHas('roles', function ($query) {

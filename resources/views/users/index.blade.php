@@ -48,9 +48,16 @@
                                     <td>
                                         {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
                                         {{ Form::hidden('_method', 'DELETE') }}
-                                        <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> | 
-                                        <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button>
-                                         | <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                        @if(auth()->user()->can('edit user'))
+                                        <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> |
+                                        @endif
+
+                                        @if(auth()->user()->can('delete user'))
+                                        <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button> |
+                                        @endif
+
+                                        <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
                                          {{ Form::close() }}
                                     </td>
                                 </tr>

@@ -21,12 +21,13 @@
             <table class="display" id="active_projects" cellspacing="0" width="100%">
               <thead>
               <tr>
-                <th>Name</th>
-                <th>Technology</th>
-                <th>Team lead</th>
-                <th>Developer</th>
-                <th>Status</th>
-                <th>View</th>
+                  <th>Key</th>
+                  <th>Name</th>
+                  <th>Technology</th>
+                  <th>Team lead</th>
+                  <th>Developer</th>
+                  <th>Status</th>
+                  <th>View</th>
                 @if(Auth::user()->can('edit project'))
                   <th>Edit</th>
                 @endif
@@ -38,6 +39,7 @@
               <tbody>
               @foreach($projects['active'] as $project)
                 <tr>
+                    <td>{{$project->key}}</td>
                   <td>{{$project->name}}</td>
                   <td>
                     @if(is_array(json_decode($project->technology)))
@@ -80,6 +82,7 @@
               <table class="display"  cellspacing="0" width="100%" id="inactive_projects">
                   <thead>
                   <tr>
+                      <th>Key</th>
                       <th>Name</th>
                       <th>Technology</th>
                       <th>Team lead</th>
@@ -97,6 +100,7 @@
                   <tbody>
                   @foreach($projects['inactive'] as $project)
                       <tr>
+                          <td>{{$project->key}}</td>
                           <td>{{$project->name}}</td>
                           <td>
                               @if(is_array(json_decode($project->technology)))
