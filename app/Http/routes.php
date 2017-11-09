@@ -30,6 +30,21 @@ Route::group(['middleware'  => 'auth'], function(){
         Route::resource( 'roles', 'RolesController' );
     });
 
+    // Route Group for Tasks And Subtasks
+
+    Route::group(['middleware' => ['task:admin, pm']], function (){
+        // Resource Routes For Tasks And Subtasks
+        Route::resource( 'tasks', 'TasksController');
+
+        // Exhausted Resource Routes for Tasks
+        Route::get('/tasks/specific/{pid}', [
+            'uses' => 'TasksController@showProjectSpecific',
+            'as' => 'specificView'
+        ]);
+
+        Route::resource( 'subtasks', 'SubtaskController');
+    });
+
     Route::group(['middleware' => ['profile:admin,HR']], function(){
         Route::resource( 'users', 'UsersController', ['only' => ['edit', 'update']] );
     });
@@ -53,22 +68,15 @@ Route::group(['middleware'  => 'auth'], function(){
 
         Route::delete( 'projects/{id}', 'ProjectsController@destroy' );
     });
-    // Purpose of this Middleware ??????
 
-    // Opposite
     Route::group(['middleware'  => ['project:admin,pm,projectlead,frontend,sales']], function(){
 
-        // Why middleware on Projects Route ????
         Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
 
         // Routes Added By Umar Farooq
         Route::get('/projectView', [
            'uses' => 'ProjectsController@getMainView',
             'as' => 'mainProjectView'
-        ]);
-        Route::get('/taskDetailView', [
-           'uses' => 'ProjectsController@getDetailView',
-           'as' => 'taskDetailView'
         ]);
     });
     Route::get('/downloadExcel_project_by_months/{id}/{type}', 'ProjectsController@downloadExcel');

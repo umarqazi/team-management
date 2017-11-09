@@ -14,7 +14,7 @@
                     </div>
                 @endif
                 @if(Auth::user()->can('create user'))
-                <div class="text-right" style="margin:20px;">
+                <div class="text-right" style="margin:20px 0px 20px 20px;">
                     <a href="/users/create" class="btn btn-primary">Create User</a>
                     @hasrole('admin')
                     {{--<button class="btn btn-primary" data-toggle="modal" data-target="#role-modal">Add Role--}}

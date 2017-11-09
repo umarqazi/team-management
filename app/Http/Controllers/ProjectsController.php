@@ -183,7 +183,6 @@ class ProjectsController extends Controller
         return view("project.create", compact('developers', 'teamleads'));
     }
 
-   
     public function store(Request $request)
     {
         $rules = array(
@@ -223,7 +222,6 @@ class ProjectsController extends Controller
                 }
             }
             else{
-
                 $project->users()->attach($request->teamlead);
             }
         }
@@ -260,7 +258,7 @@ class ProjectsController extends Controller
         $rules = array(
             'name'       => 'required|unique:projects,name,'.$id.'|max:255',
             'status'     => 'required',
-            'key' => 'required|unique:projects',
+            'key' => 'required',
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -314,11 +312,11 @@ class ProjectsController extends Controller
 
     public function getMainView()
     {
-        return view('project.mainProjectView');
+        return view('tasks.mainProjectView');
     }
 
     public function getDetailView()
     {
-        return view('project.taskDetail');
+        return view('tasks.taskDetail');
     }
 }

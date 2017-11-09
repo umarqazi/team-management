@@ -84,27 +84,9 @@
                 @else
                     <li><a href="{{ url('/home') }}">Home</a></li>
                     <li><a href="{{ url('/projects') }}">Projects</a></li>
-                    @hasrole(['admin', 'pm'])
-                        <li><a href="{{url('/projectView')}}">Task View</a></li>
-
-                    <!--////////////////////////// Add New Task Types, Priority, Workflow, Sprint, Components /////////////////////////////-->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle addNew" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Add New <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Roles</a></li>
-                            <li><a href="#">Permissions</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Component</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Task Types</a></li>
-                            <li><a href="#">Priority</a></li>
-                            <li><a href="#">Workflow</a></li>
-                            <li><a href="#">Sprints</a></li>
-                        </ul>
-                    </div>
-                    @endrole
+                    @if(auth()->user()->can('edit task'))
+                        <li><a href="{{url('/tasks')}}">Task View</a></li>
+                    @endif
                 @endif
             </ul>
 
@@ -118,7 +100,7 @@
                     {{--@hasrole(['pm', 'admin'])--}}
                     {{--Create New Task Model--}}
                     @if(auth()->user()->can('create task'))
-                        <li><a data-toggle="modal" data-target="#taskModal" data-backdrop="static" data-keyboard="false" style="cursor: pointer">Add Task</a></li>
+                        <li><a href="{{url('/tasks/create')}}">Add Task</a></li>
                     @endif
 
                     {{--@endrole--}}
@@ -143,241 +125,254 @@
     </div>
 </nav>
 
-<!--Task Model Starts Here-->
-<div id="taskModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
+{{--<!--Task Model Starts Here-->--}}
 
-        <!-- TaskModal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="btn-group" id="ConfigureFields">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="fa fa-cog"></span>Configure Fields <span class="caret"></span>
-                    </button>
+{{--<div id="taskModal" class="modal fade" role="dialog">--}}
+    {{--<div class="modal-dialog modal-lg">--}}
 
-                    <!--Configure Fields Dropdown-->
-                    <ul class="dropdown-menu">
-                        <div id="dropdownHeader"><strong>Show Fields:</strong> All | Custom</div>
-                        <hr>
-                        <div class="configurableFields">
-                            <label class="taskFields"><input type="checkbox" id="assignee" onchange="stateChanged(this.id)">Assignee</label>
-                            <label class="taskFields"><input type="checkbox" id="attachment" onchange="stateChanged(this.id)">Attachment</label>
-                            <label class="taskFields"><input type="checkbox" id="component" onchange="stateChanged(this.id)">Component/s</label>
-                            <label class="taskFields"><input type="checkbox" id="description" onchange="stateChanged(this.id)">Description</label>
-                            <label class="taskFields"><input type="checkbox" id="duetime" onchange="stateChanged(this.id)">Due Time</label>
-                            <label class="taskFields"><input type="checkbox" id="effort" onchange="stateChanged(this.id)">Effort</label>
-                            <label class="taskFields"><input type="checkbox" id="environment" onchange="stateChanged(this.id)">Environment</label>
-                            <label class="taskFields"><input type="checkbox" id="epicLink" onchange="stateChanged(this.id)">Epic Link</label>
-                            <label class="taskFields"><input type="checkbox" id="fixVersion" onchange="stateChanged(this.id)">Fix Version/s</label>
-                            <label class="taskFields"><input type="checkbox" id="tags" onchange="stateChanged(this.id)">Tags</label>
-                            <label class="taskFields"><input type="checkbox" id="percentDone" onchange="stateChanged(this.id)">Percent Done</label>
-                            <label class="taskFields"><input type="checkbox" id="priority" onchange="stateChanged(this.id)">Priority</label>
-                            <label class="taskFields"><input type="checkbox" id="reporter" onchange="stateChanged(this.id)">Reporter</label>
-                            <label class="taskFields"><input type="checkbox" id="sprint" onchange="stateChanged(this.id)">Sprint</label>
-                            <label class="taskFields"><input type="checkbox" id="timeTracking" onchange="stateChanged(this.id)">Time Tracking</label>
-                            <label class="taskFields"><input type="checkbox" id="units" onchange="stateChanged(this.id)">Units</label>
-                        </div>
-                    </ul>
-                </div>
-                <h3 class="modal-title">Create Task</h3>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal taskForm" action="" method="POST">
-                    <div class="form-group projectName">
-                        <label for="" class="col-sm-2 control-label">Project Name<span class="mendatoryFields">*</span></label>
-                        <div class="col-sm-4">
-                            <select class="form-control">
-                                <option id="" value="null">Select A Project</option>
-                                <option>Actionable Insight</option>
-                                <option>Actionable Insight Web</option>
-                            </select>
-                        </div>
-                    </div>
+        {{--<!-- TaskModal content-->--}}
+        {{--<div class="modal-content">--}}
+            {{--<div class="modal-header">--}}
+                {{--<div class="btn-group" id="ConfigureFields">--}}
+                    {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                        {{--<span class="fa fa-cog"></span>Configure Fields <span class="caret"></span>--}}
+                    {{--</button>--}}
 
-                    <div class="form-group taskType">
-                        <label class="col-sm-2 control-label">Task Type<span class="mendatoryFields">*</span></label>
-                        <div class="col-sm-4">
-                            <select class="form-control">
-                                <option id="" value="null">Select A Proper Type</option>
-                                <option>New Feature</option>
-                                <option>Bug</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<!--Configure Fields Dropdown-->--}}
+                    {{--<ul class="dropdown-menu">--}}
+                        {{--<div id="dropdownHeader"><strong>Show Fields:</strong> All | Custom</div>--}}
+                        {{--<hr>--}}
+                        {{--<div class="configurableFields">--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="assignee" onchange="stateChanged(this.id)">Assignee</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="attachment" onchange="stateChanged(this.id)">Attachment</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="component" onchange="stateChanged(this.id)">Component/s</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="description" onchange="stateChanged(this.id)">Description</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="duetime" onchange="stateChanged(this.id)">Due Time</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="effort" onchange="stateChanged(this.id)">Effort</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="environment" onchange="stateChanged(this.id)">Environment</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="epicLink" onchange="stateChanged(this.id)">Epic Link</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="fixVersion" onchange="stateChanged(this.id)">Fix Version/s</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="tags" onchange="stateChanged(this.id)">Tags</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="percentDone" onchange="stateChanged(this.id)">Percent Done</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="priority" onchange="stateChanged(this.id)">Priority</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="reporter" onchange="stateChanged(this.id)">Reporter</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="follower" onchange="stateChanged(this.id)">Follower</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="sprint" onchange="stateChanged(this.id)">Sprint</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="timeTracking" onchange="stateChanged(this.id)">Time Tracking</label>--}}
+                            {{--<label class="taskFields"><input type="checkbox" id="units" onchange="stateChanged(this.id)">Units</label>--}}
+                        {{--</div>--}}
+                    {{--</ul>--}}
+                {{--</div>--}}
+                {{--<h3 class="modal-title">Create Task</h3>--}}
+            {{--</div>--}}
+            {{--<div class="modal-body">--}}
+                {{--<form class="form-horizontal taskForm" action="" method="POST">--}}
+                    {{--<div class="form-group projectName">--}}
+                        {{--<label for="" class="col-sm-2 control-label">Project Name<span class="mendatoryFields">*</span></label>--}}
+                        {{--<div class="col-sm-4">--}}
+                            {{--<select class="form-control" name="project_name" style="overflow-y: scroll">--}}
+                                {{--<option id="" value="null">Select A Project</option>--}}
+                                {{--<option>Actionable Insight</option>--}}
+                                {{--<option>Actionable Insight Web</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <hr>
-                    <div class="form-group taskSummary">
-                        <label for="task_summary" class="col-sm-2 control-label">Summary<span class="mendatoryFields">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="text" name="task_summary" class="form-control" id="task_summary">
-                        </div>
-                    </div>
+                    {{--<div class="form-group taskType">--}}
+                        {{--<label class="col-sm-2 control-label">Task Type<span class="mendatoryFields">*</span></label>--}}
+                        {{--<div class="col-sm-4">--}}
+                            {{--<select class="form-control" name="task_type">--}}
+                                {{--<option value="null">Select A Proper Type</option>--}}
+                                {{--<option value="New Feature">New Feature</option>--}}
+                                {{--<option value="Bug">Bug</option>--}}
+                                {{--<option value="Improvement">Improvement</option>--}}
+                                {{--<option value="Task">Task</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group component" hidden>
-                        <label for="task_component" class="col-sm-2 control-label">Component/s</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="task_component">
-                                <option id="" value="null">Select A Component</option>
-                                <option>Web</option>
-                                <option>Android</option>
-                                <option>IOS</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<hr>--}}
+                    {{--<div class="form-group taskName">--}}
+                        {{--<label for="task_name" class="col-sm-2 control-label">Task Name<span class="mendatoryFields">*</span></label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<input type="text" name="task_name" class="form-control" id="task_name">--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group priority" hidden>
-                        <label for="task_priority" class="col-sm-2 control-label">Priority</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" id="task_priority" >
-                                <option>Blocker</option>
-                                <option>Critical</option>
-                                <option>Major</option>
-                                <option>Minor</option>
-                                <option>Trivial</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group component" hidden>--}}
+                        {{--<label for="task_component" class="col-sm-2 control-label">Component/s</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_component" name="task_component">--}}
+                                {{--<option id="" value="null">Select A Component</option>--}}
+                                {{--<option value="Web">Web</option>--}}
+                                {{--<option value="Android">Android</option>--}}
+                                {{--<option value="IOS">IOS</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group taskDuedate">
-                        <label for="task_duedate" class="col-sm-2 control-label">Due Date<span class="mendatoryFields">*</span></label>
-                        <div class="col-sm-3">
-                            <input type="date" name="task_duedate" class="form-control" id="task_duedate">
-                        </div>
-                    </div>
+                    {{--<div class="form-group priority" hidden>--}}
+                        {{--<label for="task_priority" class="col-sm-2 control-label">Priority</label>--}}
+                        {{--<div class="col-sm-4">--}}
+                            {{--<select class="form-control" id="task_priority" name="task_priority">--}}
+                                {{--<option value="Blocker">Blocker</option>--}}
+                                {{--<option value="Critical">Critical</option>--}}
+                                {{--<option value="Major">Major</option>--}}
+                                {{--<option value="Minor">Minor</option>--}}
+                                {{--<option value="Trivial">Trivial</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group assignee" hidden>
-                        <label for="task_assignee" class="col-sm-2 control-label">Assignee</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="task_assignee" >
-                                <option>Mustafa Rizvi</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group taskDuedate">--}}
+                        {{--<label for="task_duedate" class="col-sm-2 control-label">Due Date<span class="mendatoryFields">*</span></label>--}}
+                        {{--<div class="col-sm-3">--}}
+                            {{--<input type="date" name="task_duedate" class="form-control" id="task_duedate">--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group effort" hidden>
-                        <label for="task_effort" class="col-sm-2 control-label">Effort</label>
-                        <div class="col-sm-2">
-                            <select class="form-control" id="task_effort" >
-                                <option>None</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group assignee" hidden>--}}
+                        {{--<label for="task_assignee" class="col-sm-2 control-label">Assignee</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_assignee" name="task_assignee">--}}
+                                {{--<option>Mustafa Rizvi</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group reporter" hidden>
-                        <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="task_reporter" >
-                                <option>Mustafa Rizvi</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group follower" hidden>--}}
+                        {{--<label for="task_follower" class="col-sm-2 control-label">Follower</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_follower" name="task_follower">--}}
+                                {{--<option>Mustafa Rizvi</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group environment" hidden>
-                        <label for="task_environment" class="col-sm-2 control-label">Task Environment</label>
-                        <div class="col-sm-10">
-                            <textarea name="task_environment" class="form-control" rows="5" id="task_environment" ></textarea>
-                        </div>
-                    </div>
+                    {{--<div class="form-group effort" hidden>--}}
+                        {{--<label for="task_effort" class="col-sm-2 control-label">Effort</label>--}}
+                        {{--<div class="col-sm-2">--}}
+                            {{--<select class="form-control" id="task_effort" >--}}
+                                {{--<option>None</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group description" hidden>
-                        <label for="task_description" class="col-sm-2 control-label">Task Description</label>
-                        <div class="col-sm-10">
-                            <textarea name="task_description" class="form-control" rows="5" id="task_description" ></textarea>
-                        </div>
-                    </div>
+                    {{--<div class="form-group reporter" hidden>--}}
+                        {{--<label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_reporter" name="task_reporter" >--}}
+                                {{--<option>Mustafa Rizvi</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group timeTracking" hidden>
-                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
-                        <div class="col-sm-3">
-                            <input type="text" name="task_originalEstimate" class="form-control" id="task_originalEstimate" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group environment" hidden>--}}
+                        {{--<label for="task_environment" class="col-sm-2 control-label">Task Environment</label>--}}
+                        {{--<div class="col-sm-10">--}}
+                            {{--<textarea name="task_environment" class="form-control" rows="5" id="task_environment" ></textarea>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group timeTracking" hidden>
-                        <label for="task_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>
-                        <div class="col-sm-3">
-                            <input type="text" name="task_remainingEstimate" class="form-control" id="task_remainingEstimate" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group description" hidden>--}}
+                        {{--<label for="task_description" class="col-sm-2 control-label">Task Description</label>--}}
+                        {{--<div class="col-sm-10">--}}
+                            {{--<textarea name="task_description" class="form-control" rows="5" id="task_description" ></textarea>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group attachment" hidden>
-                        <label for="task_file" class="col-sm-2 control-label">Select File/s</label>
-                        <div class="col-sm-4" style="border: none">
-                            <input type="file" name="task_file" id="task_file" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group timeTracking" hidden>--}}
+                        {{--<label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>--}}
+                        {{--<div class="col-sm-3">--}}
+                            {{--<input type="text" name="task_originalEstimate" class="form-control" id="task_originalEstimate" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group tags" hidden>
-                        <label for="task_tags" class="col-sm-2 control-label">Tags</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="task_tags" class="form-control" id="task_tags" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group timeTracking" hidden>--}}
+                        {{--<label for="task_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>--}}
+                        {{--<div class="col-sm-3">--}}
+                            {{--<input type="text" name="task_remainingEstimate" class="form-control" id="task_remainingEstimate" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group epicLink" hidden>
-                        <label for="task_epicLink" class="col-sm-2 control-label">Epic Links</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="task_epicLink" >
-                                <option selected>Select Link</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group attachment" hidden>--}}
+                        {{--<label for="task_file" class="col-sm-2 control-label">Select File/s</label>--}}
+                        {{--<div class="col-sm-4" style="border: none">--}}
+                            {{--<input type="file" name="task_file" id="task_file" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group sprint" hidden>
-                        <label for="task_sprint" class="col-sm-2 control-label">Sprint</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="task_sprint" >
-                                <option selected>Select Sprint</option>
-                                <option>Mustafa Rizvi</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group tags" hidden>--}}
+                        {{--<label for="task_tags" class="col-sm-2 control-label">Tags</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<input type="text" name="task_tags" class="form-control" id="task_tags" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group fixVersion" hidden>
-                        <label for="task_version" class="col-sm-2 control-label">Fix Version/s</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" id="task_version" >
-                                <option selected>Select Version</option>
-                            </select>
-                        </div>
-                    </div>
+                    {{--<div class="form-group epicLink" hidden>--}}
+                        {{--<label for="task_epicLink" class="col-sm-2 control-label">Epic Links</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_epicLink" >--}}
+                                {{--<option selected>Select Link</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group units" hidden>
-                        <label for="task_units" class="col-sm-2 control-label">Units</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="task_units" class="form-control" id="task_units" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group sprint" hidden>--}}
+                        {{--<label for="task_sprint" class="col-sm-2 control-label">Sprint</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_sprint" >--}}
+                                {{--<option selected>Select Sprint</option>--}}
+                                {{--<option>Mustafa Rizvi</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group percentDone" hidden>
-                        <label for="percentDone" class="col-sm-2 control-label">Percent Done </label>
-                        <div class="col-sm-8">
-                            <input type="text" name="percentDone" class="form-control" id="percentDone" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group fixVersion" hidden>--}}
+                        {{--<label for="task_version" class="col-sm-2 control-label">Fix Version/s</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<select class="form-control" id="task_version" >--}}
+                                {{--<option selected>Select Version</option>--}}
+                            {{--</select>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <div class="form-group duetime" hidden>
-                        <label for="due_time" class="col-sm-2 control-label">Due Time</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="due_time" class="form-control" id="due_time" >
-                        </div>
-                    </div>
+                    {{--<div class="form-group units" hidden>--}}
+                        {{--<label for="task_units" class="col-sm-2 control-label">Units</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<input type="text" name="task_units" class="form-control" id="task_units" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                    <input type="hidden" name="project_id">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="checkbox" id="createAnother">Create Another
+                    {{--<div class="form-group percentDone" hidden>--}}
+                        {{--<label for="percentDone" class="col-sm-2 control-label">Percent Done </label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<input type="text" name="percentDone" class="form-control" id="percentDone" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-                <button type="submit" class="btn btn-primary" id="createTaskButton">Create</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+                    {{--<div class="form-group duetime" hidden>--}}
+                        {{--<label for="due_time" class="col-sm-2 control-label">Due Time</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<input type="text" name="due_time" class="form-control" id="due_time" >--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
-    </div>
-</div>
-<!--Task Model Ends Here-->
+                    {{--<input type="hidden" name="project_id">--}}
+                {{--</form>--}}
+            {{--</div>--}}
+            {{--<div class="modal-footer">--}}
+                {{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
+                {{--<input type="checkbox" id="createAnother">Create Another--}}
+
+                {{--<button type="submit" class="btn btn-primary" id="createTaskButton">Create</button>--}}
+                {{--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+        {{--<!-- Task Modal Content Ends -->--}}
+    {{--</div>--}}
+{{--</div>--}}
+{{--<!--Task Model Ends Here-->--}}
 
 @if(Session::has('msgerror'))
     <div class="container">
@@ -555,15 +550,17 @@
     }
 
     // Function To Show add Task Modal-Form-Input-Fields on Input Check Starts
-    function stateChanged(id){
-        if ($('#'+id).is(":checked")){
-            $("."+id).show();
-        }
-
-        else
-            $("."+id).hide();
-
-    }
+//    function stateChanged(id){
+//        if ($('#'+id).is(":checked")){
+//            alert('hii');
+//            $("."+id).show();
+//        }
+//
+//        else{
+//            alert('Bye');
+//            $("."+id).hide();
+//        }
+//    }
     // Function To Show add Task Modal-Form-Input-Fields on Input Check Ends
 
     $('.dropdown-menu input, .dropdown-menu label').click(function(e) {

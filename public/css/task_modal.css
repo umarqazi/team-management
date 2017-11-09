@@ -1,7 +1,7 @@
-.modal-body {
-    max-height: calc(100vh - 210px);
-    overflow-y: auto;
-}
+/*.modal-body {*/
+    /*max-height: calc(100vh - 210px);*/
+    /*overflow-y: auto;*/
+/*}*/
 .taskForm{
     width: 90%;
     margin: 0 auto;
@@ -78,4 +78,17 @@ a .panel-heading {
     border: none;
     background: transparent;
     color: #777777;
+}
+.TaskForm {
+    width: 80%;
+    margin: 0 auto;
+}
+.TaskForm label{
+    text-align: left !important;
+    margin-bottom: 10px!important;
+}
+.TaskForm .modal-content{
+    box-shadow: none;
+    border:none;
+    border-radius:0;
 }
