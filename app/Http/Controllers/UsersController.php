@@ -132,9 +132,18 @@ class UsersController extends Controller
         $user = User::find($id);
         $roles  = Role::all();
         $permissions    = Permission::all();
+        $role_permissions[] = [];
+        foreach ($permissions as $permission)
+        {
+            if (Role::findByName($user->roles->pluck('name'))->hasPermissionTo($permission->name))
+            {
+
+                $role_permissions[] = $permission->name;
+            }
+        }
 
         // show the edit form and pass the nerd
-        return view('/users.edit')->with('user', $user)->with('roles', $roles)->with('permissions', $permissions);
+        return view('/users.edit')->with('user', $user)->with('roles', $roles)->with('permissions', $permissions)->with('role_permissions', $role_permissions);
     }
 
     /**
@@ -162,35 +171,50 @@ class UsersController extends Controller
         } else {
             // store
             $user = User::find($id);
-            $user->name       = Input::get('name');
-            $user->email      = Input::get('email');
-            $user->save();
 
-            if( Auth::user()->hasRole('admin') )
+            if (Auth::user()->id == $id)
             {
-                $user->removeRole(Role::all());
-                $user->assignRole(Input::get('role-name'));
+                $user->name       = Input::get('name');
+                $user->email      = Input::get('email');
+                $user->save();
 
-                $user->revokePermissionTo(Permission::all());
-                if( ! empty( Input::get('permissions') ) )
-                {
-                    foreach(Input::get('permissions') as $permission)
-                    {
-                        $user->givePermissionTo($permission);
-                    }
-                }
-
-                // redirect
-                Session::flash('message', 'Successfully updated the User!');
-                Session::flash('alert-class', 'alert-success');
-                return Redirect::to('/users');
-            }
-            else
-            {
                 // redirect
                 Session::flash('message', 'Successfully updated the User!');
                 Session::flash('alert-class', 'alert-success');
                 return Redirect::to('/home');
+            }
+
+            else{
+                if( Auth::user()->hasRole('admin') | Auth::user()->can('edit user') )
+                {
+                    $user->name       = Input::get('name');
+                    $user->email      = Input::get('email');
+                    $user->save();
+
+                    $user->removeRole(Role::all());
+                    $user->assignRole(Input::get('role-name'));
+
+                    $user->revokePermissionTo(Permission::all());
+                    if( ! empty( Input::get('permissions') ) )
+                    {
+                        foreach(Input::get('permissions') as $permission)
+                        {
+                            $user->givePermissionTo($permission);
+                        }
+                    }
+
+                    // redirect
+                    Session::flash('message', 'Successfully updated the User!');
+                    Session::flash('alert-class', 'alert-success');
+                    return Redirect::to('/users');
+                }
+                else
+                {
+                    // redirect
+                    Session::flash('message', 'Successfully updated the User!');
+                    Session::flash('alert-class', 'alert-success');
+                    return Redirect::to('/home');
+                }
             }
         }
     }

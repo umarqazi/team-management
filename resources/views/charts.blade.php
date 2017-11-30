@@ -59,9 +59,9 @@
                     var dataPoint_actual = [];
                     var dataPoint_prod = [];
                     $(response.resources).each(function(){
-                        a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                        a = { y: $(this).get(0).consumed_hours, label: $(this).get(0).user['name']}
                         dataPoint_actual.push(a);
-                        b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                        b = { y: $(this).get(0).estimated_hours, label: $(this).get(0).user['name']}
                         dataPoint_prod.push(b);
                         var project_resource_name = $(this).get(0).user['name'];
                         var project_resource_id = $(this).get(0).user['id'];
@@ -167,9 +167,9 @@
                 var dataPoint_actual = [];
                 var dataPoint_prod = [];
                 $(response.resources).each(function(){
-                    a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                    a = { y: $(this).get(0).consumed_hours, label: $(this).get(0).user['name']}
                     dataPoint_actual.push(a);
-                    b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                    b = { y: $(this).get(0).estimated_hours, label: $(this).get(0).user['name']}
                     dataPoint_prod.push(b);
                     var project_resource_name = $(this).get(0).user['name'];
                     var project_resource_id = $(this).get(0).user['id'];
@@ -274,9 +274,9 @@
                 var dataPoint_actual = [];
                 var dataPoint_prod = [];
                 $(response.resources).each(function(){
-                    a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                    a = { y: $(this).get(0).consumed_hours, label: $(this).get(0).user['name']}
                     dataPoint_actual.push(a);
-                    b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                    b = { y: $(this).get(0).estimated_hours, label: $(this).get(0).user['name']}
                     dataPoint_prod.push(b);
                 });
 

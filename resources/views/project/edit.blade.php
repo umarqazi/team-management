@@ -29,6 +29,25 @@
 						<input type="text" name="name" class="form-control" id="name"
 							   value="{{$project->name}}">
 					</div>
+
+					<!--Project key Field Starts-->
+					<div class="form-group">
+						<label for="projectKey">Project Key:</label>
+						<input type="text" name="key" class="form-control" id="key" value="{{$project->key}}" onfocus="showSuggestions()">
+					</div>
+					<!--Project key Field Ends-->
+
+					<!--Project Key Suggestions Starts-->
+					<div class="form-group" id="suggestions" style="display:none">
+						<label>Suggestions:</label><br>
+						<input type="radio" name="ProjectKeySuggestion" id="projectKey1" value="" onclick="addSuggestion('projectKey1')" > <label id="ProjectKeySugg1"></label><br>
+						<input type="radio" name="ProjectKeySuggestion" id="projectKey2" value="" onclick="addSuggestion('projectKey2')" > <label id="ProjectKeySugg2"></label><br>
+						<input type="radio" name="ProjectKeySuggestion" id="projectKey3" value="" onclick="addSuggestion('projectKey3')" > <label id="ProjectKeySugg3"></label><br>
+						<input type="radio" name="ProjectKeySuggestion" id="projectKey4" value="" onclick="addSuggestion('projectKey4')" > <label id="ProjectKeySugg4"></label><br>
+						<input type="radio" name="ProjectKeySuggestion" id="projectKey5" value="" onclick="addSuggestion('projectKey5')" > <label id="ProjectKeySugg5"></label><br>
+					</div>
+					<!--Project Key Suggestions Ends-->
+
 					<div class="form-group">
 						<label for="technology">Technology:</label>
 						<select id="technology" class="form-control" name="technology[]" multiple>
@@ -78,11 +97,75 @@
 						<input type="datetime-local" class="form-control" name="external_deadline"  value="{{\Carbon\Carbon::parse($project->external_deadline)->format('Y-m-d\Th:i')}}">
 					</div>
 					<div class="text-right">
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="submit" class="btn btn-primary">Update</button>
 						<a href="/projects" class="btn btn-default">Go Back</a>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+
+	<script>
+        $(document).ready(function() {
+            $('#name').on("keyup change", function () {
+                generateKey();
+            })
+        } );
+
+        function generateKey() {
+            // Code To Generate Key For Project Starts
+            var projectName = document.getElementById('name').value;
+            var matches = projectName.match(/\b(\w)/g);
+            var key = matches.join('').toUpperCase();
+            alert(key);
+            document.getElementById('key').value = key;
+            // Code To Generate Key For Project Ends
+
+            // Code To Generate Key Suggestions For Project Starts
+            //Suggestion 1
+            var num = Math.floor(Math.random() * 9000) + 1000;
+            var alphaNumericKey = key + num;
+            document.getElementById('projectKey1').value= alphaNumericKey;
+            document.getElementById('ProjectKeySugg1').innerHTML= alphaNumericKey;
+
+            //Suggestion 2
+            var subProjectName = projectName.substring(0,3);
+            var subProjectKey = subProjectName + num;
+            document.getElementById('projectKey2').value= subProjectKey;
+            document.getElementById('ProjectKeySugg2').innerHTML= subProjectKey;
+
+            //Suggestion 3
+            var ProjectSuggName5 = projectName.split(' ');
+            document.getElementById('projectKey3').value= ProjectSuggName5[0];
+            document.getElementById('ProjectKeySugg3').innerHTML= ProjectSuggName5[0];
+
+            //Suggestion 4
+            var ProjectSuggName4 = key.toLowerCase();
+            document.getElementById('projectKey4').value= ProjectSuggName4;
+            document.getElementById('ProjectKeySugg4').innerHTML= ProjectSuggName4;
+
+            //Suggestion 5
+            var ProjectSuggName = projectName.substring(0,4);
+            document.getElementById('projectKey5').value= ProjectSuggName;
+            document.getElementById('ProjectKeySugg5').innerHTML= ProjectSuggName;
+            // Code To Generate Key Suggestions For Project Ends
+        }
+
+        function showSuggestions() {
+            $('#suggestions').fadeIn(500);
+            document.getElementById('suggestions').style.display = "block";
+        }
+
+        function hideSuggestions() {
+            $('#suggestions').fadeOut(500);
+            document.getElementById('suggestions').style.display = "none";
+        }
+
+        function addSuggestion($ID)
+        {
+            document.getElementById('key').value = '';
+            document.getElementById('key').value = document.getElementById($ID).value;
+        }
+
+	</script>
 @endsection

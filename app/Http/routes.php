@@ -26,16 +26,56 @@ Route::auth();
 Route::get('/redirect/{provider}', 'SocialAuthController@redirect');
 Route::get('/callback/{provider}', 'SocialAuthController@callback');
 
-Route::group( ['middleware'  => 'auth'], function(){
+Route::group(['middleware'  => 'auth'], function(){
 
-    Route::group(['middleware'  => 'role:admin'], function(){
+    Route::group(['middleware'  => ['role:admin, hr']], function(){
 
         Route::resource( 'users', 'UsersController', ['except' => ['edit', 'update']] );
 
         Route::resource( 'roles', 'RolesController' );
     });
 
-    Route::group(['middleware' => 'profile:admin'], function(){
+    // Route Group for Tasks
+
+    Route::group(['middleware' => ['task:admin, pm']], function (){
+        // Resource Routes For Tasks
+        Route::resource( 'tasks', 'TasksController', ['except' => ['index', 'show']]);
+
+        //  Resource Routes For Sub-tasks
+        Route::resource( 'subtasks', 'SubtasksController', ['except' => ['index', 'show']]);
+
+        // Exhausted Resource Routes for Tasks
+        // Route To Fetch Users of Specific Project
+        Route::get('/tasks/users/{ProjectID}', [
+            'uses' => 'TasksController@showProjectUsers',
+            'as' => 'ProjectUsers'
+        ]);
+
+        Route::get('/tasks/project/{projectId?}', [
+            'uses' => 'TasksController@showProject',
+            'as' => 'Project'
+        ]);
+
+    });
+
+    Route::resource( 'tasks', 'TasksController', ['only' => ['index', 'show']]);
+    // Exhausted Resource Routes for Tasks
+    Route::get('/tasks/specific/{pid}', [
+        'uses' => 'TasksController@showProjectSpecific',
+        'as' => 'specificView'
+    ]);
+
+    Route::resource( 'subtasks', 'SubtasksController', ['only' => ['index', 'show']]);
+
+    // Route Group for Sub Tasks
+    /*Route::group(['middleware' => ['subtask:admin, pm']], function (){
+        Route::resource( 'subtasks', 'SubtasksController', ['except' => ['index', 'show']]);
+    });
+
+    Route::resource( 'subtasks', 'SubtasksController', ['only' => ['index', 'show']]);*/
+
+
+    Route::group(['middleware' => ['profile:admin,HR']], function(){
         Route::resource( 'users', 'UsersController', ['only' => ['edit', 'update']] );
     });
 
@@ -58,9 +98,16 @@ Route::group( ['middleware'  => 'auth'], function(){
 
         Route::delete( 'projects/{id}', 'ProjectsController@destroy' );
     });
-    Route::group(['middleware'  => 'project'], function(){
+
+    Route::group(['middleware'  => ['project:admin,pm,projectlead,frontend,sales']], function(){
 
         Route::resource('projects', 'ProjectsController', ['only' => ['index', 'show']]);
+
+        // Routes Added By Umar Farooq
+        Route::get('/projectView', [
+           'uses' => 'ProjectsController@getMainView',
+            'as' => 'mainProjectView'
+        ]);
     });
     Route::get('/downloadExcel_project_by_months/{id}/{type}', 'ProjectsController@downloadExcel');
 //    Route::get('/projects', 'ProjectsController@index');
@@ -70,6 +117,17 @@ Route::group( ['middleware'  => 'auth'], function(){
 //    Route::get('/project/{project}', 'ProjectsController@show');
 
     Route::post('/hour', 'HoursController@store');
+
+    // Developer Task Estimation Route
+    Route::post('/developerTaskEstimation','HoursController@storeDeveloperTaskEstimation');
+    // Developer Subtask Estimation Route
+    Route::post('/developerSubtaskEstimation','HoursController@storeDeveloperSubtaskEstimation');
+
+    // Developer Task Consumption Route
+    Route::post('/task_consumed_hours','HoursController@storeTaskConsumption');
+    // Developer Subtask Consumption Route
+    Route::post('/subtask_consumed_hours','HoursController@storeSubtaskConsumption');
+
     Route::post('/hour/update/{id}', 'HoursController@update');
     Route::post('/hour/delete/{id}', 'HoursController@delete');
     Route::get('/downloadExcel_hour_by_months/{project}/{year_month}/', 'HoursController@downloadExcel');
@@ -85,5 +143,8 @@ Route::group( ['middleware'  => 'auth'], function(){
 
 //    ********************************************************************
     Route::get('/hour/{project}/{year_month}', 'HoursController@show');
+
+    //Fetch All Project Names of Projects
+    Route::get('/projectKey', 'ProjectsKeyController@getProjectNames');
 });
 

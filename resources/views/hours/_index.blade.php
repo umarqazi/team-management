@@ -19,9 +19,9 @@
     <tr id="tr_hours_{{$hrs->id}}">
         <td id="td_created_at_{{$hrs->id}}" style="width: 100px">{{$hrs->created_at->format('d-M')}}</td>
         @hasrole(['developer', 'teamlead', 'admin'])
-        <td id="td_actual_hours_{{$hrs->id}}" >{{$hrs->actual_hours}}</td>
+        <td id="td_consumed_hours_{{$hrs->id}}" >{{$hrs->consumed_hours}}</td>
         @endrole
-        <td id="td_productive_hours_{{$hrs->id}}" >{{$hrs->productive_hours}}</td>
+        <td id="td_estimated_hours_{{$hrs->id}}" >{{$hrs->estimated_hours}}</td>
         <td id="td_user_id_{{$hrs->id}}" >
         @foreach($users as $user)
             @if($hrs->user_id == $user->id )
@@ -44,11 +44,11 @@
         <td style="width: 100px"><input type="date" class="form-control" name="created_at_{{$hrs->id}}" value="{{\Carbon\Carbon::parse($hrs->created_at)->format('Y-m-d')}}"></td>
         @hasrole(['developer', 'teamlead', 'admin'])
         <td>
-            <input type="number" class="form-control" name="actual-hours_{{$hrs->id}}" value="{{$hrs->actual_hours}}">
+            <input type="number" class="form-control" name="actual-hours_{{$hrs->id}}" value="{{$hrs->consumed_hours}}">
         </td>
         @endrole
         <td>
-            <input type="number" class="form-control" name="productive-hours_{{$hrs->id}}" value="{{$hrs->productive_hours}}">
+            <input type="number" class="form-control" name="productive-hours_{{$hrs->id}}" value="{{$hrs->estimated_hours}}">
         </td>
         <td id="td_select">
             <select class="form-control" name="resource_{{$hrs->id}}">

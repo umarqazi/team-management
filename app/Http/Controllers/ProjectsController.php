@@ -30,7 +30,7 @@ class ProjectsController extends Controller
         
 
 
-        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        if($user->hasRole(['developer', 'teamlead', 'engineer','frontend']))
         {
             $projects   = $user->projects()->get();
             foreach ($projects as $project) {
@@ -80,7 +80,7 @@ class ProjectsController extends Controller
             }
         }
         $view   = View::make('project.index');
-        if($user->hasRole(['developer', 'teamlead', 'engineer']))
+        if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $view->nest('project', 'project.engineers', compact('projects'));
         }
@@ -90,7 +90,7 @@ class ProjectsController extends Controller
         }
 
         return $view;
-    }
+}
 
     public function show($id)
     {
@@ -103,8 +103,8 @@ class ProjectsController extends Controller
             $hours[]    = array(
                 'month'             => Carbon::parse($hour[0]['created_at'])->format('F'),
                 'year'              => Carbon::parse($hour[0]['created_at'])->format('Y'),
-                'actual_hours'      => $hour->sum('actual_hours'),
-                'productive_hours'  => $hour->sum('productive_hours')
+                'consumed_hours'      => $hour->sum('consumed_hours'),
+                'estimated_hours'  => $hour->sum('estimated_hours')
                 );
         }
         $teamleads   = array();
@@ -154,15 +154,15 @@ class ProjectsController extends Controller
                     'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
                     'Teamlead'          => $project->teamlead,
                     'Developer'         => $project->developers,
-                    'Hours'             => $hour->sum('productive_hours')
+                    'Hours'             => $hour->sum('estimated_hours')
                     );
             } else{
                 $hours[]    = array(
                     'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
                     'Teamlead'          => $project->teamlead,
                     'Developer'         => $project->developers,
-                    'Actual hours'      => $hour->sum('actual_hours'),
-                    'Productive hours'  => $hour->sum('productive_hours')
+                    'Actual hours'      => $hour->sum('consumed_hours'),
+                    'Productive hours'  => $hour->sum('estimated_hours')
                     );
             }
         }
@@ -183,16 +183,18 @@ class ProjectsController extends Controller
         return view("project.create", compact('developers', 'teamleads'));
     }
 
-   
     public function store(Request $request)
     {
         $rules = array(
             'name'       => 'required|unique:projects|max:255',
             'status' => 'required',
+            'key' => 'required|unique:projects',
         );
+
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
+
             return Redirect::to('/projects/create')
                 ->withErrors($validator)
                 ->withInput();
@@ -205,17 +207,27 @@ class ProjectsController extends Controller
         $project->status = $request->status;
         $project->internal_deadline = $request->internal_deadline;
         $project->external_deadline = $request->external_deadline;
+        $project->key = $request->key;
 
         $project->save();
 
         if( ! empty($request->teamlead) ) {
-            foreach($request->teamlead as $teamlead)
+
+            if(is_array($request->teamlead))
             {
-                $project->users()->attach($teamlead);
+
+                foreach($request->teamlead as $teamlead)
+                {
+                    $project->users()->attach($teamlead);
+                }
+            }
+            else{
+                $project->users()->attach($request->teamlead);
             }
         }
         if  ( ! empty($request->developer) )
         {
+
             foreach($request->developer as $developer)
             {
                 $project->users()->attach($developer);
@@ -245,7 +257,8 @@ class ProjectsController extends Controller
     {
         $rules = array(
             'name'       => 'required|unique:projects,name,'.$id.'|max:255',
-            'status'     => 'required'
+            'status'     => 'required',
+            'key' => 'required',
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -265,6 +278,7 @@ class ProjectsController extends Controller
         $project->status = $request->status;
         $project->internal_deadline = $request->internal_deadline;
         $project->external_deadline = $request->external_deadline;
+        $project->key = $request->key;
         $project->update();
         $project->users()->detach();
         if( ! empty($request->teamlead) )
@@ -294,4 +308,15 @@ class ProjectsController extends Controller
         return Redirect::to('/projects');
     }
 
+    //Other Functions for Main Project View and Other Views BY UMAR FAROOQ
+
+    public function getMainView()
+    {
+        return view('tasks.mainProjectView');
+    }
+
+    public function getDetailView()
+    {
+        return view('tasks.taskDetail');
+    }
 }

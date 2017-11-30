@@ -1,7 +1,7 @@
 @extends('project.index')
 
 @section('sales')
-  <div class="container">
+  <div class="container pageIdentifier" data-project-id="project">
     <div class="row">
       @if(Auth::user()->can('create project'))
         <div class="text-right" style="margin:20px;">
@@ -21,23 +21,26 @@
             <table class="display" id="active_projects" cellspacing="0" width="100%">
               <thead>
               <tr>
-                <th>Name</th>
-                <th>Technology</th>
-                <th>Team lead</th>
-                <th>Developer</th>
-                <th>Status</th>
-                <th>View</th>
+                  <th>Key</th>
+                  <th>Name</th>
+                  <th>Technology</th>
+                  <th>Team lead</th>
+                  <th>Developer</th>
+                  <th>Status</th>
+                  <th>View</th>
                 @if(Auth::user()->can('edit project'))
                   <th>Edit</th>
                 @endif
                 @if(Auth::user()->can('delete project'))
                   <th>Delete</th>
                 @endif
+                  <th>Tasks</th>
               </tr>
               </thead>
               <tbody>
               @foreach($projects['active'] as $project)
                 <tr>
+                    <td>{{$project->key}}</td>
                   <td>{{$project->name}}</td>
                   <td>
                     @if(is_array(json_decode($project->technology)))
@@ -66,6 +69,7 @@
                       {{ Form::close() }}
                     </td>
                   @endif
+                    <td><a href="/tasks/specific/{{$project->id}}" style="text-decoration: none;color: #FFFFFF;"><button class="btn btn-sm btn-success">View Tasks</button></a></td>
                 </tr>
               @endforeach
               </tbody>
@@ -80,6 +84,7 @@
               <table class="display"  cellspacing="0" width="100%" id="inactive_projects">
                   <thead>
                   <tr>
+                      <th>Key</th>
                       <th>Name</th>
                       <th>Technology</th>
                       <th>Team lead</th>
@@ -92,11 +97,13 @@
                       @if(Auth::user()->can('delete project'))
                           <th>Delete</th>
                       @endif
+                      <th>View</th>
                   </tr>
                   </thead>
                   <tbody>
                   @foreach($projects['inactive'] as $project)
                       <tr>
+                          <td>{{$project->key}}</td>
                           <td>{{$project->name}}</td>
                           <td>
                               @if(is_array(json_decode($project->technology)))
@@ -125,6 +132,7 @@
                                   {{ Form::close() }}
                               </td>
                           @endif
+                          <td><a href="/tasks/specific/{{$project->id}}" style="text-decoration: none;color: #FFFFFF;"><button class="btn btn-sm btn-success">View Tasks</button></a></td>
                       </tr>
                   @endforeach
                   </tbody>

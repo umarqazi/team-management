@@ -1,0 +1,425 @@
+body{
+    color: #333333;
+    font-family: Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857142857143;
+}
+.menuBar{
+    margin-bottom: 0px;
+}
+.subtaskContainer{
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.subtaskDetailSidebar{
+    width:17%;
+    height: 600px;
+    float:left;
+    box-sizing: border-box;
+    border-right: 1px solid #ddd;
+    padding: 15px 10px;
+    position: relative;
+    background-color: #F5F5F5;
+}
+.subtaskDetailSidebar li{
+    display: block;
+}
+.subtaskDetailSidebar .list{
+    margin-top: 20px;
+    padding-left: 10px;
+}
+#sidebarHeading{
+    padding: 5px;
+    text-align: center;
+    font-size: 18px;
+}
+#newFilterButton{
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
+    background: #f2f2f2;
+    background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 3.01px;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: inherit;
+    font-size: 14px;
+    font-variant: normal;
+    font-weight: normal;
+    height: 2.1428571428571em;
+}
+.taskDetailSidebar ul{
+    padding-left: 0px;
+}
+.tasksCount{
+    background-color: #2e6da4;
+    margin-left: 7px;
+    padding: 5px;
+    color: #ffffff;
+    border-radius: 8px;
+}
+.bugsCount{
+    background-color: #bc0000;
+    margin-left: 7px;
+    padding: 5px;
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+.taskDetailSidebar ul li{
+    display: block;
+    padding-left: 10px;
+}
+.taskDetailSidebar ul li a{
+    display: block;
+    text-decoration: none;
+    padding: 5px;
+}
+.taskDetailSidebar ul li a:hover{
+    background-color: #E5E5E5;
+}
+.taskViewSidebarTabs li{
+    width: 50%;
+    background-color: #f0f0f0;
+}
+#BugTitle{
+    text-align: center;
+    font-size: larger;
+    color: #333333;
+    margin-top: 20px;
+}
+.eachBug{
+    padding-left: 0px;
+}
+.eachBug li{
+    margin-left: 0px;
+    text-decoration: none;
+    display: inline;
+}
+.subtaskDetailContentBox{
+    width: 83%;
+    height: 600px;
+    float: left;
+    overflow-y: scroll;
+}
+.contentBoxHeader{
+    padding: 30px;
+}
+.contentBoxHeaderButton{
+    float: right;
+    margin-right: 30px;
+}
+.contentBoxHeader h2{
+    display: inline;
+}
+.contentBoxHeader .contentBoxSubheader{
+    font-family: Arial,sans-serif;
+    font-size: 14px;
+}
+.contentBoxSubheader .contentBoxSubheaderTaskName{
+    margin-right: 10px;
+}
+.contentBoxSubheader .contentBoxSubheaderTaskKey{
+    margin-left: 10px;
+}
+.contentBoxHeading{
+    font-size: 24px;
+    padding: 5px 0px 5px 0px;
+}
+
+#headerSaveAsButton{
+    display: inline;
+    margin-left: 20px;
+    padding: 7px;
+    background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: inherit;
+    font-size: 14px;
+}
+.contentBoxFilters{
+    border-bottom: 1px solid #e6e6e6;
+    background-color: #f5f5f5;
+    clear: both;
+    padding: 5px 20px 5px 12px;
+}
+.taskDetailFilter{
+    margin-right: 5px;
+}
+.taskDetailInput{
+    display: inline-block;
+    margin-right: 5px;
+}
+.taskDetailFilterButton{
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+.taskDetailFilterButton:hover{
+    background-color: #FDFDFD;
+    border:1px solid #cccccc;
+}
+.taskListSideBox{
+    width: 25%;
+    height: 480px;
+    border-right: 1px solid #e6e6e6;
+    float: left;
+}
+.allTasks{
+    height: 430px;
+    overflow-y: auto;
+    padding: 10px 10px 0 15px;
+}
+.eachTask {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.eachTask>li{
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    padding: 5px 0 5px 5px;
+
+}
+.eachTask>li:active{
+    background-color: #ebf2f9;
+}
+.eachTask li .taskKey{
+    font-size: 15px;
+    font-weight: bold;
+    padding:0px 0px 5px 5px;
+}
+.eachTask li .taskName{
+    font-size: 15px;
+}
+
+/*Delayed Tasks Starts*/
+.eachTask .delayed>a{
+    color: #c72727;
+}
+/*Delayed Tasks Ends*/
+
+/*Completed Tasks Starts*/
+.eachTask .completed>a{
+    color: green;
+}
+/*Completed Tasks Ends*/
+.allTaskHeader{
+    font-size: 15px;
+    font-weight:bold;
+    text-align: center;
+    height: 30px;
+    padding: 5px;
+    border-bottom:1px solid #e6e6e6;
+}
+
+.allTaskFooter{
+    height: 50px;
+    padding: 5px;
+    border-top:1px solid #e6e6e6;
+}
+
+.taskDetailBox{
+    width: 75%;
+    padding: 10px;
+    float: left;
+    height: 480px;
+    overflow-y: scroll;
+}
+.taskProjectNameAndKey{
+    padding: 20px 0px 10px 20px;
+    font-size: 16px;
+}
+.taskDetailBoxHeading{
+    padding-left:20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.subtaskDetailBoxHeaderButtons{
+    margin-left: 15px;
+}
+.subtaskDetailBoxCommentButton{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.subtaskDetailBoxAssignButton{
+    margin-right: 10px;
+}
+.subtaskDetailBoxAdminButton{
+    margin-left: 10px;
+}
+.mainTaskDetailBox{
+
+}
+.leftBox{
+    float: left;
+}
+.leftBoxDetailBox{
+    margin-top: 30px;
+}
+.leftBoxDescriptionBox{
+    margin-top: 30px;
+}
+.leftBoxTimeEstimationBox{
+    margin-top: 30px;
+}
+.leftBoxActivityBox{
+    margin-top: 30px;
+}
+.leftBoxActivityBoxContent{
+    margin-top: 15px;
+}
+
+.leftBoxDetailBoxTitle{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.leftBoxDescriptionBoxTitle{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.leftBoxSubtasksBoxTitle{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.taskViewSubtasks{
+    height: 130px;
+    overflow-y:scroll;
+}
+.leftBoxActivityBoxTitle{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.leftBoxDetailBoxContentList{
+    padding-left: 0px;
+    /*padding-top: 20px;*/
+}
+.leftBoxDetailBoxContentList .item{
+    margin: 10px 0px 10px 0px;
+}
+.leftBoxSubtasksBoxContent{
+    height: 150px;
+    overflow-y: scroll;
+}
+.leftBoxDescriptionBoxContent textarea{
+    margin-bottom: 10px;
+}
+
+.leftBoxDetailBoxContentList li{
+    display: block;
+}
+.detailType{
+    color: #707070;
+    display: inline-block;
+    font-weight: normal;
+    padding: 2px 5px 2px 0;
+    padding-right: 5px;
+    text-align: left;
+    width: 210px;
+}
+.detail{
+    text-align: left;
+}
+.rightBox{
+    float: left;
+}
+.rightBoxPeopleBox{
+    margin-top: 30px;
+}
+.rightBoxDateBox{
+    margin-top: 20px;
+}
+
+.rightBoxPeopleBoxTitle{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+.rightBoxDatesBoxTitle{
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.rightBoxPeopleBoxContent{
+    padding: 10px;
+}
+.rightBoxDatesBoxContent{
+    padding:10px;
+}
+.profileType{
+    margin-top: 5px;
+    padding: 2px 5px 2px 0;
+    color: #707070;
+    line-height: 24px;
+}
+.profilerName span{
+    margin-right: 5px;
+}
+footer{
+    display: none;
+}
+
+.resourceSheet{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/*To make Projects and Users Dropdown Filter Scrollable*/
+.taskFilter{
+    height: 150px;
+    overflow-y: scroll;
+}
+
+.liveSearch{
+    width: auto !important;
+}
+.liveSearch button {
+    background: none;
+    border: 1px solid transparent;
+    width: auto !important;
+}
+.liveSearch button:hover,.liveSearch button:focus,.liveSearch button:active {
+    background: #FDFDFD;
+}
+
+/*Custom Css For Bootstrap Live select */
+.bootstrap-select.btn-group .dropdown-menu{
+    height:200px;
+    overflow-y: scroll;
+}
+
+.editTask{
+    color: #333333;
+    text-decoration: none;
+}
+.editTask:hover{
+    color: #333333;
+    text-decoration: none;
+}
+.overdueEstimation{
+    padding: 5px;
+    background-color:#c72727;
+    color: #fff;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+.overdueDevEstimation{
+    padding: 5px;
+    background-color:#8a6d3b;
+    color: #fff;
+    border-radius: 4px;
+    margin-left: 5px;
+}
