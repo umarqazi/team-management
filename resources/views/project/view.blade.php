@@ -35,9 +35,9 @@
                                         <td>{!! $project->teamlead !!}</td>
                                         <td>{!! $project->developers !!}</td>
                                         @hasrole(['developer', 'teamlead', 'engineer', 'admin'])
-                                        <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['actual_hours']}}</a> </td>
+                                        <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['consumed_hours']}}</a> </td>
                                         @endrole
-                                        <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['productive_hours']}}</a></td>
+                                        <td><a href="javascript:void(0)" onclick="getHoursDetail( '{{$hour['month']}}', '{{$hour['year']}}' )" data-toggle="modal" data-target="#myModal2">{{$hour['estimated_hours']}}</a></td>
                                         <td><a href="{{ URL::to('/downloadExcel_hour_by_months/'.$project->id.'/'.$hour['year'].'-'.$hour['month']) }}" class="btn btn-primary"><span class="glyphicon glyphicon-download"></span></a></td>
                                     </tr>
                                 @endforeach
@@ -98,6 +98,7 @@
             <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
             <!--Main Page Content Area-->
             @hasrole(['admin','pm'])
+{{--
             <div class="taskDetailContentBox col-md-10 col-md-offset-1" style="margin-top: 20px">
 
                 <!--Main Page Content Area Filter Dropdowns-->
@@ -433,6 +434,7 @@
                     </div>
                 </div>
             </div>
+--}}
             @endrole
             <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
 
@@ -456,12 +458,12 @@
                             <input type="date" name="date" class="form-control" value="{{$currentDate}}" id="date">
                         </div>
                         <div class="form-group">
-                            <label for="actual_hours">Actual Hours:</label>
-                            <input type="text" name="actual_hours" class="form-control" id="actual_hours">
+                            <label for="consumed_hours">Actual Hours:</label>
+                            <input type="text" name="consumed_hours" class="form-control" id="consumed_hours">
                         </div>
                         <div class="form-group">
-                            <label for="productive_hours">Productive Hours:</label>
-                            <input type="text" name="productive_hours" class="form-control" id="productive_hours">
+                            <label for="estimated_hours">Productive Hours:</label>
+                            <input type="text" name="estimated_hours" class="form-control" id="estimated_hours">
                         </div>
                         <div class="form-group">
                             <label for="resource">Resource:</label>

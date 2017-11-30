@@ -23,16 +23,16 @@ class Project extends Model
      }
 
      // Tasks And Components Relation Created By Umar Farooq
-    /*
+
     public function tasks()
     {
 	    return $this->hasMany('App\Task');
     }
 
-    public function components()
-    {
-        return $this->belongsToMany('App\Component');
-    } */
+//    public function components()
+//    {
+//        return $this->belongsToMany('App\Component');
+//    }
 
     public function teamlead()
     {

@@ -90,7 +90,7 @@ class ProjectsController extends Controller
         }
 
         return $view;
-    }
+}
 
     public function show($id)
     {
@@ -103,8 +103,8 @@ class ProjectsController extends Controller
             $hours[]    = array(
                 'month'             => Carbon::parse($hour[0]['created_at'])->format('F'),
                 'year'              => Carbon::parse($hour[0]['created_at'])->format('Y'),
-                'actual_hours'      => $hour->sum('actual_hours'),
-                'productive_hours'  => $hour->sum('productive_hours')
+                'consumed_hours'      => $hour->sum('consumed_hours'),
+                'estimated_hours'  => $hour->sum('estimated_hours')
                 );
         }
         $teamleads   = array();
@@ -154,15 +154,15 @@ class ProjectsController extends Controller
                     'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
                     'Teamlead'          => $project->teamlead,
                     'Developer'         => $project->developers,
-                    'Hours'             => $hour->sum('productive_hours')
+                    'Hours'             => $hour->sum('estimated_hours')
                     );
             } else{
                 $hours[]    = array(
                     'Month'             => Carbon::parse($hour[0]['created_at'])->format('F - Y'),
                     'Teamlead'          => $project->teamlead,
                     'Developer'         => $project->developers,
-                    'Actual hours'      => $hour->sum('actual_hours'),
-                    'Productive hours'  => $hour->sum('productive_hours')
+                    'Actual hours'      => $hour->sum('consumed_hours'),
+                    'Productive hours'  => $hour->sum('estimated_hours')
                     );
             }
         }
@@ -183,7 +183,6 @@ class ProjectsController extends Controller
         return view("project.create", compact('developers', 'teamleads'));
     }
 
-   
     public function store(Request $request)
     {
         $rules = array(
@@ -223,7 +222,6 @@ class ProjectsController extends Controller
                 }
             }
             else{
-
                 $project->users()->attach($request->teamlead);
             }
         }
@@ -260,7 +258,7 @@ class ProjectsController extends Controller
         $rules = array(
             'name'       => 'required|unique:projects,name,'.$id.'|max:255',
             'status'     => 'required',
-            'key' => 'required|unique:projects',
+            'key' => 'required',
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -314,11 +312,11 @@ class ProjectsController extends Controller
 
     public function getMainView()
     {
-        return view('project.mainProjectView');
+        return view('tasks.mainProjectView');
     }
 
     public function getDetailView()
     {
-        return view('project.taskDetail');
+        return view('tasks.taskDetail');
     }
 }

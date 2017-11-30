@@ -5,14 +5,15 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 @if(Auth::user()->can('create project'))
-                <div class="text-right" style="margin:20px;">
+                <div class="text-right" style="margin:20px 0px 20px 20px;">
                     <a href="/projects/create" class="btn btn-primary">Create Project</a>
                 </div>
                 @endif
-                <div class="content" style="margin-top: 20px;">
-                    <table id="eng_projects" class="display" cellspacing="0" width="100%">
+                <div class="content table-responsive" style="margin-top: 20px;">
+                    <table id="eng_projects" class="display table table-striped" cellspacing="0" width="100%">
                         <thead>
                         <tr>
+                            <th>Key</th>
                             <th>Name</th>
                             <th>Technology</th>
                             <th>Team lead</th>

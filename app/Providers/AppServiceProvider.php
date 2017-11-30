@@ -34,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
         view()->composer(['users.index','home', 'project.index'], function ($view) {
             $view->with('resources', $this->resources);
         });
+
+        // Data(Projects, users, reporters) for Create Task Bootstrap Modal
+
+
     }
 
     /**

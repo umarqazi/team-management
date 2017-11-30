@@ -1,6 +1,6 @@
 @extends('home')
 @section('admin')
-    <div class="container">
+    <div class="container pageIdentifier" data-project-id="home">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
@@ -84,6 +84,7 @@
                                     @if(Auth::user()->can('delete project'))
                                     <th>Delete</th>
                                     @endif
+                                    <th>View</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -112,6 +113,7 @@
                                             {{ Form::close() }}
                                         </td>
                                         @endif
+                                        <td><a href="/tasks/specific/{{$project->id}}" style="text-decoration: none;color: #FFFFFF;"><button class="btn btn-sm btn-success">View Tasks</button></a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>

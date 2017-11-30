@@ -1,0 +1,102 @@
+.projectContainer{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.projectHeader{
+    padding:5px 15px 15px 50px;
+    background-color: #f5f5f5;
+    margin: -20px -15px 0px -20px;
+    border-bottom: 1px solid #9d9d9d;
+}
+.projectTitle h1{
+    color: #333333;
+    font-size: 26px;
+    font-weight: normal;
+    line-height: 1.25;
+    text-transform: none;
+    margin: 30px 0 0 0;
+}
+
+.operations-list{
+    padding-left: 0px;
+    text-decoration: none;
+}
+.operations-list li{
+    display:inline-block;
+    padding-right: 10px;
+    font-size: 16px;
+}
+.projectSubheader{
+    background-color: #f5f5f5;
+    padding: 10px 5px 5px 20px;
+    font-weight: 300;
+    font-size: 16px;
+    border-bottom: 1px solid #9d9d9d;
+    margin: 0px -15px 0px -20px;
+    color: rgb(51, 51, 51);
+}
+.projectSubheader li{
+    display:inline-block;
+    padding-right: 15px;
+}
+.projectSubheader li a{
+    text-decoration: none;
+}
+.projectSubheader li a:active{
+    color: #333333;
+    font-weight: bold;
+}
+.content{
+    background-color: #FFFFFF;
+    padding-left: 0px;
+}
+.leftSideBox{
+    width: 20%;
+    padding: 20px 20px 20px 5px;
+    float: left;
+}
+.leftSideBox ul{
+    padding-left: 0px;
+}
+.leftSideBox li{
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+.leftSideBox ul li a{
+    display: block;
+    padding: 6px;
+    text-decoration: none;
+}
+.leftSideBox li a:hover{
+    background-color: #E5E5E5;
+}
+.leftSideBox li a:active{
+    color: #333333;
+    font-weight: bold;
+}
+.rightContentBox {
+    width: 80%;
+    height: 500px;
+    border-left: 1px solid #9d9d9d;
+    float: left;
+    padding: 20px;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857142857143;
+}
+.rightHeader{
+    padding-bottom: 15px;
+    border-bottom: 1px solid #9d9d9d;
+}
+.taskFilters li {
+    color: #3b73af;
+    display: block;
+}
+.taskFilters li a{
+    text-decoration: none;
+}
+footer{
+    display: none;
+}

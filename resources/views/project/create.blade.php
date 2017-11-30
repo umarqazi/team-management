@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
+
+
+@section('styles')
+    <link rel="stylesheet" href="{{URL::asset('css/bootstrap-datetimepicker.min.css')}}">
+@endsection
+
 @section('content')
+
 <div class="container">
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
@@ -116,12 +123,19 @@
 	</div>
 </div>
 
+@section('scripts')
+    <script src="{{URL::asset('js/bootstrap-datetimepicker.js')}}"></script>
+
+@endsection
+
 	<script>
         $(document).ready(function() {
             $('#project-name').on("keyup change", function () {
                 generateKey();
-            })
-        } );
+            });
+        });
+
+
 
         function generateKey() {
             // Code To Generate Key For Project Starts

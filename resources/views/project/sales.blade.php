@@ -1,7 +1,7 @@
 @extends('project.index')
 
 @section('sales')
-  <div class="container">
+  <div class="container pageIdentifier" data-project-id="project">
     <div class="row">
       @if(Auth::user()->can('create project'))
         <div class="text-right" style="margin:20px;">
@@ -34,6 +34,7 @@
                 @if(Auth::user()->can('delete project'))
                   <th>Delete</th>
                 @endif
+                  <th>Tasks</th>
               </tr>
               </thead>
               <tbody>
@@ -68,6 +69,7 @@
                       {{ Form::close() }}
                     </td>
                   @endif
+                    <td><a href="/tasks/specific/{{$project->id}}" style="text-decoration: none;color: #FFFFFF;"><button class="btn btn-sm btn-success">View Tasks</button></a></td>
                 </tr>
               @endforeach
               </tbody>
@@ -95,6 +97,7 @@
                       @if(Auth::user()->can('delete project'))
                           <th>Delete</th>
                       @endif
+                      <th>View</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -129,6 +132,7 @@
                                   {{ Form::close() }}
                               </td>
                           @endif
+                          <td><a href="/tasks/specific/{{$project->id}}" style="text-decoration: none;color: #FFFFFF;"><button class="btn btn-sm btn-success">View Tasks</button></a></td>
                       </tr>
                   @endforeach
                   </tbody>
