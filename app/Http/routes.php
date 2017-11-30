@@ -30,20 +30,45 @@ Route::group(['middleware'  => 'auth'], function(){
         Route::resource( 'roles', 'RolesController' );
     });
 
-    // Route Group for Tasks And Subtasks
+    // Route Group for Tasks
 
     Route::group(['middleware' => ['task:admin, pm']], function (){
-        // Resource Routes For Tasks And Subtasks
-        Route::resource( 'tasks', 'TasksController');
+        // Resource Routes For Tasks
+        Route::resource( 'tasks', 'TasksController', ['except' => ['index', 'show']]);
+
+        //  Resource Routes For Sub-tasks
+        Route::resource( 'subtasks', 'SubtasksController', ['except' => ['index', 'show']]);
 
         // Exhausted Resource Routes for Tasks
-        Route::get('/tasks/specific/{pid}', [
-            'uses' => 'TasksController@showProjectSpecific',
-            'as' => 'specificView'
+        // Route To Fetch Users of Specific Project
+        Route::get('/tasks/users/{ProjectID}', [
+            'uses' => 'TasksController@showProjectUsers',
+            'as' => 'ProjectUsers'
         ]);
 
-        Route::resource( 'subtasks', 'SubtaskController');
+        Route::get('/tasks/project/{projectId?}', [
+            'uses' => 'TasksController@showProject',
+            'as' => 'Project'
+        ]);
+
     });
+
+    Route::resource( 'tasks', 'TasksController', ['only' => ['index', 'show']]);
+    // Exhausted Resource Routes for Tasks
+    Route::get('/tasks/specific/{pid}', [
+        'uses' => 'TasksController@showProjectSpecific',
+        'as' => 'specificView'
+    ]);
+
+    Route::resource( 'subtasks', 'SubtasksController', ['only' => ['index', 'show']]);
+
+    // Route Group for Sub Tasks
+    /*Route::group(['middleware' => ['subtask:admin, pm']], function (){
+        Route::resource( 'subtasks', 'SubtasksController', ['except' => ['index', 'show']]);
+    });
+
+    Route::resource( 'subtasks', 'SubtasksController', ['only' => ['index', 'show']]);*/
+
 
     Route::group(['middleware' => ['profile:admin,HR']], function(){
         Route::resource( 'users', 'UsersController', ['only' => ['edit', 'update']] );
@@ -87,6 +112,17 @@ Route::group(['middleware'  => 'auth'], function(){
 //    Route::get('/project/{project}', 'ProjectsController@show');
 
     Route::post('/hour', 'HoursController@store');
+
+    // Developer Task Estimation Route
+    Route::post('/developerTaskEstimation','HoursController@storeDeveloperTaskEstimation');
+    // Developer Subtask Estimation Route
+    Route::post('/developerSubtaskEstimation','HoursController@storeDeveloperSubtaskEstimation');
+
+    // Developer Task Consumption Route
+    Route::post('/task_consumed_hours','HoursController@storeTaskConsumption');
+    // Developer Subtask Consumption Route
+    Route::post('/subtask_consumed_hours','HoursController@storeSubtaskConsumption');
+
     Route::post('/hour/update/{id}', 'HoursController@update');
     Route::post('/hour/delete/{id}', 'HoursController@delete');
     Route::get('/downloadExcel_hour_by_months/{project}/{year_month}/', 'HoursController@downloadExcel');

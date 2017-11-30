@@ -8,6 +8,7 @@ use App\Project;
 use App\Task;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -27,15 +28,52 @@ class TasksController extends Controller
 
     public function index()
     {
-        $projects = Project::all();
-        $users = User::all();
-        $task = Task::orderBy('created_at','desc')->first();
-        $Project = $task->project;
-        $tasks = $Project->tasks;
-        $assignee = $task->users->pluck('id','name');
-        $hours = $task->hours;
+        $user   = Auth::user();
+        $users = [];
+        $Project = [];
+        $projects[] = [];
 
-        return view('tasks.taskDetail', compact('projects','users','Project','tasks','task'));
+        if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+        {
+            $projects = $user->projects;
+            $task = $user->tasks()->orderBy('created_at','desc')->first();
+            if (!is_null($task)){
+                $Project = $task->project;
+                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+//                dd($task->hours->where('subtask_id',0)->sum('consumed_hours'));
+                $assignee = $task->users->pluck('id','name');
+                $hours = $task->hours;
+            }
+        }
+        else
+        {
+            $projects = Project::all();
+            $users = User::role(['teamlead','developer'])->get();
+            $task = Task::orderBy('created_at','desc')->first();
+            if (!is_null($task))
+            {
+                $Project = $task->project;
+                $tasks = $Project->tasks;
+//                dd($task->hours);
+            }
+            $assignee = $task->users->pluck('id','name');
+            $hours = $task->hours;
+        }
+
+        $view   = View::make('tasks.index');
+
+        if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+        {
+            $view->nest('tasks', 'tasks.engineers', compact('projects','users','Project','tasks','task'));
+        }
+        else
+        {
+            $view->nest('tasks', 'tasks.admin', compact('projects','users','Project','tasks','task'));
+        }
+
+        return $view;
+
+//        return view('tasks.admin', compact('projects','users','Project','tasks','task'));
     }
 
     /**
@@ -66,7 +104,7 @@ class TasksController extends Controller
             'task_name' => 'required',
             'task_component' =>'alpha',
             'task_priority' =>'alpha',
-            'task_duedate' =>'required|date',
+            'task_duedate' =>'required',
             'task_assignee' =>'array',
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
@@ -84,6 +122,7 @@ class TasksController extends Controller
                 ->withErrors($validator);
         }
         else {
+
             $task = new Task();
             $task->project_id = $request->project_name;
             $task->types = $request->task_type;
@@ -140,11 +179,11 @@ class TasksController extends Controller
             {
                 $hour = new Hour();
                 $hour->task_id = Task::orderBy('created_at','desc')->pluck('id')->first();
+                $hour->subtask_id = 0;
                 $hour->project_id = $request->project_name;
                 $hour->estimated_hours = $request->task_originalEstimate;
                 $hour->save();
             }
-
 
             // redirect
             Session::flash('message', 'Successfully created Task!');
@@ -161,46 +200,152 @@ class TasksController extends Controller
      */
     public function show($id)
     {
+        $user   = Auth::user();
+
+        if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+        {
+            $projects = $user->projects;
+
+            $task = $user->tasks()->find($id);
+            $Project = $task->project;
+            $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+            $assignee = $task->users->pluck('id','name');
+            $hours = $task->hours;
+        }
+        else
+        {
         // Data To Populate View i-e Projects Filter, Users Filter etc
-        $projects = Project::all();
-        $users = User::all();
+            $projects = Project::all();
+            $users = User::all();
 
-        //Other Specific Data
-        $task = Task::find($id);
-        $Project = $task->project;
-        $tasks = $Project->tasks;
-        $assignee = $task->users->pluck('id','name');
-        $hours = $task->hours;
+            // Other Specific Data
+            $task = Task::find($id);
+            $Project = $task->project;
+            $tasks = $Project->tasks;
+            $assignee = $task->users->pluck('id','name');
+            $hours = $task->hours;
+        }
 
-        return view('tasks.view', compact('projects','users','Project','tasks','task'));
+        $view   = View::make('tasks.index');
+
+        if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+        {
+            $view->nest('tasks', 'tasks.view', compact('projects','Project','tasks','task'));
+        }
+        else
+        {
+            $view->nest('tasks', 'tasks.view', compact('projects','users','Project','tasks','task'));
+        }
+
+        return $view;
     }
 
+    // Function To Fetch Specific Project and its Tasks on Project Filter in Task Views
     public function showProjectSpecific($pid)
     {
+        // String To Int Conversion
+        $pid = (int)$pid;
+
         $tasks[] = [];
         $task[] = [];
         $hours[] = [];
 
-        // String To Int Conversion
-        $pid = (int)$pid;
+        $user   = Auth::user();
 
-        $projects = Project::all();
-        $users = User::all();
-        $Project = Project::find($pid);
-        $tasks = $Project->tasks;
-
-        if ($tasks == null) {
-
-            return view('tasks.taskDetail', compact('projects','users','Project','tasks','task'));
+        if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+        {
+            $projects = $user->projects;
+            $Project = $user->projects()->find($pid);
+            $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+        }
+        else
+        {
+            $projects = Project::all();
+            $users = User::all();
+            $Project = Project::find($pid);
+            $tasks = $Project->tasks;
         }
 
-        else {
+        // Check Condition Changed
+        if (empty($tasks)) {
+
+            $view   = View::make('tasks.index');
+
+            if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+            {
+                $view->nest('tasks', 'tasks.engineers', compact('projects','Project','tasks','task'));
+            }
+            else
+            {
+                $view->nest('tasks', 'tasks.admin', compact('projects','users','Project','tasks','task'));
+            }
+
+            return $view;
+        }
+
+        else
+        {
             $task = $Project->tasks()->orderBy('created_at', 'desc')->first();
-//            $task = $project->tasks()->with('users')->orderBy('created_at','desc')->first();
-            //$hours = $task->hours;
 
-            return view('tasks.taskDetail', compact('projects','users','Project','tasks','task'));
+            $view   = View::make('tasks.index');
+
+            if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
+            {
+                $view->nest('tasks', 'tasks.engineers', compact('projects','Project','tasks','task'));
+            }
+            else
+            {
+                $view->nest('tasks', 'tasks.admin', compact('projects','users','Project','tasks','task'));
+            }
+
+            return $view;
+
+            //$task = $project->tasks()->with('users')->orderBy('created_at','desc')->first();
+            //$hours = $task->hours;
+            //return view('tasks.admin', compact('projects','users','Project','tasks','task'));
         }
+    }
+
+
+    public function showProjectUsers($ProjectID)
+    {
+        $users = Project::find($ProjectID)->users;
+//        dd($users);
+        $html = '';
+        foreach ($users as $user)
+        {
+            $html.="<option value='$user->id'>$user->name</option>";
+        }
+        echo $html;
+    }
+
+    public function showProject($PID = null)
+    {
+        $projects = Project::all();
+        $users = User::role(['teamlead','developer'])->get();
+        $reporters = User::role(['pm','admin'])->get();
+
+        $project_html = '';
+        $user_html = '';
+        $reporter_html = '';
+
+        foreach ($projects as $project) {
+            $project_html .="<option value='$project->id' ". ((!empty($_GET['projectId']) and $_GET['projectId'] == $project->id)? 'selected': '').">$project->name</option>";
+        }
+
+        foreach ($users as $user) {
+            $user_html .="<option value='$user->id'>$user->name</option>";
+        }
+
+        foreach ($reporters as $reporter) {
+            $reporter_html .="<option value='$reporter->id'>$reporter->name</option>";
+        }
+        $data = array(
+            'project_options' => $project_html,
+            'user_options' => $user_html,
+            'reporter_options' => $reporter_html
+        );
+        echo json_encode($data);
     }
 
     /**
@@ -212,16 +357,73 @@ class TasksController extends Controller
     public function edit($id)
     {
         $projects = Project::all();
-        $users = User::role(['teamlead','developer'])->get();
+
         $reporters = User::role(['pm','admin'])->get();
 
         $task = Task::where('id',$id)->first();
 
-//        dd($task->users->toArray());
-        $taskProject = $task->project->first();
-        $taskUser = $task->users->pluck('id','name');
+        $users = $task->project->users;
 
-        return view('tasks.edit', compact('projects','users', 'reporters','task','taskProject','taskUser'));
+//      dd($task->users->toArray());
+        $taskProject = $task->project;
+
+        $taskUser = $task->users->pluck('id');
+
+        if ($_GET['isAjax'])
+        {
+            $project_html = '';
+            $user_html = '';
+            $reporter_html = '';
+
+            foreach ($projects as $project) {
+                $project_html .="<option value='$project->id' ".(($taskProject->id == $project->id)? 'selected': '').">$project->name</option>";
+            }
+
+            /*echo($task->users->pluck('id'));
+            die();*/
+
+            foreach ($users as $user) {
+                $user_html .="<option value='$user->id'>$user->name</option>";
+            }
+
+            /*echo($user_html);
+            die();*/
+
+            foreach ($reporters as $reporter) {
+                $reporter_html .="<option value='$reporter->id' ".(($task->reporter == $reporter->id)? 'selected': '').">$reporter->name</option>";
+            }
+
+            $task_user = array();
+            foreach ($task->users as $user) {
+                $task_user = array_merge($task_user, array($user->pluck('id')));
+            }
+
+//            $task_user = $task->users->pluck('id')->first();
+
+            /*echo ($reporter_html);
+            die();*/
+
+            $data = array(
+                'project_options' => $project_html,
+                'user_options' => $user_html,
+                'reporter_options' => $reporter_html,
+                'task_name' => $task->name,
+                'task_description' => $task->description,
+                'task_percentDone' => $task->percentDone,
+                'task_duedate' => $task->duedate,
+                'task_estimated_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
+                'task_remaining_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
+                'task_tags' => $task->tags,
+                'task_type' => $task->types,
+                'task_priority' => $task->priority,
+                'task_workflow' => $task->workflow,
+                'task_component' => $task->component,
+                'task_follower' => $task->follower,
+                'task_assignee' => $taskUser,
+            );
+            echo json_encode($data);
+        } else
+            return view('tasks.edit', compact('projects','users', 'reporters','task','taskProject','taskUser'));
     }
 
     /**
@@ -239,7 +441,7 @@ class TasksController extends Controller
             'task_name' => 'required',
             'task_component' =>'alpha',
             'task_priority' =>'alpha',
-            'task_duedate' =>'required|date',
+            'task_duedate' =>'required',
             'task_assignee' =>'array',
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
@@ -253,7 +455,7 @@ class TasksController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/tasks/'. $id.'/edit')
+            return Redirect::to('/tasks/')
                 ->withErrors($validator);
         }
         else {
@@ -290,27 +492,27 @@ class TasksController extends Controller
                 $task->users()->attach($request->task_assignee);
             }
 
-            /*To Add Hours Estimate in Hours Table*/
+            /*To update Hours Estimate in Hours Table*/
 
-            if (! empty($task->hours[0]))
-            {
-                $hour = $task->hours[0];
-                //$hour->task_id = Task::orderBy('created_at', 'desc')->pluck('id')->first();
-                $hour->task_id = $id;
-                $hour->project_id = $request->project_name;
-                $hour->estimated_hours = $request->task_originalEstimate;
-                $hour->update();
-            }
-            /* If hours are not previously entered */
-            elseif (! empty($request->task_originalEstimate))
-            {
-                $hour = new Hour();
-                $hour->task_id = $id;
-                $hour->project_id = $request->project_name;
-                $hour->estimated_hours = $request->task_originalEstimate;
-                $hour->save();
-            }
+            if (! empty($request->task_originalEstimate)) {
 
+                if (! empty($task->hours[0])) {
+                    $hour = $task->hours[0];
+                    //$hour->task_id = Task::orderBy('created_at', 'desc')->pluck('id')->first();
+                    $hour->task_id = $id;
+                    $hour->project_id = $request->project_name;
+                    $hour->estimated_hours = $request->task_originalEstimate;
+                    $hour->update();
+                }
+                /* If hours are not previously entered */
+                else {
+                    $hour = new Hour();
+                    $hour->task_id = $id;
+                    $hour->project_id = $request->project_name;
+                    $hour->estimated_hours = $request->task_originalEstimate;
+                    $hour->save();
+                }
+            }
 
             // redirect
             Session::flash('message', 'Successfully Updated Task!');

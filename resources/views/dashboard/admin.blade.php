@@ -1,6 +1,6 @@
 @extends('home')
 @section('admin')
-    <div class="container">
+    <div class="container pageIdentifier" data-project-id="home">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">

@@ -64,12 +64,12 @@
                             <h3 class="modal-title">Create Task</h3>
                 </div>
 
-                <div class="modal-body">
+                <div class="task-body">
                     <form class="form-horizontal taskForm" method="POST" action="/tasks">
                         <div class="form-group projectName">
                             <label class="col-xs-12 control-label">Project Name<span class="mendatoryFields">*</span></label>
                             <div class="col-xs-12">
-                                <select class="form-control" name="project_name" style="overflow-y: scroll">
+                                <select class="form-control" name="project_name" id="project_name" style="overflow-y: scroll">
                                     <option id="" value="null">Select A Project</option>
                                     @foreach($projects as $project)
                                         <option value="{{$project->id}}">{{$project->name}}</option>
@@ -134,7 +134,7 @@
 
                         <div class="form-group assignee" hidden>
                             <label for="task_assignee" class="col-xs-12 control-label">Assignee</label>
-                            <div class="col-xs-4">
+                            <div class="col-xs-6">
                                 <select class="form-control selectpicker" id="task_assignee" name="task_assignee[]" multiple>
                                     @foreach($users as $user)
                                         <option value="{{$user->id}}">{{$user->name}}</option>
@@ -145,8 +145,8 @@
 
                         <div class="form-group follower" hidden>
                             <label for="task_follower" class="col-xs-12 control-label">Follower</label>
-                            <div class="col-xs-12">
-                                <select class="form-control" id="task_follower" name="task_follower">
+                            <div class="col-xs-6">
+                                <select class="form-control selectpicker" id="task_follower" name="task_follower">
                                     @foreach($users as $user)
                                         <option value="{{$user->id}}">{{$user->name}}</option>
                                     @endforeach
@@ -165,7 +165,7 @@
 
                         <div class="form-group reporter" hidden>
                             <label for="task_reporter" class="col-xs-12 control-label">Reporter<span class="mendatoryFields">*</span></label>
-                            <div class="col-xs-12">
+                            <div class="col-xs-6">
                                 <select class="form-control" id="task_reporter" name="task_reporter" >
                                     @foreach($reporters as $reporter)
                                         <option value="{{$reporter->id}}">{{$reporter->name}}</option>
@@ -292,6 +292,7 @@
 
     @section('scripts')
         <script src="{{URL::asset('js/bootstrap-select.min.js')}}"></script>
+        <script src="{{URL::asset('js/taskFilter.js')}}"></script>
     @endsection
 
     <script>

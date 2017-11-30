@@ -54,5 +54,6 @@ class Kernel extends HttpKernel
         'profile'   => \App\Http\Middleware\ProfileMiddleware::class,
         'project'   => \App\Http\Middleware\ProjectMiddleware::class,
         'task'      => \App\Http\Middleware\TaskMiddleware::class,
+        'subtask'   => \App\Http\Middleware\SubtaskMiddleware::class,
     ];
 }

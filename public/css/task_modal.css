@@ -1,11 +1,11 @@
-/*.modal-body {*/
-    /*max-height: calc(100vh - 210px);*/
-    /*overflow-y: auto;*/
-/*}*/
-.taskForm{
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}
+/*.taskForm{
     width: 90%;
     margin: 0 auto;
-}
+}*/
 .mendatoryFields{
     color: red;
 }

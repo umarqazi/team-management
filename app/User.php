@@ -38,10 +38,10 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Task');
     }
 
-//    public function subtasks()
-//    {
-//        return $this->hasMany('App\Subtask');
-//    }
+    public function subtasks()
+    {
+        return $this->hasMany('App\Subtask');
+    }
 
     public function hours()
     {

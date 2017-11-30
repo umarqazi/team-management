@@ -17,10 +17,10 @@ class Task extends Model
         return $this->belongsToMany('App\User');
     }
 
-//    public function subtasks()
-//    {
-//        return $this->hasMany('App\Subtask');
-//    }
+    public function subtasks()
+    {
+        return $this->hasMany('App\Subtask');
+    }
 
     public function hours()
     {

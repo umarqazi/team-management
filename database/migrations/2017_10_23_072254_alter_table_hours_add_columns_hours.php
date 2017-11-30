@@ -16,7 +16,6 @@ class AlterTableHoursAddColumnsHours extends Migration
             $table->integer('estimated_hours');
             $table->integer('internal_hours');
             $table->integer('consumed_hours');
-
             /*Now Fields for Task And Subtask Tables Starts*/
             $table->integer('task_id')->unsigned();
             $table->foreign('task_id')
@@ -44,7 +43,11 @@ class AlterTableHoursAddColumnsHours extends Migration
             $table->dropColumn('estimated_hours');
             $table->dropColumn('internal_hours');
             $table->dropColumn('consumed_hours');
+
+            $table->dropForeign('hours_task_id_foreign');
             $table->dropColumn('task_id');
+
+            $table->dropForeign('hours_subtask_id_foreign');
             $table->dropColumn('subtask_id');
         });
     }

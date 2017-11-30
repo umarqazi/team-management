@@ -7,11 +7,11 @@ body{
 .menuBar{
     margin-bottom: 0px;
 }
-.taskContainer{
+.subtaskContainer{
     padding-right: 0px;
     padding-left: 0px;
 }
-.taskDetailSidebar{
+.subtaskDetailSidebar{
     width:17%;
     height: 600px;
     float:left;
@@ -21,8 +21,17 @@ body{
     position: relative;
     background-color: #F5F5F5;
 }
+.subtaskDetailSidebar li{
+    display: block;
+}
+.subtaskDetailSidebar .list{
+    margin-top: 20px;
+    padding-left: 10px;
+}
 #sidebarHeading{
     padding: 5px;
+    text-align: center;
+    font-size: 18px;
 }
 #newFilterButton{
     color: #333;
@@ -92,16 +101,14 @@ body{
     text-decoration: none;
     display: inline;
 }
-.taskDetailContentBox{
+.subtaskDetailContentBox{
     width: 83%;
     height: 600px;
     float: left;
+    overflow-y: scroll;
 }
 .contentBoxHeader{
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #e6e6e6;
-    padding: 20px;
-    height: 74px;
+    padding: 30px;
 }
 .contentBoxHeaderButton{
     float: right;
@@ -110,6 +117,21 @@ body{
 .contentBoxHeader h2{
     display: inline;
 }
+.contentBoxHeader .contentBoxSubheader{
+    font-family: Arial,sans-serif;
+    font-size: 14px;
+}
+.contentBoxSubheader .contentBoxSubheaderTaskName{
+    margin-right: 10px;
+}
+.contentBoxSubheader .contentBoxSubheaderTaskKey{
+    margin-left: 10px;
+}
+.contentBoxHeading{
+    font-size: 24px;
+    padding: 5px 0px 5px 0px;
+}
+
 #headerSaveAsButton{
     display: inline;
     margin-left: 20px;
@@ -190,10 +212,6 @@ body{
     color: green;
 }
 /*Completed Tasks Ends*/
-.eachTask .aboutToDeliver>a{
-    color: #8a6d3b;
-}
-
 .allTaskHeader{
     font-size: 15px;
     font-weight:bold;
@@ -225,9 +243,18 @@ body{
     font-size: 18px;
     font-weight: bold;
 }
-.taskDetailBoxHeaderButtons{
-    margin-top: 15px;
-    margin-left: 30px;
+.subtaskDetailBoxHeaderButtons{
+    margin-left: 15px;
+}
+.subtaskDetailBoxCommentButton{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.subtaskDetailBoxAssignButton{
+    margin-right: 10px;
+}
+.subtaskDetailBoxAdminButton{
+    margin-left: 10px;
 }
 .mainTaskDetailBox{
 
@@ -236,25 +263,35 @@ body{
     float: left;
 }
 .leftBoxDetailBox{
-    margin-top: 20px;
+    margin-top: 30px;
 }
+.leftBoxDescriptionBox{
+    margin-top: 30px;
+}
+.leftBoxTimeEstimationBox{
+    margin-top: 30px;
+}
+.leftBoxActivityBox{
+    margin-top: 30px;
+}
+.leftBoxActivityBoxContent{
+    margin-top: 15px;
+}
+
 .leftBoxDetailBoxTitle{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #cccccc ;
 }
 .leftBoxDescriptionBoxTitle{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #cccccc ;
 }
 .leftBoxSubtasksBoxTitle{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #cccccc ;
 }
 .taskViewSubtasks{
     height: 130px;
@@ -264,11 +301,13 @@ body{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #cccccc ;
 }
 .leftBoxDetailBoxContentList{
-    padding-left: 10px;
-    padding-top: 20px;
+    padding-left: 0px;
+    /*padding-top: 20px;*/
+}
+.leftBoxDetailBoxContentList .item{
+    margin: 10px 0px 10px 0px;
 }
 .leftBoxSubtasksBoxContent{
     height: 150px;
@@ -288,7 +327,7 @@ body{
     padding: 2px 5px 2px 0;
     padding-right: 5px;
     text-align: left;
-    width: 150px;
+    width: 210px;
 }
 .detail{
     text-align: left;
@@ -296,19 +335,23 @@ body{
 .rightBox{
     float: left;
 }
+.rightBoxPeopleBox{
+    margin-top: 30px;
+}
+.rightBoxDateBox{
+    margin-top: 20px;
+}
+
 .rightBoxPeopleBoxTitle{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #cccccc;
     margin-top: 20px;
 }
 .rightBoxDatesBoxTitle{
     font-size: 14px;
     font-weight: bold;
     padding-bottom: 5px;
-    border-bottom: 1px solid #cccccc;
-    margin-top: 20px;
 }
 .rightBoxPeopleBoxContent{
     padding: 10px;

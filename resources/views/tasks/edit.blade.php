@@ -59,7 +59,7 @@
                         </div>
                         <h3 class="modal-title">Edit Task</h3>
                     </div>
-                    <div class="modal-body">
+                    <div class="task-body">
                         <form class="form-horizontal taskForm" role="form" action="/tasks/{{$task->id }}" method="POST">
 
                             <input type="hidden" name="_method" value="PUT">
@@ -67,7 +67,7 @@
                             <div class="form-group projectName">
                                 <label class="col-xs-12 control-label">Project Name<span class="mendatoryFields">*</span></label>
                                 <div class="col-xs-12">
-                                    <select class="form-control" name="project_name" style="overflow-y: scroll">
+                                    <select class="form-control" name="project_name" id="project_name" style="overflow-y: scroll">
                                         <option id="" value="null">Select A Project</option>
                                         @foreach($projects as $project)
 
@@ -303,6 +303,7 @@
 
     @section('scripts')
         <script src="{{URL::asset('js/bootstrap-select.min.js')}}"></script>
+        <script src="{{URL::asset('js/taskFilter.js')}}"></script>
     @endsection
 
     <script>

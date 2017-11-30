@@ -1,8 +1,26 @@
 $(document).ready(function () {
+
+    //Fetch User of the Selected Project 0n Create Task View
+    $('#project_name').on('change', function () {
+        var ProjectID = $(this).val();
+        if (ProjectID != "null"){
+            // window.location.href = '/tasks/users/'+ProjectID;
+            $("#task_assignee, #task_follower").html('');
+
+            $("#task_assignee, #task_follower").load('/tasks/users/'+ProjectID, function (data) {
+
+                $('#task_assignee, #task_follower').selectpicker('refresh');
+            });
+        }
+    });
+
     // Fetch Selected Project And its Tasks
     $('#project_select').on('change', function () {
+
         var id = $(this).val();
-        window.location.href = '/tasks/specific/'+id;
+        if (id != "null"){
+            window.location.href = '/tasks/specific/'+id;
+        }
     });
 
     // Task Type Filter

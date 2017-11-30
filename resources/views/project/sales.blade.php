@@ -1,7 +1,7 @@
 @extends('project.index')
 
 @section('sales')
-  <div class="container">
+  <div class="container pageIdentifier" data-project-id="project">
     <div class="row">
       @if(Auth::user()->can('create project'))
         <div class="text-right" style="margin:20px;">
