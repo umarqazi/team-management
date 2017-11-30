@@ -14,6 +14,11 @@ Route::get('/verge', function(){
     return File::get(public_path(). '/verge/index.php');
 });
 
+
+Route::get('/totalankle', function(){
+    return File::get(public_path(). '/totalankle/index.php');
+});
+
 Route::get('/pages', 'PagesController@showPage');
 
 Route::auth();
