@@ -154,7 +154,7 @@
                                                             </a>
                                                         </li>
                                                     @endforeach
-                                                    @else
+                                                @else
                                                     <li>No Tasks Available</li>
                                                 @endif
                                             </ol>

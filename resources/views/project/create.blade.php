@@ -106,10 +106,43 @@
 							<input type="datetime-local" class="form-control" name="internal_deadline" value="{{ old("internal_deadline") }}"><br>
 						</div>
 
+						{{--<div>
+							<div class="form-group">
+								<label for="internal_deadline" class="col-sm-12 control-label" style="padding: 0px 0px 0px 0px">Internal Deadline:</label>
+								<div class='input-group date' id='projectInternalDeadline'>
+									<input type='text' name="internal_deadline" class="form-control" id="internal_deadline" />
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+						</div>
+
+						<script type="text/javascript">
+                            $(function () {
+                                $('#projectInternalDeadline').datetimepicker();
+                            });
+						</script>
+--}}
 						<div class="form-group">
 							<label for="external_deadline">External Deadline:</label> <br>
 							<input type="datetime-local" class="form-control" name="external_deadline" value="{{ old("external_deadline") }}" ><br>
 						</div>
+
+						{{--<div>
+							<div class="form-group">
+								<label for="external_deadline" class="col-sm-12 control-label" style="padding: 0px 0px 0px 0px">External Deadline:</label>
+								<div class='input-group date' id='projectExternalDeadline'>
+									<input type='text' name="external_deadline" class="form-control" id="external_deadline" />
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+						</div>
+
+						<script type="text/javascript">
+                            $(function () {
+                                $('#projectExternalDeadline').datetimepicker();
+                            });
+						</script>--}}
+
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="text-right">
 							<button type="submit" class="btn btn-primary">Submit</button>

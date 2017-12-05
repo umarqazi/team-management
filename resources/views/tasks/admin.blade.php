@@ -145,6 +145,8 @@
                                                             </a>
                                                         </li>
                                                     @endforeach
+                                                @else
+                                                    <li> No Tasks Available </li>
                                                 @endif
                                             </ol>
                                         </div>
