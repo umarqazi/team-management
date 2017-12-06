@@ -29,14 +29,17 @@ class TasksController extends Controller
     public function index()
     {
         $user   = Auth::user();
-        $users = [];
-        $Project = [];
-        $projects[] = [];
+        $users = array();
+        $Project = array();
+        $projects = array();
+        $tasks = array();
+        $task = array();
 
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $projects = $user->projects;
             $task = $user->tasks()->orderBy('created_at','desc')->first();
+
             if (!is_null($task)){
                 $Project = $task->project;
                 $tasks = $user->tasks()->where('project_id', $Project->id)->get();
@@ -50,14 +53,15 @@ class TasksController extends Controller
             $projects = Project::all();
             $users = User::role(['teamlead','developer'])->get();
             $task = Task::orderBy('created_at','desc')->first();
+
             if (!is_null($task))
             {
                 $Project = $task->project;
                 $tasks = $Project->tasks;
 //                dd($task->hours);
+                $assignee = $task->users->pluck('id','name');
+                $hours = $task->hours;
             }
-            $assignee = $task->users->pluck('id','name');
-            $hours = $task->hours;
         }
 
         $view   = View::make('tasks.index');
@@ -129,7 +133,7 @@ class TasksController extends Controller
             $task->name = $request->task_name;
             $task->component = $request->task_component;
             $task->priority = $request->task_priority;
-            $task->duedate = $request->task_duedate;
+            $task->duedate = strtotime($request->task_duedate);
             $task->follower = $request->task_follower;
             $task->reporter = $request->task_reporter;
             $task->description = $request->task_description;
@@ -179,7 +183,6 @@ class TasksController extends Controller
             {
                 $hour = new Hour();
                 $hour->task_id = Task::orderBy('created_at','desc')->pluck('id')->first();
-                $hour->subtask_id = 0;
                 $hour->project_id = $request->project_name;
                 $hour->estimated_hours = $request->task_originalEstimate;
                 $hour->save();
@@ -205,7 +208,7 @@ class TasksController extends Controller
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $projects = $user->projects;
-
+            $users = User::all();
             $task = $user->tasks()->find($id);
             $Project = $task->project;
             $tasks = $user->tasks()->where('project_id', $Project->id)->get();
@@ -230,7 +233,7 @@ class TasksController extends Controller
 
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
-            $view->nest('tasks', 'tasks.view', compact('projects','Project','tasks','task'));
+            $view->nest('tasks', 'tasks.view', compact('projects','users','Project','tasks','task'));
         }
         else
         {
@@ -255,6 +258,7 @@ class TasksController extends Controller
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $projects = $user->projects;
+            $users = User::all();
             $Project = $user->projects()->find($pid);
             $tasks = $user->tasks()->where('project_id', $Project->id)->get();
         }
@@ -273,7 +277,7 @@ class TasksController extends Controller
 
             if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
             {
-                $view->nest('tasks', 'tasks.engineers', compact('projects','Project','tasks','task'));
+                $view->nest('tasks', 'tasks.engineers', compact('projects','users','Project','tasks','task'));
             }
             else
             {
@@ -291,7 +295,7 @@ class TasksController extends Controller
 
             if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
             {
-                $view->nest('tasks', 'tasks.engineers', compact('projects','Project','tasks','task'));
+                $view->nest('tasks', 'tasks.engineers', compact('projects','users','Project','tasks','task'));
             }
             else
             {
@@ -410,7 +414,7 @@ class TasksController extends Controller
                 'task_name' => $task->name,
                 'task_description' => $task->description,
                 'task_percentDone' => $task->percentDone,
-                'task_duedate' => $task->duedate,
+                'task_duedate' => date('m/d/Y h:i A',$task->duedate),
                 'task_estimated_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
                 'task_remaining_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
                 'task_tags' => $task->tags,
@@ -466,7 +470,7 @@ class TasksController extends Controller
             $task->name = $request->task_name;
             $task->component = $request->task_component;
             $task->priority = $request->task_priority;
-            $task->duedate = $request->task_duedate;
+            $task->duedate = strtotime($request->task_duedate);
             $task->follower = $request->task_follower;
             $task->reporter = $request->task_reporter;
             $task->description = $request->task_description;

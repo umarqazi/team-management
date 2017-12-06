@@ -12,7 +12,6 @@ function configureFields(id){
 $(document).ready(function () {
 
     $('.editTask').on('click', function () {
-
         var id= $(this).attr('task-id');
 
         $.ajax({

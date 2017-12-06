@@ -16,14 +16,15 @@ class AlterTableHoursAddColumnsHours extends Migration
             $table->integer('estimated_hours');
             $table->integer('internal_hours');
             $table->integer('consumed_hours');
-            /*Now Fields for Task And Subtask Tables Starts*/
-            $table->integer('task_id')->unsigned();
+            /* Now Fields for Task And Subtask Tables Starts */
+            /* Check whether nullable() works fine for foreign key on Tasks and Subtasks OR Not */
+            $table->integer('task_id')->unsigned()->nullable();
             $table->foreign('task_id')
                 ->references('id')
                 ->on('tasks')
                 ->onDelete('cascade');
 
-            $table->integer('subtask_id')->unsigned();
+            $table->integer('subtask_id')->unsigned()->nullable();
             $table->foreign('subtask_id')
                 ->references('id')
                 ->on('subtasks')

@@ -554,24 +554,19 @@
     }
 
     function generateKeyForAllProjects(){
-        alert('Generate Function');
         var projectArray = [];
         var len = AllProjects.length;
         for (var i=0;i<len; i++){
-            alert('Generate Function For Loop:'+ i);
 
             if (hasWhiteSpace(AllProjects[i]))
             {
                 var matches = AllProjects[i].match(/\b(\w)/g);
                 projectArray[i] = matches.join('').toUpperCase();
-                alert(projectArray[i]);
             }
             else {
                 projectArray[i] = AllProjects[i];
-                alert(projectArray[i]);
             }
         }
-        alert(projectArray);
     }
 
     function hasWhiteSpace(string) {
