@@ -19,6 +19,10 @@ Route::get('/totalankle', function(){
     return File::get(public_path(). '/totalankle/index.php');
 });
 
+Route::get('/camp', function(){
+   return File::get(public_path(). '/camp/index.php');
+});
+
 Route::get('/pages', 'PagesController@showPage');
 
 Route::auth();
