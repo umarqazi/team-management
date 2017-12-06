@@ -78,7 +78,7 @@ class SubtasksController extends Controller
             $subtask->task_id = $request->task_name;
             $subtask->name = $request->subtask_name;
             $subtask->priority = $request->subtask_priority;
-            $subtask->duedate = $request->subtask_duedate;
+            $subtask->duedate = strtotime($request->subtask_duedate);
             $subtask->user_id = $request->subtask_assignee;
             $subtask->follower = $request->subtask_follower;
             $subtask->reporter = $request->subtask_reporter;
@@ -101,7 +101,7 @@ class SubtasksController extends Controller
             // redirect
             Session::flash('message', 'Successfully created Subtask!');
             Session::flash('alert-class', 'alert-success');
-            return Redirect::to('/tasks');
+            return Redirect::to('/tasks/'.$request->task_name);
         }
     }
 
@@ -268,7 +268,7 @@ class SubtasksController extends Controller
             $subtask->task_id = $request->task_name;
             $subtask->name = $request->subtask_name;
             $subtask->priority = $request->subtask_priority;
-            $subtask->duedate = $request->subtask_duedate;
+            $subtask->duedate = strtotime($request->subtask_duedate);
             $subtask->user_id = $request->subtask_assignee;
             $subtask->follower = $request->subtask_follower;
             $subtask->reporter = $request->subtask_reporter;

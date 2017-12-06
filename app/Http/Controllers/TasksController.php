@@ -133,7 +133,7 @@ class TasksController extends Controller
             $task->name = $request->task_name;
             $task->component = $request->task_component;
             $task->priority = $request->task_priority;
-            $task->duedate = $request->task_duedate;
+            $task->duedate = strtotime($request->task_duedate);
             $task->follower = $request->task_follower;
             $task->reporter = $request->task_reporter;
             $task->description = $request->task_description;
@@ -183,7 +183,6 @@ class TasksController extends Controller
             {
                 $hour = new Hour();
                 $hour->task_id = Task::orderBy('created_at','desc')->pluck('id')->first();
-                $hour->subtask_id = 0;
                 $hour->project_id = $request->project_name;
                 $hour->estimated_hours = $request->task_originalEstimate;
                 $hour->save();
@@ -415,7 +414,7 @@ class TasksController extends Controller
                 'task_name' => $task->name,
                 'task_description' => $task->description,
                 'task_percentDone' => $task->percentDone,
-                'task_duedate' => $task->duedate,
+                'task_duedate' => date('m/d/Y h:i A',$task->duedate),
                 'task_estimated_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
                 'task_remaining_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
                 'task_tags' => $task->tags,
@@ -471,7 +470,7 @@ class TasksController extends Controller
             $task->name = $request->task_name;
             $task->component = $request->task_component;
             $task->priority = $request->task_priority;
-            $task->duedate = $request->task_duedate;
+            $task->duedate = strtotime($request->task_duedate);
             $task->follower = $request->task_follower;
             $task->reporter = $request->task_reporter;
             $task->description = $request->task_description;

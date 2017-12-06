@@ -229,7 +229,7 @@
                                         <div class="rightBoxDatesBoxContent">
                                             <div class="dueDate">
                                                 <div class="profileType">Due:</div>
-                                                <div class="profilerName">{{$subtask->duedate}}</div>
+                                                <div class="profilerName">{{date('d-m-Y h:i A',$subtask->duedate)}} </div>
                                             </div>
                                             <div class="createdAt">
                                                 <div class="profileType">Created:</div>
@@ -333,7 +333,7 @@
                                                 <script type="text/javascript">
                                                     $(function () {
                                                         $('#subtaskEditModalDueDate').datetimepicker();
-                                                        $('#subtask_duedate').val(" {{$subtask->duedate}} ");
+                                                        $('#subtask_duedate').val(" {{date('m/d/Y h:i A',$subtask->duedate)}} ");
                                                     });
                                                 </script>
 

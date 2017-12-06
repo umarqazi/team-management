@@ -8,7 +8,7 @@ use App\User;
 
 class Hour extends Model
 {
-	protected $fillable = ['consumed_hours', 'estimated_hours', 'details', 'task_id', 'subtask_id', 'created_at'];
+	protected $fillable = ['consumed_hours', 'estimated_hours','internal_hours', 'details', 'task_id', 'subtask_id', 'created_at'];
 
     public function project()
     {

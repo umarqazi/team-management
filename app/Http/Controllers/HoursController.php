@@ -52,7 +52,7 @@ class HoursController extends Controller
 
             $hour = Hour::where([
                 ['task_id', $request->task_id],
-                ['subtask_id', 0]
+                ['subtask_id', null]
             ])->first();
 
             $hour->internal_hours = $request->dev_estimated_hours;
@@ -118,7 +118,6 @@ class HoursController extends Controller
             $hour = new Hour;
             $hour->project_id = $request->project_id;
             $hour->task_id = $request->task_id;
-            $hour->subtask_id = 0;
             $hour->consumed_hours = $request->consumed_hours;
             $hour->internal_hours = $request->task_internal_hours;
             $hour->estimated_hours = $request->task_estimated_hours;

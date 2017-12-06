@@ -13,7 +13,7 @@ class AlterTableSubtasksModifyDuedateColumn extends Migration
     public function up()
     {
         Schema::table('subtasks', function (Blueprint $table) {
-            $table->timestamp('duedate')->change();
+            $table->integer('duedate')->change();
         });
     }
 
