@@ -24,6 +24,7 @@ class TaskMiddleware
         }
 
         else{
+
             switch ($request->method())
             {
                 case 'GET':
