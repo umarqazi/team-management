@@ -1,0 +1,12 @@
+/*new theme starts*/
+.navbar-default {background-color: #404040;}
+.navbar-default .navbar-brand {color: #abc9ec;}
+.panel-default>.panel-heading {color: #fff; background-color: #337ab7;}
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {color: #abc9ec;}
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {color: #d6d6d6;}
+.navbar-default .navbar-nav>li>a {color: #d6d6d6;}
+.taskDetailSidebar {background-color: #c0504e !important;}
+.taskDetailSidebar ul li a {color: #ffd0d0 !important;}
+#sidebarHeading {color: #fff; font-weight: bold;}
+#newFilterButton {background-image: none; background-color: #80b36f; color: #fff; border: none;}
+/*new theme ends*/

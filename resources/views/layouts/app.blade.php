@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{URL::asset('css/task_modal.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('css/theme.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-select.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-datetimepicker.min.css')}}">
     @yield('styles')
@@ -102,7 +103,7 @@
                     {{--Create New Task Model--}}
                     @if(auth()->user()->can('create task'))
                         <li><a href="#" id="createTask" data-toggle="modal" data-target="#appTaskModal" data-backdrop="static" data-keyboard="false">Create Task</a></li>
-                        <li><a href="{{url('/tasks/create')}}" id="createTask">Add Task</a></li>
+                        {{--<li><a href="{{url('/tasks/create')}}" id="createTask">Add Task</a></li>--}}
                     @endif
 
                     {{--@endrole--}}

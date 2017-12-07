@@ -70,7 +70,7 @@ class SubtasksController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/tasks')
+            return Redirect::to('/tasks/'.$request->task_name)
                 ->withErrors($validator);
         }
         else {
@@ -302,7 +302,7 @@ class SubtasksController extends Controller
             // redirect
             Session::flash('message', 'Successfully Updated Subtask!');
             Session::flash('alert-class', 'alert-success');
-            return Redirect::to('subtasks/'.$id);
+            return Redirect::to('/subtasks/'.$id);
         }
     }
 

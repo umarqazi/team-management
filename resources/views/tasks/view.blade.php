@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-select.min.css')}}">
 @endsection
 @section('content')
-    <div class="container-fluid ">
+    <div class="container-fluid pageIdentifier" data-project-id="{{$Project->id}}">
         <div class="row">
             <div class="col-md-12 taskContainer">
 
@@ -147,7 +147,7 @@
                                             <ol class="eachTask" >
                                                 @if(! empty($tasks))
                                                     @foreach($tasks as $t)
-                                                        <li class="@if($t->duedate < strtotime('now') && $t->workflow != 'Completed') delayed  @elseif(strtotime(date('Y-m-d H:i',$t->duedate) .' -1 day') <= strtotime('now')) aboutToDeliver @endif {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                        <li class="@if($t->workflow == 'Completed') taskCompleted @elseif(strtotime(date('Y-m-d H:i',$t->duedate) .' -1 day') <= strtotime('now')) aboutToDeliver @elseif($t->duedate < strtotime('now') && $t->workflow != 'Completed') delayed @endif {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
                                                             <a href="/tasks/{{$t->id}}">
                                                                 <div class="taskKey">{{$t->key}}</div>
                                                                 <div class="taskName">{{str_limit($t->name, 15)}}</div>
@@ -192,8 +192,10 @@
                                 @endif
 
                                 <div class="taskDetailBoxHeading">
-                                    <div class="taskProjectNameAndKey"><a href="#"> @if($task != null) {{$task->project->name}} @endif </a> / <a href="#"> @if($task != null) {{$task->key}} @endif </a></div>
-                                    <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                    @if(!empty($task))
+                                        <div class="taskProjectNameAndKey"><a href="/project/{{$task->project->id}}"> @if($task != null) {{$task->project->name}} @endif </a> / <a href="/project/{{$task->project->id}}"> @if($task != null) {{$task->key}} @endif </a></div>
+                                        <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                    @endif
                                 </div>
 
                                 <!--Task Detail Header Buttons-->
@@ -229,7 +231,9 @@
                                             <ul class="dropdown-menu">
                                                 @if(auth()->user()->can('create task'))
                                                     <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
-                                                @elseif(\Illuminate\Support\Facades\Auth::user()->hasRole(['developer','teamlead','frontend']))
+                                                @endif
+
+                                                @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['developer','teamlead','frontend']))
                                                     <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
                                                 @endif
                                             </ul>
@@ -358,7 +362,7 @@
                                                     <li class="item">
                                                         <div class="itemDetail">
                                                             <span class="detailType">Dev's Estimated Hours:</span>
-                                                            <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours[0]->internal_hours}} @else 0 @endif Hours</span>
+                                                            <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
                                                         </div>
                                                     </li>
                                                     <li class="item">
@@ -373,7 +377,7 @@
                                                             @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['pm','admin']))
                                                                 <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours[0]->estimated_hours - $task->hours->where('subtask_id',0)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours[0]) && $task->hours->where('subtask_id',0)->sum('consumed_hours') > $task->hours[0]->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             @else
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours[0]->internal_hours - $task->hours->where('subtask_id',0)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours[0]) && $task->hours->where('subtask_id',0)->sum('consumed_hours') > $task->hours[0]->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->where('subtask_id', null)->pluck('internal_hours')->first() - $task->hours->where('subtask_id',0)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours[0]) && $task->hours->where('subtask_id',0)->sum('consumed_hours') > $task->hours[0]->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             @endif
                                                         </div>
                                                     </li>
@@ -1085,7 +1089,7 @@
                                                     </div>
                                                 </div>
 
-                                                <input type="hidden" name="task_id" value="{{$task->id}}">
+                                                @if(!empty($task->id)) <input type="hidden" name="task_id" value="{{$task->id}}"> @endif
 
                                                 <div class="modal-footer">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">

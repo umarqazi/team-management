@@ -45,7 +45,7 @@ class HoursController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/tasks/' . $request->task_id)
+            return Redirect::to('/tasks/'.$request->task_id)
                 ->withErrors($validator);
         }
         else {
@@ -62,7 +62,7 @@ class HoursController extends Controller
             Session::flash('message', 'Task Successfully Estimated!');
             Session::flash('alert-class', 'alert-success');
 
-            return redirect('/tasks/' . $request->task_id);
+            return redirect('/tasks/'.$request->task_id);
         }
     }
 
