@@ -37,7 +37,7 @@ class TasksController extends Controller
 
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
-            $projects = $user->projects;
+            $projects = !empty($user->projects) ?$user->projects :array();
             $task = $user->tasks()->orderBy('created_at','desc')->first();
 
             if (!is_null($task)){
@@ -122,7 +122,7 @@ class TasksController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('tasks/create')
+            return Redirect::to('/tasks')
                 ->withErrors($validator);
         }
         else {
@@ -191,7 +191,7 @@ class TasksController extends Controller
             // redirect
             Session::flash('message', 'Successfully created Task!');
             Session::flash('alert-class', 'alert-success');
-            return Redirect::to('tasks/create');
+            return Redirect::to('/tasks');
         }
     }
 
@@ -415,8 +415,8 @@ class TasksController extends Controller
                 'task_description' => $task->description,
                 'task_percentDone' => $task->percentDone,
                 'task_duedate' => date('m/d/Y h:i A',$task->duedate),
-                'task_estimated_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
-                'task_remaining_hours' => $task->hours()->where('subtask_id',0)->pluck('estimated_hours'),
+                'task_estimated_hours' => $task->hours()->where('subtask_id',null)->pluck('estimated_hours'),
+                'task_remaining_hours' => $task->hours()->where('subtask_id',null)->pluck('estimated_hours'),
                 'task_tags' => $task->tags,
                 'task_type' => $task->types,
                 'task_priority' => $task->priority,
@@ -459,7 +459,7 @@ class TasksController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/tasks/')
+            return Redirect::to('/tasks/'.$id)
                 ->withErrors($validator);
         }
         else {
@@ -500,9 +500,8 @@ class TasksController extends Controller
 
             if (! empty($request->task_originalEstimate)) {
 
-                if (! empty($task->hours[0])) {
-                    $hour = $task->hours[0];
-                    //$hour->task_id = Task::orderBy('created_at', 'desc')->pluck('id')->first();
+                if (! empty($task->hours->where('subtask_id', null)->first())) {
+                    $hour = $task->hours->where('subtask_id', null)->first();
                     $hour->task_id = $id;
                     $hour->project_id = $request->project_name;
                     $hour->estimated_hours = $request->task_originalEstimate;
