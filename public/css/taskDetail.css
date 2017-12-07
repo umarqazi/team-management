@@ -185,14 +185,14 @@ body{
 }
 /*Delayed Tasks Ends*/
 
-/*Completed Tasks Starts*/
-.eachTask .completed>a{
-    color: green;
-}
-/*Completed Tasks Ends*/
 .eachTask .aboutToDeliver>a{
     color: #8a6d3b;
 }
+/*Completed Tasks Starts*/
+.eachTask .taskCompleted>a{
+    color: green;
+}
+/*Completed Tasks Ends*/
 
 .allTaskHeader{
     font-size: 15px;

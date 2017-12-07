@@ -138,7 +138,7 @@
                                             <ol class="eachTask" >
                                                 @if($tasks != null)
                                                     @foreach($tasks as $t)
-                                                        <li class="@if($t->duedate < strtotime('now') && $t->workflow != 'Completed') delayed  @elseif(strtotime(date('Y-m-d H:i',$t->duedate) .' -1 day') <= strtotime('now')) aboutToDeliver @endif {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                        <li class="@if($t->workflow == 'Completed') taskCompleted @elseif(strtotime(date('Y-m-d H:i',$t->duedate) .' -1 day') <= strtotime('now')) aboutToDeliver @elseif($t->duedate < strtotime('now') && $t->workflow != 'Completed') delayed @endif {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
                                                             <a href="/tasks/{{$t->id}}">
                                                                 <div class="taskKey">{{$t->key}}</div>
                                                                 <div class="taskName">{{str_limit($t->name, 15)}}</div>
