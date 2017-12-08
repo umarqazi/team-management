@@ -32,6 +32,7 @@
                             <!--Main Page Content Area Filter Dropdowns-->
                             <div class="contentBoxFilters">
 
+                                <span class="FilterLabel">Filters:</span>
                                 <!--Projects Filter Dropdown-->
                                 <div class="btn-group taskDetailFilter">
                                     <select class="selectpicker liveSearch" id="project_select"  data-live-search="true">
@@ -151,7 +152,15 @@
                                                     <ol class="eachTask" >
                                                         @if(! empty($tasks))
                                                             @foreach($tasks as $t)
-                                                                <li class="@if($t->workflow == 'Completed') taskCompleted @elseif(strtotime(date('Y-m-d H:i',$t->duedate) .' -1 day') <= strtotime('now')) aboutToDeliver @elseif($t->duedate < strtotime('now') && $t->workflow != 'Completed') delayed @endif {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                <li class="
+                                                                        @if($t->workflow == 'Completed')
+                                                                            taskCompleted
+                                                                        @elseif($t->duedate < strtotime('now'))
+                                                                            delayed
+                                                                        @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                            aboutToDeliver
+                                                                        @endif
+                                                                {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
                                                                     <a href="/tasks/{{$t->id}}">
                                                                         <div class="taskKey">{{$t->key}}</div>
                                                                         <div class="taskName">{{str_limit($t->name, 15)}}</div>
@@ -177,6 +186,12 @@
                                     </div>
 
                                     <!--Tab Code-->
+                                    <div class="allTaskFooter">
+                                        <p class="hint completeHint"><span></span>Completed Tasks</p>
+                                        <p class="hint aboutToDeliverHint"><span></span>About To Deliver </p>
+                                        <p class="hint delayHint"><span></span>Delayed Tasks</p>
+                                        <p class="hint normalHint"><span></span>Normal Tasks</p>
+                                    </div>
                                 </div>
 
                                 <!--Content Box Task Detail Box Showing Detail of the Task-->
@@ -226,6 +241,37 @@
                                             <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
                                             <button class="btn btn-default btn-sm" type="submit"><span class="fa fa-comment"></span> Comment</button>
                                             <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Status
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu taskStatus">
+                                                        <li value="Todo"><a>Todo</a></li>
+                                                        <li value="In Progress"><a>In Progress</a></li>
+                                                        <li value="In QA"><a>In QA</a></li>
+                                                        <li value="Completed"><a>Completed</a></li>
+                                                    </ul>
+                                                    <script>
+                                                        $(function () {
+                                                            $('.taskStatus li').click(function () {
+                                                                console.log($(this).attr('value'));
+                                                                $.ajax({
+                                                                    url: '/status',
+                                                                    type:'GET',
+                                                                    data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
+                                                                    dataType: 'json',
+                                                                    success: function (data) {
+                                                                        if(data) {
+                                                                            alert('Status Successfully Updated');
+                                                                            location.reload();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            });
+                                                        })
+                                                    </script>
+                                                </div>
                                                 <button type="button" class="btn btn-default">Assign</button>
                                                 <button type="button" class="btn btn-default">Reopen</button>
                                                 <button type="button" class="btn btn-default">Change Request</button>

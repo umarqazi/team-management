@@ -130,6 +130,10 @@ body{
     clear: both;
     padding: 5px 20px 5px 12px;
 }
+.FilterLabel{
+    margin-right: 10px;
+    font-size: 16px;
+}
 .taskDetailFilter{
     margin-right: 5px;
 }
@@ -152,7 +156,7 @@ body{
     float: left;
 }
 .allTasks{
-    height: 430px;
+    height: 373px;
     overflow-y: auto;
     padding: 10px 10px 0 15px;
 }
@@ -204,9 +208,50 @@ body{
 }
 
 .allTaskFooter{
-    height: 50px;
     padding: 5px;
     border-top:1px solid #e6e6e6;
+}
+
+/*.allTaskFooter .hint{*/
+    /*width: 10px;*/
+    /*height: 10px;*/
+    /*margin-right: 10px;*/
+/*}*/
+
+.allTaskFooter p{
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 0;
+    padding: 5px;
+    font-size: 12px;
+}
+.allTaskFooter .completeHint span{
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-color: green ;
+    display: inline-block;
+}
+.allTaskFooter .aboutToDeliverHint span{
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-color: #8a6d3b ;
+    display: inline-block;
+}
+.allTaskFooter .delayHint span{
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-color: #c72727 ;
+    display: inline-block;
+}
+.allTaskFooter .normalHint span{
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-color: #337ab7 ;
+    display: inline-block;
 }
 
 .taskDetailBox{

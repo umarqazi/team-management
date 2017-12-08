@@ -524,6 +524,15 @@ class TasksController extends Controller
         }
     }
 
+    public function updateStatus(){
+
+        $task = Task::find($_GET['task_id']);
+        $task->workflow = $_GET['value'];
+        $task->update();
+
+        echo true;
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -306,6 +306,15 @@ class SubtasksController extends Controller
         }
     }
 
+    public function updateStatus(){
+
+        $subtask = Subtask::find($_GET['subtask_id']);
+        $subtask->Workflow = $_GET['value'];
+        $subtask->update();
+
+        echo true;
+    }
+
     /**
      * Remove the specified resource from storage.
      *
