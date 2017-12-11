@@ -60,7 +60,17 @@ Route::group(['middleware'  => 'auth'], function(){
         'as' => 'specificView'
     ]);
 
+    Route::get('/status',[
+       'uses' => 'TasksController@updateStatus',
+       'as' => 'updateStatus'
+    ]);
+
     Route::resource( 'subtasks', 'SubtasksController', ['only' => ['index', 'show']]);
+
+    Route::get('/subtask_status',[
+        'uses' => 'SubtasksController@updateStatus',
+        'as' => 'updateStatus'
+    ]);
 
     // Route Group for Sub Tasks
     /*Route::group(['middleware' => ['subtask:admin, pm']], function (){
