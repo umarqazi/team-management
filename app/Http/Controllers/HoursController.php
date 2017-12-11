@@ -68,7 +68,6 @@ class HoursController extends Controller
 
     public function storeDeveloperSubtaskEstimation(Request $request)
     {
-
         $rules = array(
             'dev_estimated_hours' => 'required|integer',
         );
@@ -76,12 +75,11 @@ class HoursController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/subtasks/' . $request->subtask_id)
+            return Redirect::to('/subtasks/'.$request->subtask_id)
                 ->withErrors($validator);
         } else {
 
             $hour = Hour::where([
-                ['task_id', $request->task_id],
                 ['subtask_id', $request->subtask_id]
             ])->first();
 
@@ -92,12 +90,11 @@ class HoursController extends Controller
             Session::flash('message', 'Subtask Successfully created Estimated!');
             Session::flash('alert-class', 'alert-success');
 
-            return redirect('/subtasks/' . $request->subtask_id);
+            return redirect('/subtasks/'.$request->subtask_id);
         }
     }
 
     public function storeTaskConsumption(Request $request){
-//        dd($request);
 
         $rules = array(
             'project_id' => 'required|integer',

@@ -30,40 +30,44 @@
                                 <strong>Success!</strong> {{ Session::get('message') }}
                             </div>
                         @endif
-                        <table class="table table-hover table-striped">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Joined</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($users as $user)
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
                                 <tr>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ Carbon\Carbon::parse($user->created_at)->format("dS \of F, Y") }}</td>
-                                    <td>
-                                        {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
-                                        {{ Form::hidden('_method', 'DELETE') }}
-
-                                        @if(auth()->user()->can('edit user'))
-                                        <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> |
-                                        @endif
-
-                                        @if(auth()->user()->can('delete user'))
-                                        <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button> |
-                                        @endif
-
-                                        <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                                         {{ Form::close() }}
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                    <th>Action</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ Carbon\Carbon::parse($user->created_at)->format("dS \of F, Y") }}</td>
+                                        <td>
+                                            {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
+                                            {{ Form::hidden('_method', 'DELETE') }}
+
+                                            @if(auth()->user()->can('edit user'))
+                                                <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> |
+                                            @endif
+
+                                            @if(auth()->user()->can('delete user'))
+                                                <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button> |
+                                            @endif
+
+                                            <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                            {{ Form::close() }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>

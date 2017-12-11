@@ -31,6 +31,7 @@
                     <!--Main Page Content Area Filter Dropdowns-->
                     <div class="contentBoxFilters">
 
+                        <span class="FilterLabel">Filters:</span>
                         <!--Projects Filter Dropdown-->
                         <div class="btn-group taskDetailFilter">
                                 <select class="selectpicker liveSearch" id="project_select"  data-live-search="true">
@@ -138,11 +139,21 @@
                                             <ol class="eachTask" >
                                                 @if($tasks != null)
                                                     @foreach($tasks as $t)
-                                                        <li class="@if($t->workflow == 'Completed') taskCompleted @elseif(strtotime(date('Y-m-d H:i',$t->duedate) .' -1 day') <= strtotime('now')) aboutToDeliver @elseif($t->duedate < strtotime('now') && $t->workflow != 'Completed') delayed @endif {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                        <li class="
+                                                                @if($t->workflow == 'Completed')
+                                                                    taskCompleted
+                                                                @elseif($t->duedate < strtotime('now'))
+                                                                    delayed
+                                                                @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                    aboutToDeliver
+                                                                @endif
+                                                                {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
                                                             <a href="/tasks/{{$t->id}}">
                                                                 <div class="taskKey">{{$t->key}}</div>
                                                                 <div class="taskName">{{str_limit($t->name, 15)}}</div>
                                                             </a>
+                                                            <?/*=date('Y-m-d H:i', strtotime('now'))*/?><!--<br>
+                                                            --><?/*=date('Y-m-d H:i', $t->duedate)*/?>
                                                         </li>
                                                     @endforeach
                                                 @else
@@ -152,7 +163,7 @@
                                         </div>
                                     </div>
 
-                                    <div role="tabpanel" class="allBugs tab-pane" id="bugs">
+                                    <div role="tabpanel" class="allTasks allBugs tab-pane" id="bugs">
                                         <div class="bugList">
                                             <ul class="eachBug">
                                                 <li><div id="BugTitle">No Bugs Available</div></li>
@@ -164,7 +175,14 @@
                             </div>
 
                             <!--Tab Code-->
+                            <div class="allTaskFooter">
+                                <p class="hint completeHint"><span></span>Completed Tasks</p>
+                                <p class="hint aboutToDeliverHint"><span></span>About To Deliver </p>
+                                <p class="hint delayHint"><span></span>Delayed Tasks</p>
+                                <p class="hint normalHint"><span></span>Normal Tasks</p>
+                            </div>
                         </div>
+
 
                         <!--Content Box Task Detail Box Showing Detail of the Task-->
                         <div class="taskDetailBox">
@@ -183,8 +201,10 @@
                                 @endif
 
                                 <div class="taskDetailBoxHeading">
-                                    <div class="taskProjectNameAndKey"><a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{ucwords($task->project->name)}} @endif </a> / <a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{$task->key}} @endif </a></div>
-                                    <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                    @if(! empty($task))
+                                        <div class="taskProjectNameAndKey"><a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{ucwords($task->project->name)}} @endif </a> / <a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{$task->key}} @endif </a></div>
+                                        <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                    @endif
                                 </div>
 
                                     <!--Task Detail Header Buttons-->
@@ -210,8 +230,38 @@
                                     @endif
 
                                         <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                        <button class="btn btn-default btn-sm" type="submit"><span class="fa fa-comment"></span> Comment</button>
                                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Status
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu taskStatus">
+                                                    <li value="Todo"><a>Todo</a></li>
+                                                    <li value="In Progress"><a>In Progress</a></li>
+                                                    <li value="In QA"><a>In QA</a></li>
+                                                    <li value="Completed"><a>Completed</a></li>
+                                                </ul>
+                                                <script>
+                                                    $(function () {
+                                                        $('.taskStatus li').click(function () {
+                                                            console.log($(this).attr('value'));
+                                                            $.ajax({
+                                                                url: '/status',
+                                                                type:'GET',
+                                                                data:{task_id: '@if(!empty($task))<?= $task->id ?> @endif',value: $(this).attr('value')},
+                                                                dataType: 'json',
+                                                                success: function (data) {
+                                                                    if(data) {
+                                                                        alert('Status Successfully Updated');
+                                                                        location.reload();
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+                                                    })
+                                                </script>
+                                            </div>
                                             <button type="button" class="btn btn-default">Assign</button>
                                             <button type="button" class="btn btn-default">Reopen</button>
                                             <button type="button" class="btn btn-default">Change Request</button>
@@ -343,25 +393,25 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours[0]->estimated_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Dev's Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours[0]->internal_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->internal_hours}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Consumed Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id',0)->sum('consumed_hours')}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->sum('consumed_hours')}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Remaining Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours[0]->estimated_hours - $task->hours->where('subtask_id',0)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id',0)->sum('consumed_hours') > $task->hours[0]->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->first()->estimated_hours - $task->hours->where('subtask_id', null)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -793,6 +843,7 @@
                                             <label for="subtask_priority" class="col-sm-2 control-label">Priority</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="subtask_priority" name="subtask_priority">
+                                                    <option value="">Select A Priority</option>
                                                     <option value="Blocker">Blocker</option>
                                                     <option value="Critical">Critical</option>
                                                     <option value="Major">Major</option>
