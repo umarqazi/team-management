@@ -201,8 +201,10 @@
                                 @endif
 
                                 <div class="taskDetailBoxHeading">
-                                    <div class="taskProjectNameAndKey"><a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{ucwords($task->project->name)}} @endif </a> / <a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{$task->key}} @endif </a></div>
-                                    <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                    @if(! empty($task))
+                                        <div class="taskProjectNameAndKey"><a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{ucwords($task->project->name)}} @endif </a> / <a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{$task->key}} @endif </a></div>
+                                        <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                    @endif
                                 </div>
 
                                     <!--Task Detail Header Buttons-->
@@ -228,7 +230,6 @@
                                     @endif
 
                                         <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                        <button class="btn btn-default btn-sm" type="submit"><span class="fa fa-comment"></span> Comment</button>
                                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                             <div class="btn-group" role="group">
                                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -248,7 +249,7 @@
                                                             $.ajax({
                                                                 url: '/status',
                                                                 type:'GET',
-                                                                data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
+                                                                data:{task_id: '@if(!empty($task))<?= $task->id ?> @endif',value: $(this).attr('value')},
                                                                 dataType: 'json',
                                                                 success: function (data) {
                                                                     if(data) {
@@ -392,25 +393,25 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours[0]->estimated_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Dev's Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours[0]->internal_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->internal_hours}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Consumed Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id',0)->sum('consumed_hours')}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->sum('consumed_hours')}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Remaining Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours[0]->estimated_hours - $task->hours->where('subtask_id',0)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id',0)->sum('consumed_hours') > $task->hours[0]->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->first()->estimated_hours - $task->hours->where('subtask_id', null)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -842,6 +843,7 @@
                                             <label for="subtask_priority" class="col-sm-2 control-label">Priority</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="subtask_priority" name="subtask_priority">
+                                                    <option value="">Select A Priority</option>
                                                     <option value="Blocker">Blocker</option>
                                                     <option value="Critical">Critical</option>
                                                     <option value="Major">Major</option>

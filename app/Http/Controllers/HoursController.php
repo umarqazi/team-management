@@ -68,7 +68,6 @@ class HoursController extends Controller
 
     public function storeDeveloperSubtaskEstimation(Request $request)
     {
-        dd($request);
         $rules = array(
             'dev_estimated_hours' => 'required|integer',
         );
@@ -81,7 +80,6 @@ class HoursController extends Controller
         } else {
 
             $hour = Hour::where([
-                ['task_id', $request->task_id],
                 ['subtask_id', $request->subtask_id]
             ])->first();
 
@@ -97,7 +95,6 @@ class HoursController extends Controller
     }
 
     public function storeTaskConsumption(Request $request){
-//        dd($request);
 
         $rules = array(
             'project_id' => 'required|integer',

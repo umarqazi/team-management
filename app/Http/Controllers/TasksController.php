@@ -38,6 +38,7 @@ class TasksController extends Controller
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $projects = !empty($user->projects) ?$user->projects :array();
+            $users = User::role(['teamlead','developer'])->get();
             $task = $user->tasks()->orderBy('created_at','desc')->first();
 
             if (!is_null($task)){
@@ -122,7 +123,7 @@ class TasksController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/tasks')
+            return Redirect::to('/tasks/specific/'.$request->project_name)
                 ->withErrors($validator);
         }
         else {
@@ -191,7 +192,7 @@ class TasksController extends Controller
             // redirect
             Session::flash('message', 'Successfully created Task!');
             Session::flash('alert-class', 'alert-success');
-            return Redirect::to('/tasks');
+            return Redirect::to('/tasks/specific/'.$request->project_name);
         }
     }
 
@@ -208,7 +209,7 @@ class TasksController extends Controller
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $projects = $user->projects;
-            $users = User::all();
+            $users = User::role(['teamlead','developer'])->get();
             $task = $user->tasks()->find($id);
             $Project = $task->project;
             $tasks = $user->tasks()->where('project_id', $Project->id)->get();
@@ -219,7 +220,7 @@ class TasksController extends Controller
         {
         // Data To Populate View i-e Projects Filter, Users Filter etc
             $projects = Project::all();
-            $users = User::all();
+            $users = User::role(['teamlead','developer'])->get();
 
             // Other Specific Data
             $task = Task::find($id);
@@ -249,8 +250,12 @@ class TasksController extends Controller
         // String To Int Conversion
         $pid = (int)$pid;
 
-        $tasks[] = [];
-        $task[] = [];
+        $users = array();
+        $Project = array();
+        $projects = array();
+        $tasks = array();
+        $task = array();
+
         $hours[] = [];
 
         $user   = Auth::user();
@@ -325,7 +330,7 @@ class TasksController extends Controller
 
     public function showProject($PID = null)
     {
-        $projects = Project::all();
+        $projects = Project::where('status', 1)->get();
         $users = User::role(['teamlead','developer'])->get();
         $reporters = User::role(['pm','admin'])->get();
 
@@ -543,10 +548,11 @@ class TasksController extends Controller
     {
         $id= (int)$id;
         $task = Task::find($id);
+
         $task->delete();
 
         Session::flash('message', 'Successfully deleted the Task!');
         Session::flash('alert-class', 'alert-success');
-        return Redirect::to('/tasks');
+        return Redirect::to('/tasks/specific/'.$task->project()->pluck('id')->first());
     }
 }

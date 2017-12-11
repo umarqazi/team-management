@@ -75,7 +75,7 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/') }}">
+            <a class="navbar-brand">
                 Techverx
             </a>
         </div>
@@ -176,7 +176,7 @@
                             <label for="" class="col-sm-2 control-label">Project Name<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-4">
                                 <select class="form-control" id="project_name" name="project_name" style="overflow-y: scroll">
-                                    <option id="" value="null">Select A Project</option>
+                                    <option id="" value="">Select A Project</option>
                                 </select>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                             <label class="col-sm-2 control-label">Task Type<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-4">
                                 <select class="form-control" name="task_type">
-                                    <option value="" selected>Select A Proper Type</option>
+                                    <option value="" selected>Select Task Type</option>
                                     <option value="New Feature">New Feature</option>
                                     <option value="Bug">Bug</option>
                                     <option value="Improvement">Improvement</option>
@@ -204,7 +204,7 @@
 
                         <div class="form-group modal-component" hidden>
                             <label for="task_component" class="col-sm-2 control-label">Component/s</label>
-                            <div class="col-sm-8">
+                            <div class="col-sm-4">
                                 <select class="form-control" id="task_component" name="task_component">
                                     <option value="" selected>Select A Component</option>
                                     <option value="Web">Web</option>
@@ -218,6 +218,7 @@
                             <label for="task_priority" class="col-sm-2 control-label">Priority</label>
                             <div class="col-sm-4">
                                 <select class="form-control" id="task_priority" name="task_priority">
+                                    <option value="">Select A Priority</option>
                                     <option value="Blocker">Blocker</option>
                                     <option value="Critical">Critical</option>
                                     <option value="Major">Major</option>
@@ -247,7 +248,7 @@
                             <label for="task_assignee" class="col-sm-2 control-label">Assignee</label>
                             <div class="col-sm-8">
                                 <select class="form-control selectpicker" id="task_assignee" name="task_assignee[]" multiple>
-                                    <option value="null" disabled>Select An Assignee</option>
+                                    <option value="" disabled>Select An Assignee</option>
                                 </select>
                             </div>
                         </div>
@@ -256,7 +257,7 @@
                             <label for="task_follower" class="col-sm-2 control-label">Follower</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="task_follower" name="task_follower">
-                                    <option value="null">Select A Follower</option>
+                                    <option value="">Select A Follower</option>
                                 </select>
                             </div>
                         </div>
@@ -274,21 +275,21 @@
                             <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="task_reporter" name="task_reporter" >
-                                    <option value="null">Select A Reporter</option>
+                                    <option value="">Select A Reporter</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group modal-environment" hidden>
                             <label for="task_environment" class="col-sm-2 control-label">Task Environment</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-8">
                                 <textarea name="task_environment" class="form-control" rows="5" id="task_environment" ></textarea>
                             </div>
                         </div>
 
                         <div class="form-group modal-description" hidden>
                             <label for="task_description" class="col-sm-2 control-label">Task Description</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-8">
                                 <textarea name="task_description" class="form-control" rows="5" id="task_description" ></textarea>
                             </div>
                         </div>
@@ -325,6 +326,7 @@
                             <label for="task_workflow" class="col-xs-2 control-label">Workflow</label>
                             <div class="col-xs-8">
                                 <select class="form-control" id="task_workflow" name="task_workflow">
+                                    <option value="">Select Workflow</option>
                                     <option value="Todo">Todo</option>
                                     <option value="In Progress">In Progress</option>
                                     <option value="In QA">In QA</option>

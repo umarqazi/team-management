@@ -188,6 +188,7 @@ class ProjectsController extends Controller
         $rules = array(
             'name'       => 'required|unique:projects|max:255',
             'status' => 'required',
+            'external_deadline' => 'after:internal_deadline',
             'key' => 'required|unique:projects',
         );
 

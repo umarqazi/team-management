@@ -239,7 +239,6 @@
                                             @endif
 
                                             <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                            <button class="btn btn-default btn-sm" type="submit"><span class="fa fa-comment"></span> Comment</button>
                                             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -403,26 +402,26 @@
                                                                 <li class="item">
                                                                     <div class="itemDetail">
                                                                         <span class="detailType">Total Estimated Hours:</span>
-                                                                        <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours[0]->estimated_hours}} @else 0 @endif Hours</span>
+                                                                        <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
                                                                     </div>
                                                                 </li>
                                                             @endif
                                                             <li class="item">
                                                                 <div class="itemDetail">
                                                                     <span class="detailType">Dev's Estimated Hours:</span>
-                                                                    <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
+                                                                    <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
                                                                 </div>
                                                             </li>
                                                             <li class="item">
                                                                 <div class="itemDetail">
                                                                     <span class="detailType">Total Consumed Hours:</span>
-                                                                    <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id',0)->sum('consumed_hours')}} @else 0 @endif Hours</span>
+                                                                    <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->where('subtask_id',null)->sum('consumed_hours')}} @else 0 @endif Hours</span>
                                                                 </div>
                                                             </li>
                                                             </li><li class="item">
                                                                 <div class="itemDetail">
                                                                     <span class="detailType">Total Remaining Hours:</span>
-                                                                    <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours[0]->internal_hours - $task->hours->where('subtask_id',0)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours[0]) && $task->hours->where('subtask_id',0)->sum('consumed_hours') > $task->hours[0]->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                    <span class="detail"> @if(! empty($task->hours->first())) {{abs($task->hours->first()->internal_hours - $task->hours->where('subtask_id',null)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours->first()) && $task->hours->where('subtask_id',null)->sum('consumed_hours') > $task->hours->first()->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                                 </div>
                                                             </li>
                                                         </ul>

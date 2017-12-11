@@ -280,8 +280,9 @@ class SubtasksController extends Controller
             /*To Add Hours Estimate in Hours Table*/
             if (!empty($request->subtask_originalEstimate)) {
 
-                if (! empty($subtask->hours[0])){
-                    $hour = $subtask->hours[0];
+                if (! empty($subtask->hours->first())){
+
+                    $hour = $subtask->hours->first();
                     $hour->task_id = $request->task_name;
                     $hour->subtask_id = $id;
                     $hour->project_id = $request->project_id;
