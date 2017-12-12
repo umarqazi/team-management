@@ -51,6 +51,11 @@ Route::group(['middleware'  => 'auth'], function(){
             'as' => 'Project'
         ]);
 
+        Route::post('/reopen', [
+           'uses' => 'TasksController@reopenAndChangeRequest',
+           'as' => 'reopenTask'
+        ]);
+
     });
 
     Route::resource( 'tasks', 'TasksController', ['only' => ['index', 'show']]);

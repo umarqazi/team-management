@@ -125,9 +125,9 @@
                                 </div>
 
                                 <!--Tag Filter-->
-                                {{--<div class="taskDetailInput">
+                                <div class="taskDetailInput">
                                     <input type="text" class="form-control" id="task_tag" placeholder="Search By Tags">
-                                </div>--}}
+                                </div>
                             </div>
 
                             <div class="mainTaskDetail">
@@ -239,52 +239,50 @@
                                             @endif
 
                                             <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                            <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Status
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu taskStatus">
-                                                        <li value="Todo"><a>Todo</a></li>
-                                                        <li value="In Progress"><a>In Progress</a></li>
-                                                        <li value="In QA"><a>In QA</a></li>
-                                                        <li value="Completed"><a>Completed</a></li>
-                                                    </ul>
-                                                    <script>
-                                                        $(function () {
-                                                            $('.taskStatus li').click(function () {
-                                                                console.log($(this).attr('value'));
-                                                                $.ajax({
-                                                                    url: '/status',
-                                                                    type:'GET',
-                                                                    data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
-                                                                    dataType: 'json',
-                                                                    success: function (data) {
-                                                                        if(data) {
-                                                                            alert('Status Successfully Updated');
-                                                                            location.reload();
-                                                                        }
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Status
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu taskStatus">
+                                                    <li value="Todo"><a>Todo</a></li>
+                                                    <li value="In Progress"><a>In Progress</a></li>
+                                                    <li value="In QA"><a>In QA</a></li>
+                                                    <li value="Completed"><a>Completed</a></li>
+                                                </ul>
+                                                <script>
+                                                    $(function () {
+                                                        $('.taskStatus li').click(function () {
+                                                            console.log($(this).attr('value'));
+                                                            $.ajax({
+                                                                url: '/status',
+                                                                type:'GET',
+                                                                data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
+                                                                dataType: 'json',
+                                                                success: function (data) {
+                                                                    if(data) {
+                                                                        alert('Status Successfully Updated');
+                                                                        location.reload();
                                                                     }
-                                                                });
+                                                                }
                                                             });
-                                                        })
-                                                    </script>
-                                                </div>
-                                                <button type="button" class="btn btn-default">Assign</button>
-                                                <button type="button" class="btn btn-default">Reopen</button>
-                                                <button type="button" class="btn btn-default">Change Request</button>
-                                                <div class="btn-group" role="group">
-                                                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        More <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        @if(auth()->user()->can('create task'))
-                                                            <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
-                                                        @endif
-                                                        <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
-                                                    </ul>
-                                                </div>
+                                                        });
+                                                    })
+                                                </script>
+                                            </div>
+                                            <button type="button" class="btn btn-default btn-sm">Assign</button>
+                                            <button type="button" class="btn btn-default btn-sm">Reopen</button>
+                                            <button type="button" class="btn btn-default btn-sm">Change Request</button>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    More <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    @if(auth()->user()->can('create task'))
+                                                        <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
+                                                    @endif
+                                                    <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
+                                                </ul>
                                             </div>
 
                                             {{--<div class="btn-group btn-group-sm" role="group" aria-label="...">
@@ -386,7 +384,7 @@
                                                         <form>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <textarea class="form-control" rows="3" name="description" id="description"> @if($task != null) {{$task->description}} @endif </textarea>
+                                                                    <textarea class="form-control" rows="3" name="description" id="description" readonly> @if($task != null) {{$task->description}} @endif </textarea>
                                                                 </div>
                                                             </div>
                                                         </form>

@@ -538,6 +538,41 @@ class TasksController extends Controller
         echo true;
     }
 
+    // Function To Add Task Reopen and Change Request.
+    public function reopenAndChangeRequest(Request $request){
+        
+        $rules = array(
+            'description' => 'required',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Reopen And Change Request
+        if ($validator->fails()) {
+            return Redirect::to('/tasks/'.$request->task_id)
+                ->withErrors($validator);
+        }
+        else {
+            $task = Task::find($request->task_id);
+            if (empty($task->description)){
+                $task->description = $request->request_type."\n".$request->description;
+            }
+            else{
+                $task->description .= "\n\n".$request->request_type."\n".$request->description;
+            }
+            $task->update();
+
+            // redirect
+            if ($request->request_type == "Reopen Request"){
+                Session::flash('message', 'Task Reopen Request Successfully Submitted!');
+            }
+            else{
+                Session::flash('message', 'Task Change Request Successfully Submitted!');
+            }
+            Session::flash('alert-class', 'alert-success');
+            return Redirect::to('tasks/'.$request->task_id);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -68,12 +68,11 @@ body{
 }
 .taskDetailSidebar ul li a{
     display: block;
-    text-decoration: none;
     padding: 5px;
 }
-.taskDetailSidebar ul li a:hover{
+/*.taskDetailSidebar ul li a:hover{
     background-color: #E5E5E5;
-}
+}*/
 .taskViewSidebarTabs li{
     width: 50%;
     background-color: #f0f0f0;

@@ -65,48 +65,46 @@
                                 <button class="btn btn-default subtaskDetailBoxCommentButton" type="submit"><span class="fa fa-comment"></span> Comment</button>
                                 <button class="btn btn-default subtaskDetailBoxAssignButton" type="button">Assign</button>
 
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Status <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu subtaskStatus">
-                                            <li value="Todo"><a>Todo</a></li>
-                                            <li value="In Progress"><a>In Progress</a></li>
-                                            <li value="In QA"><a>In QA</a></li>
-                                            <li value="Completed"><a>Completed</a></li>
-                                        </ul>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu subtaskStatus">
+                                        <li value="Todo"><a>Todo</a></li>
+                                        <li value="In Progress"><a>In Progress</a></li>
+                                        <li value="In QA"><a>In QA</a></li>
+                                        <li value="Completed"><a>Completed</a></li>
+                                    </ul>
 
-                                        <script>
-                                            $(function () {
-                                                $('.subtaskStatus li').click(function () {
-                                                    console.log($(this).attr('value'));
-                                                    $.ajax({
-                                                        url: '/subtask_status',
-                                                        type:'GET',
-                                                        data:{subtask_id: '<?=$subtask->id ?>',value: $(this).attr('value')},
-                                                        dataType: 'json',
-                                                        success: function (data) {
-                                                            if(data) {
-                                                                alert('Status Successfully Updated');
-                                                                location.reload();
-                                                            }
+                                    <script>
+                                        $(function () {
+                                            $('.subtaskStatus li').click(function () {
+                                                console.log($(this).attr('value'));
+                                                $.ajax({
+                                                    url: '/subtask_status',
+                                                    type:'GET',
+                                                    data:{subtask_id: '<?=$subtask->id ?>',value: $(this).attr('value')},
+                                                    dataType: 'json',
+                                                    success: function (data) {
+                                                        if(data) {
+                                                            alert('Status Successfully Updated');
+                                                            location.reload();
                                                         }
-                                                    });
+                                                    }
                                                 });
-                                            })
-                                        </script>
-                                    </div>
-                                    <button class="btn btn-default" type="button">Reopen</button>
-                                    <button class="btn btn-default" type="button">Change Request</button>
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            More <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#" data-toggle="modal" data-target="#DeveloperSubtaskEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
-                                        </ul>
-                                    </div>
+                                            });
+                                        })
+                                    </script>
+                                </div>
+                                <button class="btn btn-default" type="button">Reopen</button>
+                                <button class="btn btn-default" type="button">Change Request</button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        More <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" data-toggle="modal" data-target="#DeveloperSubtaskEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
+                                    </ul>
                                 </div>
                             </div>
 

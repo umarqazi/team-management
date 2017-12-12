@@ -19,10 +19,13 @@ body{
     border-right: 1px solid #ddd;
     padding: 15px 10px;
     position: relative;
-    background-color: #F5F5F5;
+    background-color: #c0504e !important;
 }
 .subtaskDetailSidebar li{
     display: block;
+}
+.subtaskDetailSidebar ul li a{
+    color: #ffffff !important;
 }
 .subtaskDetailSidebar .list{
     margin-top: 20px;

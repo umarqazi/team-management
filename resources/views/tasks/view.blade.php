@@ -123,9 +123,9 @@
                         </div>
 
                         <!--Tag Filter-->
-                        {{--<div class="taskDetailInput">
+                        <div class="taskDetailInput">
                             <input type="text" class="form-control" id="task_tag"  placeholder="Search By Tags">
-                        </div>--}}
+                        </div>
                     </div>
 
                     <div class="mainTaskDetail">
@@ -235,55 +235,57 @@
                                     @endif
 
                                     <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Status
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu taskStatus">
-                                                <li value="Todo"><a>Todo</a></li>
-                                                <li value="In Progress"><a>In Progress</a></li>
-                                                <li value="In QA"><a>In QA</a></li>
-                                                <li value="Completed"><a>Completed</a></li>
-                                            </ul>
-                                            <script>
-                                                $(function () {
-                                                    $('.taskStatus li').click(function () {
-                                                        console.log($(this).attr('value'));
-                                                        $.ajax({
-                                                            url: '/status',
-                                                            type:'GET',
-                                                            data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
-                                                            dataType: 'json',
-                                                            success: function (data) {
-                                                                if(data) {
-                                                                    alert('Status Successfully Updated');
-                                                                    location.reload();
-                                                                }
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Status
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu taskStatus">
+                                            <li value="Todo"><a>Todo</a></li>
+                                            <li value="In Progress"><a>In Progress</a></li>
+                                            <li value="In QA"><a>In QA</a></li>
+                                            <li value="Completed"><a>Completed</a></li>
+                                        </ul>
+                                        <script>
+                                            $(function () {
+                                                $('.taskStatus li').click(function () {
+                                                    console.log($(this).attr('value'));
+                                                    $.ajax({
+                                                        url: '/status',
+                                                        type:'GET',
+                                                        data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
+                                                        dataType: 'json',
+                                                        success: function (data) {
+                                                            if(data) {
+                                                                alert('Status Successfully Updated');
+                                                                location.reload();
                                                             }
-                                                        });
+                                                        }
                                                     });
-                                                })
-                                            </script>
-                                        </div>
-                                        <button type="button" class="btn btn-default">Assign</button>
-                                        <button type="button" class="btn btn-default">Reopen</button>
-                                        <button type="button" class="btn btn-default">Change Request</button>
-                                        <div class="btn-group" role="group">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                More <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                @if(auth()->user()->can('create task'))
-                                                    <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
-                                                @endif
+                                                });
+                                            })
+                                        </script>
+                                    </div>
+                                    <button type="button" class="btn btn-default btn-sm">Assign</button>
 
-                                                @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['developer','teamlead','frontend']))
-                                                    <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
-                                                @endif
-                                            </ul>
-                                        </div>
+                                    @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['admin','pm']))
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#reopenModal">Reopen</button>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#changeRequestModal">Change Request</button>
+                                    @endif
+
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            More <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            @if(auth()->user()->can('create task'))
+                                                <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
+                                            @endif
+
+                                            @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['developer','teamlead','frontend']))
+                                                <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
+                                            @endif
+                                        </ul>
                                     </div>
 
                                     {{--<div class="btn-group btn-group-sm" role="group" aria-label="...">
@@ -385,7 +387,7 @@
                                                 <form>
                                                     <div class="form-group">
                                                         <div class="col-sm-12">
-                                                            <textarea class="form-control" rows="3" name="description" id="description"> @if($task != null) {{$task->description}} @endif </textarea>
+                                                            <textarea class="form-control" rows="3" name="description" id="description" readonly> @if($task != null) {{$task->description}} @endif </textarea>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -1109,8 +1111,8 @@
 
                                                         @if(! empty($Project))<input type="hidden" name="project_id" value="{{$Project->id}}">@endif
                                                         @if(! empty($task))<input type="hidden" name="task_id" value="{{$task->id}}">@endif
-                                                        @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours[0]->internal_hours}}">@endif
-                                                        @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours[0]->estimated_hours}}">@endif
+                                                        @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours->first()->internal_hours}}">@endif
+                                                        @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours->first()->estimated_hours}}">@endif
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -1125,39 +1127,105 @@
 
                                     {{--Add Hour Modal Ends--}}
 
-                                {{--Add Estimated Hour By Developer Starts --}}
-                                <div class="modal fade" id="DeveloperEstimationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">Add Estimation</h4>
-                                            </div>
+                                    {{--Add Estimated Hour By Developer Starts --}}
+                                    <div class="modal fade" id="DeveloperEstimationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Add Estimation</h4>
+                                                </div>
 
-                                            <form method="post" action="/developerTaskEstimation">
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="dev_estimated_hours">Estimated Hours:</label>
-                                                        <input type="text" name="dev_estimated_hours" class="form-control" id="dev_estimated_hours">
+                                                <form method="post" action="/developerTaskEstimation">
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="dev_estimated_hours">Estimated Hours:</label>
+                                                            <input type="text" name="dev_estimated_hours" class="form-control" id="dev_estimated_hours">
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                @if(!empty($task->id)) <input type="hidden" name="task_id" value="{{$task->id}}"> @endif
+                                                    @if(!empty($task->id)) <input type="hidden" name="task_id" value="{{$task->id}}"> @endif
 
-                                                <div class="modal-footer">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Add Hours</button>
-                                                </div>
-                                            </form>
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Add Hours</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {{--Add Estimated Hour By Developer Ends--}}
+                                    {{--Add Estimated Hour By Developer Ends--}}
+
+                                    {{--Reopen Request Modal Starts--}}
+                                    <div class="modal fade" id="reopenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Task Reopen</h4>
+                                                </div>
+
+                                                <form method="post" action="/reopen">
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="description">Write Why to Reopen Task: ??</label>
+                                                            <textarea name="description" class="form-control" id="description"></textarea>
+                                                        </div>
+
+                                                        @if(! empty($task)) <input type="hidden" name="task_id" value="{{$task->id}}">@endif
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <input type="hidden" name="request_type" value="Reopen Request">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--Reopen Request Modal Starts--}}
+
+
+                                    {{--Change Request Modal Starts--}}
+                                    <div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Change Request</h4>
+                                                </div>
+
+                                                <form method="post" action="/reopen">
+                                                    <div class="modal-body">
+
+                                                        <div class="form-group">
+                                                            <label for="description">Write Why Change Request: ??</label>
+                                                            <textarea name="description" class="form-control" id="description"></textarea>
+                                                        </div>
+
+                                                        @if(! empty($task)) <input type="hidden" name="task_id" value="{{$task->id}}">@endif
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <input type="hidden" name="request_type" value="Change Request">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--Change Request Modal Ends--}}
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
