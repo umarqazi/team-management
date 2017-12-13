@@ -272,7 +272,7 @@
                         </div>
 
                         <div class="form-group modal-reporter" hidden>
-                            <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                            <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="task_reporter" name="task_reporter" >
                                     <option value="">Select A Reporter</option>

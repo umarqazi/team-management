@@ -384,7 +384,7 @@
                                                         <form>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <textarea class="form-control" rows="3" name="description" id="description" readonly> @if($task != null) {{$task->description}} @endif </textarea>
+                                                                    <textarea class="form-control" rows="6" name="description" id="description" readonly> @if($task != null) {{$task->description}} @endif </textarea>
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -899,7 +899,7 @@
                                                             </div>
 
                                                             <div class="form-group editModal-reporter" hidden>
-                                                                <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                                                <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                                                                 <div class="col-sm-8">
                                                                     <select class="form-control" id="edit_task_reporter" name="task_reporter" >
                                                                         <option value="null">Select A Reporter</option>
@@ -1156,7 +1156,7 @@
                                                             </div>
 
                                                             <div class="form-group subtask-modal-reporter" hidden>
-                                                                <label for="subtask_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                                                <label for="subtask_reporter" class="col-sm-2 control-label">Reporter</label>
                                                                 <div class="col-sm-8">
                                                                     <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
                                                                         <option value="null">Select A Reporter</option>

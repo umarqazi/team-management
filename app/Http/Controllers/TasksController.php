@@ -553,6 +553,7 @@ class TasksController extends Controller
         }
         else {
             $task = Task::find($request->task_id);
+            $task->workflow = 'Todo';
             if (empty($task->description)){
                 $task->description = $request->request_type."\n".$request->description;
             }
@@ -571,6 +572,17 @@ class TasksController extends Controller
             Session::flash('alert-class', 'alert-success');
             return Redirect::to('tasks/'.$request->task_id);
         }
+    }
+
+    // Task Assign to Users through admin And View.blade.php
+    public function assignTask(){
+        echo $_GET['UID'];
+        echo $_GET['TID'];
+
+        $task = Task::find($_GET['TID']);
+        $task->users()->attach($_GET['UID']);
+
+        echo true;
     }
 
     /**

@@ -390,13 +390,17 @@ footer{
 }
 .liveSearch button {
     background: none;
-    border: 1px solid transparent;
     width: auto !important;
+}
+.contentBoxFilters .liveSearch button {
+    border: 1px solid transparent;
 }
 .liveSearch button:hover,.liveSearch button:focus,.liveSearch button:active {
     background: #FDFDFD;
 }
-
+.taskDetailBoxHeaderButtons .bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover{
+    color: #333 !important;
+}
 /*Custom Css For Bootstrap Live select */
 .bootstrap-select.btn-group .dropdown-menu{
     height:200px;

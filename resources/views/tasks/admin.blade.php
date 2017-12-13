@@ -259,7 +259,15 @@
                                                 })
                                             </script>
                                         </div>
-                                        <button type="button" class="btn btn-default btn-sm">Assign</button>
+
+                                        <div class="btn-group" role="group">
+                                            <select class="selectpicker liveSearch " id="taskAssign" data-live-search="true">
+                                                <option value="">Assign</option>
+                                                @foreach($users as $user)
+                                                    <option data-tokens="{{$user->name}}" value="{{$user->id.'|'.$task->id}}"><a>{{$user->name}}</a></option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#reopenModal">Reopen</button>
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#changeRequestModal">Change Request</button>
                                         <div class="btn-group" role="group">
@@ -373,7 +381,7 @@
                                                     <form>
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
-                                                                <textarea class="form-control" rows="3" name="description" id="description" readonly> @if($task != null) {{ $task->description}} @endif </textarea>
+                                                                <textarea class="form-control" rows="6" name="description" id="description" readonly> @if($task != null) {{ $task->description}} @endif </textarea>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -646,7 +654,7 @@
                                     </div>
 
                                     <div class="form-group editModal-reporter" hidden>
-                                        <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                        <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                                         <div class="col-sm-8">
                                             <select class="form-control" id="edit_task_reporter" name="task_reporter" >
                                                 <option value="null">Select A Reporter</option>
@@ -897,7 +905,7 @@
                                         </div>
 
                                         <div class="form-group subtask-modal-reporter" hidden>
-                                            <label for="subtask_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                            <label for="subtask_reporter" class="col-sm-2 control-label">Reporter</label>
                                             <div class="col-sm-8">
                                                 <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
                                                     @if(!is_null($task))<option value="{{$task->reporter}}">{{\App\User::where('id',$task->reporter)->pluck('name')->first()}} </option> @endif
@@ -1190,9 +1198,16 @@
     </script>--}}
 
     <script>
-        $('.selectpicker').selectpicker();
 
-        document.getElementById('date').valueAsDate = new Date();
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".taskDetailBoxHeaderButtons .liveSearch button.btn-default").addClass("btn-sm");
+            $('.selectpicker').selectpicker();
+
+            document.getElementById('date').valueAsDate = new Date();
+        });
     </script>
 
 @endsection

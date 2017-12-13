@@ -62,8 +62,6 @@
                                 @endif
 
                                 <button class="btn btn-default" data-toggle="modal" data-target="#hourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                <button class="btn btn-default subtaskDetailBoxCommentButton" type="submit"><span class="fa fa-comment"></span> Comment</button>
-                                <button class="btn btn-default subtaskDetailBoxAssignButton" type="button">Assign</button>
 
                                 <div class="btn-group" role="group">
                                     <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -96,8 +94,8 @@
                                         })
                                     </script>
                                 </div>
-                                <button class="btn btn-default" type="button">Reopen</button>
-                                <button class="btn btn-default" type="button">Change Request</button>
+                                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#reopenModal">Reopen</button>
+                                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#changeRequestModal">Change Request</button>
                                 <div class="btn-group" role="group">
                                     <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         More <span class="caret"></span>
@@ -147,7 +145,7 @@
                                         <div class="leftBoxDescriptionBoxContent">
                                             <form>
                                                 <div class="form-group">
-                                                    <textarea class="form-control" rows="5" name="description" id="description"> {{$subtask->description}}</textarea>
+                                                    <textarea class="form-control" rows="5" name="description" id="description" readonly> {{$subtask->description}}</textarea>
                                                 </div>
                                             </form>
                                         </div>
@@ -624,6 +622,71 @@
                                     </div>
                                 </div>
                                 {{--Add Estimated Hour By Developer Ends--}}
+
+                            {{--Reopen Request Modal Starts--}}
+                            <div class="modal fade" id="reopenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Subtask Reopen</h4>
+                                        </div>
+
+                                        <form method="post" action="/reopen_subtask">
+                                            <div class="modal-body">
+
+                                                <div class="form-group">
+                                                    <label for="description">Write Why to Reopen Subtask: ??</label>
+                                                    <textarea name="description" class="form-control" id="description"></textarea>
+                                                </div>
+
+                                                @if(! empty($task)) <input type="hidden" name="subtask_id" value="{{$subtask->id}}">@endif
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="request_type" value="Reopen Request">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {{--Reopen Request Modal Ends--}}
+
+                            {{--Change Request Modal Starts--}}
+                            <div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Change Request</h4>
+                                        </div>
+
+                                        <form method="post" action="/reopen_subtask">
+                                            <div class="modal-body">
+
+                                                <div class="form-group">
+                                                    <label for="description">Write Why Change Request: ??</label>
+                                                    <textarea name="description" class="form-control" id="description"></textarea>
+                                                </div>
+
+                                                @if(! empty($task)) <input type="hidden" name="subtask_id" value="{{$subtask->id}}">@endif
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="request_type" value="Change Request">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {{--Change Request Modal Ends--}}
+
                         </div>
                     </div>
                 </div>

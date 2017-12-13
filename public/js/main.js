@@ -49,3 +49,31 @@ $(document).ready(function () {
         });
     });
 });
+
+/*
+    Assign Task To users without Creating or Updating
+    Through Assign Button On Admin And View.blade.php
+ */
+
+$(document).ready(function () {
+
+    $('#taskAssign').on('change', function () {
+        //var value= $(this).val();
+
+        var taskArr = $(this).val().split('|');
+
+        $.ajax({
+            url: '/assign_task',
+            type: 'GET',
+            data: {UID:taskArr[0], TID: taskArr[1]},        // isAjax is just a variable to check AJAX request
+            dataType: 'json',
+            success: function (data) {
+
+                if(data){
+                    alert('Assignee Successfully added to this Task!');
+                    location.reload();
+                }
+            }
+        });
+    });
+});

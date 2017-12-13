@@ -55,15 +55,20 @@ input:focus { outline: none; }
 
 /* active */
 
-input:focus ~ label, input.used ~ label {
+
+.loginForm input:focus ~ label, .loginForm input.used ~ label {
     top: -20px;
     -webkit-transform: scale(.75);
     transform: scale(.75); left: -2px;
-    /* font-size: 14px; */
     color: #4a89dc;
 }
 
-
+.loginForm .used ~ label {
+    top: -20px;
+    -webkit-transform: scale(.75);
+    transform: scale(.75); left: -2px;
+    color: #4a89dc;
+}
 /* Underline */
 
 .bar {
