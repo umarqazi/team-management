@@ -397,13 +397,13 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Dev's Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->internal_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0]))  {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
@@ -415,7 +415,7 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Remaining Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->first()->estimated_hours - $task->hours->where('subtask_id', null)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->where('subtask_id', null)->pluck('estimated_hours')->first() - $task->hours->where('subtask_id', null)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -542,7 +542,7 @@
                                             <label class="taskFields"><input type="checkbox" id="editModal-reporter" onchange="configureFields(this.id)">Reporter</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-follower" onchange="configureFields(this.id)">Follower</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-sprint" onchange="configureFields(this.id)">Sprint</label>
-                                            <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Time Tracking</label>
+                                            <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Remaining Estimate</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-units" onchange="configureFields(this.id)">Units</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-workflow" onchange="configureFields(this.id)">Workflow</label>
                                         </div>
@@ -676,8 +676,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group editModal-timeTracking" hidden>
-                                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                    <div class="form-group">
+                                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate <span class="mendatoryFields">*</span></label>
                                         <div class="col-sm-3">
                                             <input type="number" name="task_originalEstimate" class="form-control" id="edit_task_originalEstimate" >
                                         </div>
@@ -769,7 +769,7 @@
 
                                     <div class="modal-footer myFooter" style="position: fixed;left: 0;right: 0;bottom: -60px;">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-primary" id="createTaskButton">Update</button>
+                                        <button type="submit" class="btn btn-success" id="createTaskButton">Update</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </form>
@@ -829,7 +829,7 @@
                                                 <select class="form-control" id="task_name" name="task_name" style="overflow-y: scroll">
 
                                                     @foreach($tasks as $eachtask)
-                                                    <option value="{{ $eachtask->id}}">{{ucwords($eachtask->name)}}</option>
+                                                    <option value="{{ $eachtask->id}}" @if(!empty($task)) @if($eachtask->id == $task->id) selected @endif @endif>{{ucwords($eachtask->name)}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -1030,6 +1030,7 @@
                         <!--Sub Task Modal Content Ends -->
                     </div>
                 </div>
+
                 {{--<!--Sub Task Model Ends Here-->--}}
 
                 {{--Add Hour Modal Starts--}}

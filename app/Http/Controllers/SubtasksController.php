@@ -120,7 +120,8 @@ class SubtasksController extends Controller
             $tasks = Task::all();
             $projects = $user->projects;
 
-            $subtask = $user->subtasks()->find($id);
+//            $subtask = $user->subtasks()->find($id);
+            $subtask = Subtask::find($id);
             $task = $subtask->task;
             $projectId = $task->project_id;
             $users = $task->users;

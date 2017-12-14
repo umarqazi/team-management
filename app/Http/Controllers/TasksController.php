@@ -41,10 +41,9 @@ class TasksController extends Controller
             $users = User::role(['teamlead','developer'])->get();
             $task = $user->tasks()->orderBy('created_at','desc')->first();
 
-            if (!is_null($task)){
+            if (!empty($task)){
                 $Project = $task->project;
                 $tasks = $user->tasks()->where('project_id', $Project->id)->get();
-//                dd($task->hours->where('subtask_id',0)->sum('consumed_hours'));
                 $assignee = $task->users->pluck('id','name');
                 $hours = $task->hours;
             }
@@ -55,7 +54,7 @@ class TasksController extends Controller
             $users = User::role(['teamlead','developer'])->get();
             $task = Task::orderBy('created_at','desc')->first();
 
-            if (!is_null($task))
+            if (!empty($task))
             {
                 $Project = $task->project;
                 $tasks = $Project->tasks;
@@ -114,7 +113,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',
@@ -330,7 +329,20 @@ class TasksController extends Controller
 
     public function showProject($PID = null)
     {
-        $projects = Project::where('status', 1)->get();
+        $user = Auth::user();
+
+        if ($user->hasRole(['developer','teamlead'])){
+            $projects = $user->projects()->where('status', 1)->get();
+        }
+
+        elseif ($user->hasRole(['admin','pm'])){
+            $projects = Project::where('status', 1)->get();
+        }
+
+        else{
+            $projects = Project::where('status', 1)->get();
+        }
+
         $users = User::role(['teamlead','developer'])->get();
         $reporters = User::role(['pm','admin'])->get();
 
@@ -455,7 +467,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',

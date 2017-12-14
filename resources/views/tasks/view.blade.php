@@ -410,7 +410,7 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                     @endif
@@ -430,7 +430,7 @@
                                                         <div class="itemDetail">
                                                             <span class="detailType">Total Remaining Hours:</span>
                                                             @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['pm','admin']))
-                                                                <span class="detail"> @if(! empty($task->hours->first())) {{abs($task->hours->first()->estimated_hours - $task->hours->where('subtask_id',null)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours->first()) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                <span class="detail"> @if(! empty($task->hours->first())) {{abs($task->hours->where('subtask_id', null)->pluck('estimated_hours')->first() - $task->hours->where('subtask_id',null)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours->first()) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             @else
                                                                 <span class="detail"> @if(! empty($task->hours->first())) {{abs($task->hours->where('subtask_id', null)->pluck('internal_hours')->first() - $task->hours->where('subtask_id',null)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours->first()) && $task->hours->where('subtask_id',null)->sum('consumed_hours') > $task->hours->first()->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             @endif
@@ -556,7 +556,7 @@
                                                             <label class="taskFields"><input type="checkbox" id="editModal-reporter" onchange="configureFields(this.id)">Reporter</label>
                                                             <label class="taskFields"><input type="checkbox" id="editModal-follower" onchange="configureFields(this.id)">Follower</label>
                                                             <label class="taskFields"><input type="checkbox" id="editModal-sprint" onchange="configureFields(this.id)">Sprint</label>
-                                                            <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Time Tracking</label>
+                                                            <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Remaining Estimate</label>
                                                             <label class="taskFields"><input type="checkbox" id="editModal-units" onchange="configureFields(this.id)">Units</label>
                                                             <label class="taskFields"><input type="checkbox" id="editModal-workflow" onchange="configureFields(this.id)">Workflow</label>
                                                         </div>
@@ -624,13 +624,6 @@
                                                         </div>
                                                     </div>
 
-                                                    {{--<div class="form-group taskDuedate">
-                                                        <label for="task_duedate" class="col-sm-2 control-label">Due Date<span class="mendatoryFields">*</span></label>
-                                                        <div class="col-sm-3">
-                                                            <input type="date" name="task_duedate" class="form-control" id="edit_task_duedate">
-                                                        </div>
-                                                    </div>--}}
-
                                                     <div class='col-sm-12 taskDuedate'>
                                                         <div class="form-group">
                                                             <label for="task_duedate" class="col-sm-2 control-label">Due Date & Time:<span class="mendatoryFields">*</span></label>
@@ -697,8 +690,8 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="form-group editModal-timeTracking" hidden>
-                                                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                                    <div class="form-group">
+                                                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate <span class="mendatoryFields">*</span></label>
                                                         <div class="col-sm-3">
                                                             <input type="number" name="task_originalEstimate" class="form-control" id="edit_task_originalEstimate" >
                                                         </div>
@@ -851,7 +844,7 @@
                                                             <select class="form-control" id="task_name" name="task_name" style="overflow-y: scroll">
 
                                                                 @foreach($tasks as $eachtask)
-                                                                    <option value="{{ $eachtask->id}}">{{ucwords($eachtask->name)}}</option>
+                                                                    <option value="{{ $eachtask->id}}" @if(!empty($task)) @if($eachtask->id == $task->id) selected @endif @endif>{{ucwords($eachtask->name)}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -1040,7 +1033,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <input type="hidden" name="task_id">
+                                                    <input type="hidden" name="project_id" value="{{$Project->id}}">
                                                 </div>
 
                                                 <div class="modal-footer myFooter">

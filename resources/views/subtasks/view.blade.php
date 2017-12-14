@@ -338,6 +338,7 @@
                                                     <label for="subtask_priority" class="col-sm-2 control-label">Priority</label>
                                                     <div class="col-sm-4">
                                                         <select class="form-control" id="subtask_priority" name="subtask_priority">
+                                                            <option value="">Select A Priority</option>
                                                             <option value="Blocker" @if($subtask->priority == 'Blocker') selected @endif>Blocker</option>
                                                             <option value="Critical" @if($subtask->priority == 'Critical') selected @endif>Critical</option>
                                                             <option value="Major" @if($subtask->priority == 'Major') selected @endif>Major</option>
@@ -426,7 +427,7 @@
                                                 <div class="form-group subtask-modal-timeTracking" hidden>
                                                     <label for="subtask_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>
                                                     <div class="col-sm-3">
-                                                        <input type="number" name="subtask_remainingEstimate" class="form-control" id="subtask_remainingEstimate" value="{{$subtask->hours->pluck('estimated_hours')->first() - (empty($subtask->hours->pluck('consumed_hours')->first())? 0: $subtask->hours->pluck('consumed_hours')->first())}}">
+                                                        <input type="number" name="subtask_remainingEstimate" class="form-control" id="subtask_remainingEstimate" value="{{$subtask->hours->pluck('estimated_hours')->first() - (empty($subtask->hours->pluck('consumed_hours'))? 0: $subtask->hours->sum('consumed_hours'))}}">
                                                     </div>
                                                 </div>
 

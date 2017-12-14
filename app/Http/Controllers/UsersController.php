@@ -181,7 +181,7 @@ class UsersController extends Controller
                 // redirect
                 Session::flash('message', 'Successfully updated the User!');
                 Session::flash('alert-class', 'alert-success');
-                return Redirect::to('/home');
+                return Redirect::to('/users');
             }
 
             else{
