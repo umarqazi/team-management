@@ -54,11 +54,33 @@
 
                                 @if(auth()->user()->can('delete task'))
                                     <div class="deleteSubtask" style="display: inline-block">
-                                        {{ Form::open(array('url' => '/subtasks/' . $subtask->id)) }}
-                                        {{ Form::hidden('_method', 'DELETE') }}
-                                        <button class="btn btn-default" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
-                                        {{ Form::close() }}
+                                        <button class="btn btn-default" type="submit" style="cursor: pointer" data-toggle="modal" data-target="#deleteSubtaskModal"><span class="fa fa-trash"></span> Delete</button>
                                     </div>
+
+                                    {{--Delete Prompt Modal Starts--}}
+                                    <div class="modal fade" id="deleteSubtaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document" style="max-width: 400px">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                    <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
+                                                    <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
+
+                                                    <div style="margin-top: 20px">
+
+                                                        <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                        <div style="display: inline-block">
+                                                            {{ Form::open(array('url' => '/subtasks/' . $subtask->id)) }}
+                                                            {{ Form::hidden('_method', 'DELETE') }}
+                                                            <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
+                                                            {{ Form::close() }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--Change Request Modal Ends--}}
+
                                 @endif
 
                                 <button class="btn btn-default" data-toggle="modal" data-target="#hourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
@@ -301,7 +323,7 @@
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-priority" onchange="fieldStateChanged(this.id)">Priority</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-reporter" onchange="fieldStateChanged(this.id)">Reporter</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-follower" onchange="fieldStateChanged(this.id)">Follower</label>
-                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Time Tracking</label>
+                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Remaining Estimate</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-units" onchange="fieldStateChanged(this.id)">Units</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-workflow" onchange="fieldStateChanged(this.id)">Workflow</label>
                                                     </div>
@@ -395,7 +417,7 @@
                                                 </div>
 
                                                 <div class="form-group subtask-modal-reporter" hidden>
-                                                    <label for="subtask_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                                    <label for="subtask_reporter" class="col-sm-2 control-label">Reporter</label>
                                                     <div class="col-sm-8">
                                                         <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
                                                             <option value="{{$subtask->reporter}}">{{\App\User::where('id',$subtask->reporter)->pluck('name')->first()}}</option>
@@ -417,8 +439,8 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group subtask-modal-timeTracking" hidden>
-                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                                <div class="form-group">
+                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                                                     <div class="col-sm-3">
                                                         <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" value="{{$subtask->hours->pluck('estimated_hours')->first()}}">
                                                     </div>

@@ -89,7 +89,6 @@ body{
 .eachBug li{
     margin-left: 0px;
     text-decoration: none;
-    display: inline;
 }
 .taskDetailContentBox{
     width: 83%;
@@ -164,6 +163,8 @@ body{
     overflow-y: auto;
     padding: 10px 10px 0 15px;
 }
+/* CSS  for Tasks in Tasks Side Bar */
+
 .eachTask {
     list-style: none;
     margin: 0;
@@ -186,18 +187,45 @@ body{
 .eachTask li .taskName{
     font-size: 15px;
 }
+/* CSS  for Tasks in Tasks Side Bar Ends*/
+
+/* CSS  for Bugs in Tasks Side Bar Starts*/
+
+.eachBug {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.eachBug>li{
+    border-bottom: 1px solid #ccc !important;
+    cursor: pointer;
+    padding: 5px 0 5px 5px;
+
+}
+.eachBug>li:active{
+    background-color: #ebf2f9;
+}
+.eachBug li .taskKey{
+    font-size: 15px;
+    font-weight: bold;
+    padding:0px 0px 5px 5px;
+}
+.eachBug li .taskName{
+    font-size: 15px;
+}
+/* CSS  for Bugs in Tasks Side Bar Ends*/
 
 /*Delayed Tasks Starts*/
-.eachTask .delayed>a{
+.delayed>a{
     color: #c72727;
 }
 /*Delayed Tasks Ends*/
 
-.eachTask .aboutToDeliver>a{
+.aboutToDeliver>a{
     color: #8a6d3b;
 }
 /*Completed Tasks Starts*/
-.eachTask .taskCompleted>a{
+.taskCompleted>a{
     color: green;
 }
 /*Completed Tasks Ends*/

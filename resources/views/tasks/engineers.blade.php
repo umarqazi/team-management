@@ -138,7 +138,7 @@
                                     <div>
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-tabs taskViewSidebarTabs" role="tablist">
-                                            <li role="presentation" class="active" ><a href="#tasks" aria-controls="tasks" role="tab"data-toggle="tab">Tasks @if(!empty($tasks)) <span class="tasksCount">{{count($tasks)}}</span> @endif</a></li>
+                                            <li role="presentation" class="active" ><a href="#tasks" aria-controls="tasks" role="tab"data-toggle="tab">Tasks @if(!empty($tasks)) <span class="tasksCount">{{count($tasks)-count($tasks->where('types','Bug'))}}</span> @endif</a></li>
                                             <li role="presentation"><a href="#bugs" aria-controls="bugs" role="tab" data-toggle="tab">Bugs @if(!empty($tasks)) <span class="bugsCount">{{0}}</span> @endif</a></li>
                                         </ul>
 
@@ -152,20 +152,22 @@
                                                     <ol class="eachTask" >
                                                         @if(! empty($tasks))
                                                             @foreach($tasks as $t)
-                                                                <li class="
-                                                                        @if($t->workflow == 'Completed')
-                                                                            taskCompleted
-                                                                        @elseif($t->duedate < strtotime('now'))
-                                                                            delayed
-                                                                        @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
-                                                                            aboutToDeliver
-                                                                        @endif
-                                                                {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
-                                                                    <a href="/tasks/{{$t->id}}">
-                                                                        <div class="taskKey">{{$t->key}}</div>
-                                                                        <div class="taskName">{{str_limit($t->name, 15)}}</div>
-                                                                    </a>
-                                                                </li>
+                                                                @if($t->types != 'Bug')
+                                                                    <li class="
+                                                                            @if($t->workflow == 'Completed')
+                                                                                taskCompleted
+                                                                            @elseif($t->duedate < strtotime('now'))
+                                                                                delayed
+                                                                            @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                                aboutToDeliver
+                                                                            @endif
+                                                                    {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                        <a href="/tasks/{{$t->id}}">
+                                                                            <div class="taskKey">{{$t->key}}</div>
+                                                                            <div class="taskName">{{str_limit($t->name, 15)}}</div>
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
                                                             @endforeach
                                                         @else
                                                             <li> No Tasks Available </li>
@@ -176,9 +178,30 @@
 
                                             <div role="tabpanel" class="allBugs tab-pane" id="bugs">
                                                 <div class="bugList">
-                                                    <ul class="eachBug">
-                                                        <li><div id="BugTitle">No Bugs Available</div></li>
-                                                    </ul>
+                                                    <ol class="eachBug">
+                                                        @if($tasks != null)
+                                                            @foreach($tasks as $t)
+                                                                @if($t->types == 'Bug')
+                                                                    <li class="
+                                                                    @if($t->workflow == 'Completed')
+                                                                        taskCompleted
+                                                                    @elseif($t->duedate < strtotime('now'))
+                                                                        delayed
+                                                                    @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                        aboutToDeliver
+                                                                    @endif
+                                                                    {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                        <a href="/tasks/{{$t->id}}">
+                                                                            <div class="taskKey">{{$t->key}}</div>
+                                                                            <div class="taskName">{{str_limit($t->name, 15)}}</div>
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <li><div id="BugTitle">No Bugs Available</div></li>
+                                                        @endif
+                                                    </ol>
                                                 </div>
                                             </div>
                                         </div>
@@ -228,11 +251,33 @@
                                             @if(auth()->user()->can('delete task'))
                                                 @if($task != null)
                                                     <div class="deleteTask" style="display: inline-block">
-                                                        {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
-                                                        {{ Form::hidden('_method', 'DELETE') }}
-                                                        <button class="btn btn-default btn-sm" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
-                                                        {{ Form::close() }}
+                                                        <button class="btn btn-default btn-sm" style="cursor: pointer" data-toggle="modal" data-target="#deleteTaskModal"><span class="fa fa-trash"></span> Delete</button>
                                                     </div>
+
+                                                    {{--Delete Prompt Modal Starts--}}
+                                                    <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                        <div class="modal-dialog" role="document" style="max-width: 400px">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
+                                                                    <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
+
+                                                                    <div style="margin-top: 20px">
+
+                                                                        <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                                        <div style="display: inline-block">
+                                                                            {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
+                                                                            {{ Form::hidden('_method', 'DELETE') }}
+                                                                            <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
+                                                                            {{ Form::close() }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{--Change Request Modal Ends--}}
+
                                                 @else
                                                     <button class="btn btn-default btn-sm" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
                                                 @endif
@@ -1176,8 +1221,8 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="form-group subtask-modal-timeTracking" hidden>
-                                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                                                <div class="form-group">
+                                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                                                                     <div class="col-sm-3">
                                                                         <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" >
                                                                     </div>
@@ -1338,8 +1383,8 @@
 
                                                             @if(! empty($Project))<input type="hidden" name="project_id" value="{{$Project->id}}">@endif
                                                             @if(! empty($task))<input type="hidden" name="task_id" value="{{$task->id}}">@endif
-                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours[0]->internal_hours}}">@endif
-                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours[0]->estimated_hours}}">@endif
+                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}}">@endif
+                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}}">@endif
                                                         </div>
 
                                                         <div class="modal-footer">

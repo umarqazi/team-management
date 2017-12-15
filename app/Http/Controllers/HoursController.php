@@ -95,7 +95,6 @@ class HoursController extends Controller
     }
 
     public function storeTaskConsumption(Request $request){
-        dd($request);
 
         $rules = array(
             'project_id' => 'required|integer',
@@ -133,7 +132,7 @@ class HoursController extends Controller
     }
 
     public function storeSubtaskConsumption(Request $request){
-        dd($request);
+
         $rules = array(
             'project_id' => 'required|integer',
             'task_id' => 'required|integer',
