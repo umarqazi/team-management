@@ -107,7 +107,7 @@
 
 	<script>
         $(document).ready(function() {
-            $('#name').on("keyup change", function () {
+            $('#name').on("keyup change click", function () {
                 generateKey();
             })
         } );
@@ -117,7 +117,6 @@
             var projectName = document.getElementById('name').value;
             var matches = projectName.match(/\b(\w)/g);
             var key = matches.join('').toUpperCase();
-            alert(key);
             document.getElementById('key').value = key;
             // Code To Generate Key For Project Ends
 

@@ -222,6 +222,12 @@
                                     </div>
                                 @endif
 
+                                @if(Session::has('message'))
+                                    <script>
+                                        toastr.success('{{ Session::get('message') }}')
+                                    </script>
+                                @endif
+
                                 <div class="taskDetailBoxHeading">
                                     @if(! empty($task))
                                         <div class="taskProjectNameAndKey"><a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{ucwords($task->project->name)}} @endif </a> / <a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{$task->key}} @endif </a></div>

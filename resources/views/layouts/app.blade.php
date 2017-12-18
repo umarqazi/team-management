@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{URL::asset('css/theme.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-select.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-datetimepicker.min.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('css/toastr.min.css')}}">
     @yield('styles')
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
@@ -55,9 +56,9 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+    <script src="{{URL::asset('js/toastr.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script src="{{URL::asset('js/login.js')}}"></script>
 
     @yield('scripts')
 </head>
@@ -428,7 +429,6 @@
 <script src="{{URL::asset('js/taskFilter.js')}}"></script>
 <script src="{{URL::asset('js/moment.js')}}"></script>
 <script src="{{URL::asset('js/bootstrap-datetimepicker.js')}}"></script>
-
 <!--Initializing Select Picker-->
 <script>
     $('.selectpicker').selectpicker();
