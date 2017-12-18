@@ -125,8 +125,8 @@
                             <div>
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs taskViewSidebarTabs" role="tablist">
-                                    <li role="presentation" class="active" ><a href="#tasks" aria-controls="tasks" role="tab"data-toggle="tab">Tasks @if(!empty($tasks))<span class="tasksCount">{{count($tasks)}}</span> @endif</a></li>
-                                    <li role="presentation"><a href="#bugs" aria-controls="bugs" role="tab" data-toggle="tab">Bugs @if(!empty($tasks)) <span class="bugsCount">{{0}}</span> @endif</a></li>
+                                    <li role="presentation" class="active" ><a href="#tasks" aria-controls="tasks" role="tab"data-toggle="tab">Tasks @if(!empty($tasks))<span class="tasksCount">{{count($tasks)-count($tasks->where('types', 'Bug'))}}</span> @endif</a></li>
+                                    <li role="presentation"><a href="#bugs" aria-controls="bugs" role="tab" data-toggle="tab">Bugs @if(!empty($tasks)) <span class="bugsCount">{{count($tasks->where('types', 'Bug'))}}</span> @endif</a></li>
                                 </ul>
 
                                 <!-- Tab panes -->
@@ -139,22 +139,22 @@
                                             <ol class="eachTask" >
                                                 @if($tasks != null)
                                                     @foreach($tasks as $t)
-                                                        <li class="
-                                                                @if($t->workflow == 'Completed')
-                                                                    taskCompleted
-                                                                @elseif($t->duedate < strtotime('now'))
-                                                                    delayed
-                                                                @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
-                                                                    aboutToDeliver
-                                                                @endif
-                                                                {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
-                                                            <a href="/tasks/{{$t->id}}">
-                                                                <div class="taskKey">{{$t->key}}</div>
-                                                                <div class="taskName">{{str_limit($t->name, 15)}}</div>
-                                                            </a>
-                                                            <?/*=date('Y-m-d H:i', strtotime('now'))*/?><!--<br>
-                                                            --><?/*=date('Y-m-d H:i', $t->duedate)*/?>
-                                                        </li>
+                                                        @if($t->types != 'Bug')
+                                                            <li class="
+                                                                    @if($t->workflow == 'Completed')
+                                                                        taskCompleted
+                                                                    @elseif($t->duedate < strtotime('now'))
+                                                                        delayed
+                                                                    @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                        aboutToDeliver
+                                                                    @endif
+                                                                    {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                <a href="/tasks/{{$t->id}}">
+                                                                    <div class="taskKey">{{$t->key}}</div>
+                                                                    <div class="taskName">{{str_limit($t->name, 15)}}</div>
+                                                                </a>
+                                                            </li>
+                                                        @endif
                                                     @endforeach
                                                 @else
                                                     <li> No Tasks Available </li>
@@ -165,9 +165,31 @@
 
                                     <div role="tabpanel" class="allTasks allBugs tab-pane" id="bugs">
                                         <div class="bugList">
-                                            <ul class="eachBug">
-                                                <li><div id="BugTitle">No Bugs Available</div></li>
-                                            </ul>
+                                            <ol class="eachBug">
+                                                @if($tasks != null)
+                                                    @foreach($tasks as $t)
+                                                        @if($t->types == 'Bug')
+                                                            <li class="
+                                                                @if($t->workflow == 'Completed')
+                                                                    taskCompleted
+                                                                @elseif($t->duedate < strtotime('now'))
+                                                                    delayed
+                                                                @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                    aboutToDeliver
+                                                                @endif
+                                                                {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                <a href="/tasks/{{$t->id}}">
+                                                                    <div class="taskKey">{{$t->key}}</div>
+                                                                    <div class="taskName">{{str_limit($t->name, 15)}}</div>
+                                                                </a>
+                                                            </li>
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    <li><div id="BugTitle">No Bugs Available</div></li>
+                                                @endif
+
+                                            </ol>
                                         </div>
                                     </div>
                                 </div>
@@ -219,63 +241,88 @@
                                     @if(auth()->user()->can('delete task'))
                                         @if($task != null)
                                             <div class="deleteTask" style="display: inline-block">
-                                                {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
-                                                {{ Form::hidden('_method', 'DELETE') }}
-                                                <button class="btn btn-default btn-sm" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
-                                                {{ Form::close() }}
+                                                <button class="btn btn-default btn-sm" style="cursor: pointer" data-toggle="modal" data-target="#deleteTaskModal"><span class="fa fa-trash"></span> Delete</button>
                                             </div>
-                                        @else
-                                            <button class="btn btn-default btn-sm" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
+
+                                                {{--Delete Prompt Modal Starts--}}
+                                                <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                    <div class="modal-dialog" role="document" style="max-width: 400px">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body text-center">
+                                                                <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
+                                                                <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
+
+                                                                <div style="margin-top: 20px">
+
+                                                                    <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                                    <div style="display: inline-block">
+                                                                        {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
+                                                                        {{ Form::hidden('_method', 'DELETE') }}
+                                                                        <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
+                                                                        {{ Form::close() }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{--Change Request Modal Ends--}}
                                         @endif
                                     @endif
 
                                         <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                        <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                            <div class="btn-group" role="group">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Status
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu taskStatus">
+                                                <li value="Todo"><a>Todo</a></li>
+                                                <li value="In Progress"><a>In Progress</a></li>
+                                                <li value="In QA"><a>In QA</a></li>
+                                                <li value="Completed"><a>Completed</a></li>
+                                            </ul>
+                                            <script>
+                                                $(function () {
+                                                    $('.taskStatus li').click(function () {
+                                                        console.log($(this).attr('value'));
+                                                        $.ajax({
+                                                            url: '/status',
+                                                            type:'GET',
+                                                            data:{task_id: '@if(!empty($task))<?= $task->id ?> @endif',value: $(this).attr('value')},
+                                                            dataType: 'json',
+                                                            success: function (data) {
+                                                                if(data) {
+                                                                    alert('Status Successfully Updated');
+                                                                    location.reload();
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                })
+                                            </script>
+                                        </div>
+
+                                        <div class="btn-group" role="group">
+                                            <select class="selectpicker liveSearch " id="taskAssign" data-live-search="true">
+                                                <option value="">Assign</option>
+                                                @foreach($users as $user)
+                                                    <option data-tokens="{{$user->name}}" value="{{$user->id.'|'.$task->id}}"><a>{{$user->name}}</a></option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#reopenModal">Reopen</button>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#changeRequestModal">Change Request</button>
+                                        <div class="btn-group" role="group">
+                                            @if(auth()->user()->can('create task'))
                                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Status
+                                                    More
                                                     <span class="caret"></span>
                                                 </button>
-                                                <ul class="dropdown-menu taskStatus">
-                                                    <li value="Todo"><a>Todo</a></li>
-                                                    <li value="In Progress"><a>In Progress</a></li>
-                                                    <li value="In QA"><a>In QA</a></li>
-                                                    <li value="Completed"><a>Completed</a></li>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
                                                 </ul>
-                                                <script>
-                                                    $(function () {
-                                                        $('.taskStatus li').click(function () {
-                                                            console.log($(this).attr('value'));
-                                                            $.ajax({
-                                                                url: '/status',
-                                                                type:'GET',
-                                                                data:{task_id: '@if(!empty($task))<?= $task->id ?> @endif',value: $(this).attr('value')},
-                                                                dataType: 'json',
-                                                                success: function (data) {
-                                                                    if(data) {
-                                                                        alert('Status Successfully Updated');
-                                                                        location.reload();
-                                                                    }
-                                                                }
-                                                            });
-                                                        });
-                                                    })
-                                                </script>
-                                            </div>
-                                            <button type="button" class="btn btn-default">Assign</button>
-                                            <button type="button" class="btn btn-default">Reopen</button>
-                                            <button type="button" class="btn btn-default">Change Request</button>
-                                            <div class="btn-group" role="group">
-                                                @if(auth()->user()->can('create task'))
-                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        More
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
-                                                    </ul>
-                                                @endif
-                                            </div>
+                                            @endif
                                         </div>
 
                                         {{--<div class="btn-group btn-group-sm" role="group" aria-label="...">
@@ -377,7 +424,7 @@
                                                     <form>
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
-                                                                <textarea class="form-control" rows="3" name="description" id="description"> @if($task != null) {{$task->description}} @endif </textarea>
+                                                                <textarea class="form-control" rows="6" name="description" id="description" readonly> @if($task != null) {{ $task->description}} @endif </textarea>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -393,13 +440,13 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Dev's Estimated Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->first()->internal_hours}} @else 0 @endif Hours</span>
+                                                                <span class="detail"> @if(! empty($task->hours[0]))  {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
                                                             </div>
                                                         </li>
                                                         <li class="item">
@@ -411,7 +458,7 @@
                                                         <li class="item">
                                                             <div class="itemDetail">
                                                                 <span class="detailType">Total Remaining Hours:</span>
-                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->first()->estimated_hours - $task->hours->where('subtask_id', null)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->where('subtask_id', null)->pluck('estimated_hours')->first() - $task->hours->where('subtask_id', null)->sum('consumed_hours'))}} @else 0 @endif Hours</span> @if(! empty($task->hours[0]) && $task->hours->where('subtask_id', null)->sum('consumed_hours') > $task->hours->first()->estimated_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -538,7 +585,7 @@
                                             <label class="taskFields"><input type="checkbox" id="editModal-reporter" onchange="configureFields(this.id)">Reporter</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-follower" onchange="configureFields(this.id)">Follower</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-sprint" onchange="configureFields(this.id)">Sprint</label>
-                                            <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Time Tracking</label>
+                                            <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Remaining Estimate</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-units" onchange="configureFields(this.id)">Units</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-workflow" onchange="configureFields(this.id)">Workflow</label>
                                         </div>
@@ -650,7 +697,7 @@
                                     </div>
 
                                     <div class="form-group editModal-reporter" hidden>
-                                        <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                        <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                                         <div class="col-sm-8">
                                             <select class="form-control" id="edit_task_reporter" name="task_reporter" >
                                                 <option value="null">Select A Reporter</option>
@@ -672,8 +719,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group editModal-timeTracking" hidden>
-                                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                    <div class="form-group">
+                                        <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate <span class="mendatoryFields">*</span></label>
                                         <div class="col-sm-3">
                                             <input type="number" name="task_originalEstimate" class="form-control" id="edit_task_originalEstimate" >
                                         </div>
@@ -765,7 +812,7 @@
 
                                     <div class="modal-footer myFooter" style="position: fixed;left: 0;right: 0;bottom: -60px;">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-primary" id="createTaskButton">Update</button>
+                                        <button type="submit" class="btn btn-success" id="createTaskButton">Update</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </form>
@@ -808,7 +855,7 @@
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-priority" onchange="fieldStateChanged(this.id)">Priority</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-reporter" onchange="fieldStateChanged(this.id)">Reporter</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-follower" onchange="fieldStateChanged(this.id)">Follower</label>
-                                            <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Time Tracking</label>
+                                            <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Remaining Estimate</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-units" onchange="fieldStateChanged(this.id)">Units</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-workflow" onchange="fieldStateChanged(this.id)">Workflow</label>
                                         </div>
@@ -825,7 +872,7 @@
                                                 <select class="form-control" id="task_name" name="task_name" style="overflow-y: scroll">
 
                                                     @foreach($tasks as $eachtask)
-                                                    <option value="{{ $eachtask->id}}">{{ucwords($eachtask->name)}}</option>
+                                                    <option value="{{ $eachtask->id}}" @if(!empty($task)) @if($eachtask->id == $task->id) selected @endif @endif>{{ucwords($eachtask->name)}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -901,7 +948,7 @@
                                         </div>
 
                                         <div class="form-group subtask-modal-reporter" hidden>
-                                            <label for="subtask_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                            <label for="subtask_reporter" class="col-sm-2 control-label">Reporter</label>
                                             <div class="col-sm-8">
                                                 <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
                                                     @if(!is_null($task))<option value="{{$task->reporter}}">{{\App\User::where('id',$task->reporter)->pluck('name')->first()}} </option> @endif
@@ -923,8 +970,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group subtask-modal-timeTracking" hidden>
-                                            <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                        <div class="form-group">
+                                            <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                                             <div class="col-sm-3">
                                                 <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" >
                                             </div>
@@ -1026,6 +1073,7 @@
                         <!--Sub Task Modal Content Ends -->
                     </div>
                 </div>
+
                 {{--<!--Sub Task Model Ends Here-->--}}
 
                 {{--Add Hour Modal Starts--}}
@@ -1087,10 +1135,10 @@
                                         @endif
                                     </div>
 
-                                    @if(! empty($Project))<input type="hidden" name="project_id" value="{{$Project->id}}">@endif
-                                    @if(! empty($task))<input type="hidden" name="task_id" value="{{$task->id}}">@endif
-                                    @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours[0]->internal_hours}}">@endif
-                                    @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours[0]->estimated_hours}}">@endif
+                                    @if(! empty($Project)) <input type="hidden" name="project_id" value="{{$Project->id}}">@endif
+                                    @if(! empty($task)) <input type="hidden" name="task_id" value="{{$task->id}}">@endif
+                                    @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}}">@endif
+                                    @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}}">@endif
                                 </div>
 
                                 <div class="modal-footer">
@@ -1104,6 +1152,73 @@
                 </div>
 
                 {{--Add Hour Modal Ends--}}
+
+
+                {{--Reopen Request Modal Starts--}}
+                <div class="modal fade" id="reopenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Task Reopen</h4>
+                            </div>
+
+                            <form method="post" action="/reopen">
+                                <div class="modal-body">
+
+                                    <div class="form-group">
+                                        <label for="description">Write Why to Reopen Task: ??</label>
+                                        <textarea name="description" class="form-control" id="description"></textarea>
+                                    </div>
+
+                                    @if(! empty($task)) <input type="hidden" name="task_id" value="{{$task->id}}">@endif
+                                </div>
+
+                                <div class="modal-footer">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="request_type" value="Reopen Request">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{--Reopen Request Modal Starts--}}
+
+
+                {{--Change Request Modal Starts--}}
+                <div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Change Request</h4>
+                            </div>
+
+                            <form method="post" action="/reopen">
+                                <div class="modal-body">
+
+                                    <div class="form-group">
+                                        <label for="description">Write Why Change Request: ??</label>
+                                        <textarea name="description" class="form-control" id="description"></textarea>
+                                    </div>
+
+                                    @if(! empty($task)) <input type="hidden" name="task_id" value="{{$task->id}}">@endif
+                                </div>
+
+                                <div class="modal-footer">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="request_type" value="Change Request">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{--Change Request Modal Ends--}}
+
             </div>
         </div>
     </div>
@@ -1127,9 +1242,16 @@
     </script>--}}
 
     <script>
-        $('.selectpicker').selectpicker();
 
-        document.getElementById('date').valueAsDate = new Date();
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".taskDetailBoxHeaderButtons .liveSearch button.btn-default").addClass("btn-sm");
+            $('.selectpicker').selectpicker();
+
+            document.getElementById('date').valueAsDate = new Date();
+        });
     </script>
 
 @endsection

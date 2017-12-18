@@ -54,59 +54,77 @@
 
                                 @if(auth()->user()->can('delete task'))
                                     <div class="deleteSubtask" style="display: inline-block">
-                                        {{ Form::open(array('url' => '/subtasks/' . $subtask->id)) }}
-                                        {{ Form::hidden('_method', 'DELETE') }}
-                                        <button class="btn btn-default" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
-                                        {{ Form::close() }}
+                                        <button class="btn btn-default" type="submit" style="cursor: pointer" data-toggle="modal" data-target="#deleteSubtaskModal"><span class="fa fa-trash"></span> Delete</button>
                                     </div>
+
+                                    {{--Delete Prompt Modal Starts--}}
+                                    <div class="modal fade" id="deleteSubtaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document" style="max-width: 400px">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                    <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
+                                                    <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
+
+                                                    <div style="margin-top: 20px">
+
+                                                        <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                        <div style="display: inline-block">
+                                                            {{ Form::open(array('url' => '/subtasks/' . $subtask->id)) }}
+                                                            {{ Form::hidden('_method', 'DELETE') }}
+                                                            <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
+                                                            {{ Form::close() }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--Change Request Modal Ends--}}
+
                                 @endif
 
                                 <button class="btn btn-default" data-toggle="modal" data-target="#hourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                <button class="btn btn-default subtaskDetailBoxCommentButton" type="submit"><span class="fa fa-comment"></span> Comment</button>
-                                <button class="btn btn-default subtaskDetailBoxAssignButton" type="button">Assign</button>
 
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Status <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu subtaskStatus">
-                                            <li value="Todo"><a>Todo</a></li>
-                                            <li value="In Progress"><a>In Progress</a></li>
-                                            <li value="In QA"><a>In QA</a></li>
-                                            <li value="Completed"><a>Completed</a></li>
-                                        </ul>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu subtaskStatus">
+                                        <li value="Todo"><a>Todo</a></li>
+                                        <li value="In Progress"><a>In Progress</a></li>
+                                        <li value="In QA"><a>In QA</a></li>
+                                        <li value="Completed"><a>Completed</a></li>
+                                    </ul>
 
-                                        <script>
-                                            $(function () {
-                                                $('.subtaskStatus li').click(function () {
-                                                    console.log($(this).attr('value'));
-                                                    $.ajax({
-                                                        url: '/subtask_status',
-                                                        type:'GET',
-                                                        data:{subtask_id: '<?=$subtask->id ?>',value: $(this).attr('value')},
-                                                        dataType: 'json',
-                                                        success: function (data) {
-                                                            if(data) {
-                                                                alert('Status Successfully Updated');
-                                                                location.reload();
-                                                            }
+                                    <script>
+                                        $(function () {
+                                            $('.subtaskStatus li').click(function () {
+                                                console.log($(this).attr('value'));
+                                                $.ajax({
+                                                    url: '/subtask_status',
+                                                    type:'GET',
+                                                    data:{subtask_id: '<?=$subtask->id ?>',value: $(this).attr('value')},
+                                                    dataType: 'json',
+                                                    success: function (data) {
+                                                        if(data) {
+                                                            alert('Status Successfully Updated');
+                                                            location.reload();
                                                         }
-                                                    });
+                                                    }
                                                 });
-                                            })
-                                        </script>
-                                    </div>
-                                    <button class="btn btn-default" type="button">Reopen</button>
-                                    <button class="btn btn-default" type="button">Change Request</button>
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            More <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#" data-toggle="modal" data-target="#DeveloperSubtaskEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
-                                        </ul>
-                                    </div>
+                                            });
+                                        })
+                                    </script>
+                                </div>
+                                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#reopenModal">Reopen</button>
+                                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#changeRequestModal">Change Request</button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default dropdown-toggle subtaskDetailBoxAdminButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        More <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" data-toggle="modal" data-target="#DeveloperSubtaskEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
+                                    </ul>
                                 </div>
                             </div>
 
@@ -149,7 +167,7 @@
                                         <div class="leftBoxDescriptionBoxContent">
                                             <form>
                                                 <div class="form-group">
-                                                    <textarea class="form-control" rows="5" name="description" id="description"> {{$subtask->description}}</textarea>
+                                                    <textarea class="form-control" rows="5" name="description" id="description" readonly> {{$subtask->description}}</textarea>
                                                 </div>
                                             </form>
                                         </div>
@@ -305,7 +323,7 @@
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-priority" onchange="fieldStateChanged(this.id)">Priority</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-reporter" onchange="fieldStateChanged(this.id)">Reporter</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-follower" onchange="fieldStateChanged(this.id)">Follower</label>
-                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Time Tracking</label>
+                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Remaining Estimate</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-units" onchange="fieldStateChanged(this.id)">Units</label>
                                                         <label class="taskFields"><input type="checkbox" id="subtask-modal-workflow" onchange="fieldStateChanged(this.id)">Workflow</label>
                                                     </div>
@@ -342,6 +360,7 @@
                                                     <label for="subtask_priority" class="col-sm-2 control-label">Priority</label>
                                                     <div class="col-sm-4">
                                                         <select class="form-control" id="subtask_priority" name="subtask_priority">
+                                                            <option value="">Select A Priority</option>
                                                             <option value="Blocker" @if($subtask->priority == 'Blocker') selected @endif>Blocker</option>
                                                             <option value="Critical" @if($subtask->priority == 'Critical') selected @endif>Critical</option>
                                                             <option value="Major" @if($subtask->priority == 'Major') selected @endif>Major</option>
@@ -398,7 +417,7 @@
                                                 </div>
 
                                                 <div class="form-group subtask-modal-reporter" hidden>
-                                                    <label for="subtask_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                                    <label for="subtask_reporter" class="col-sm-2 control-label">Reporter</label>
                                                     <div class="col-sm-8">
                                                         <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
                                                             <option value="{{$subtask->reporter}}">{{\App\User::where('id',$subtask->reporter)->pluck('name')->first()}}</option>
@@ -420,8 +439,8 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="form-group subtask-modal-timeTracking" hidden>
-                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                                <div class="form-group">
+                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                                                     <div class="col-sm-3">
                                                         <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" value="{{$subtask->hours->pluck('estimated_hours')->first()}}">
                                                     </div>
@@ -430,7 +449,7 @@
                                                 <div class="form-group subtask-modal-timeTracking" hidden>
                                                     <label for="subtask_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>
                                                     <div class="col-sm-3">
-                                                        <input type="number" name="subtask_remainingEstimate" class="form-control" id="subtask_remainingEstimate" value="{{$subtask->hours->pluck('estimated_hours')->first() - (empty($subtask->hours->pluck('consumed_hours')->first())? 0: $subtask->hours->pluck('consumed_hours')->first())}}">
+                                                        <input type="number" name="subtask_remainingEstimate" class="form-control" id="subtask_remainingEstimate" value="{{$subtask->hours->pluck('estimated_hours')->first() - (empty($subtask->hours->pluck('consumed_hours'))? 0: $subtask->hours->sum('consumed_hours'))}}">
                                                     </div>
                                                 </div>
 
@@ -626,6 +645,71 @@
                                     </div>
                                 </div>
                                 {{--Add Estimated Hour By Developer Ends--}}
+
+                            {{--Reopen Request Modal Starts--}}
+                            <div class="modal fade" id="reopenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Subtask Reopen</h4>
+                                        </div>
+
+                                        <form method="post" action="/reopen_subtask">
+                                            <div class="modal-body">
+
+                                                <div class="form-group">
+                                                    <label for="description">Write Why to Reopen Subtask: ??</label>
+                                                    <textarea name="description" class="form-control" id="description"></textarea>
+                                                </div>
+
+                                                @if(! empty($task)) <input type="hidden" name="subtask_id" value="{{$subtask->id}}">@endif
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="request_type" value="Reopen Request">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {{--Reopen Request Modal Ends--}}
+
+                            {{--Change Request Modal Starts--}}
+                            <div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Change Request</h4>
+                                        </div>
+
+                                        <form method="post" action="/reopen_subtask">
+                                            <div class="modal-body">
+
+                                                <div class="form-group">
+                                                    <label for="description">Write Why Change Request: ??</label>
+                                                    <textarea name="description" class="form-control" id="description"></textarea>
+                                                </div>
+
+                                                @if(! empty($task)) <input type="hidden" name="subtask_id" value="{{$subtask->id}}">@endif
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="hidden" name="request_type" value="Change Request">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {{--Change Request Modal Ends--}}
+
                         </div>
                     </div>
                 </div>

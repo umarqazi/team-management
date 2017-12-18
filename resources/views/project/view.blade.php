@@ -83,7 +83,7 @@
                         <div class="col-md-12">
                             <!-- Trigger the modal with a button -->
                             <div class="text-center" style="margin-top: 50px;">
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">Add Hours</button>
+                                {{--<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">Add Hours</button>--}}
                                 <a href="{{ URL::to('/downloadExcel_project_by_months/'.$project->id.'/xlsx') }}" class="btn btn-primary">Export Project Details</a>
                                 <a href="/projects" class="btn btn-default">Go Back</a>
                             </div>
