@@ -41,10 +41,9 @@ class TasksController extends Controller
             $users = User::role(['teamlead','developer'])->get();
             $task = $user->tasks()->orderBy('created_at','desc')->first();
 
-            if (!is_null($task)){
+            if (!empty($task)){
                 $Project = $task->project;
                 $tasks = $user->tasks()->where('project_id', $Project->id)->get();
-//                dd($task->hours->where('subtask_id',0)->sum('consumed_hours'));
                 $assignee = $task->users->pluck('id','name');
                 $hours = $task->hours;
             }
@@ -55,7 +54,7 @@ class TasksController extends Controller
             $users = User::role(['teamlead','developer'])->get();
             $task = Task::orderBy('created_at','desc')->first();
 
-            if (!is_null($task))
+            if (!empty($task))
             {
                 $Project = $task->project;
                 $tasks = $Project->tasks;
@@ -114,7 +113,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',
@@ -330,7 +329,20 @@ class TasksController extends Controller
 
     public function showProject($PID = null)
     {
-        $projects = Project::where('status', 1)->get();
+        $user = Auth::user();
+
+        if ($user->hasRole(['developer','teamlead'])){
+            $projects = $user->projects()->where('status', 1)->get();
+        }
+
+        elseif ($user->hasRole(['admin','pm'])){
+            $projects = Project::where('status', 1)->get();
+        }
+
+        else{
+            $projects = Project::where('status', 1)->get();
+        }
+
         $users = User::role(['teamlead','developer'])->get();
         $reporters = User::role(['pm','admin'])->get();
 
@@ -455,7 +467,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',
@@ -534,6 +546,53 @@ class TasksController extends Controller
         $task = Task::find($_GET['task_id']);
         $task->workflow = $_GET['value'];
         $task->update();
+
+        echo true;
+    }
+
+    // Function To Add Task Reopen and Change Request.
+    public function reopenAndChangeRequest(Request $request){
+        
+        $rules = array(
+            'description' => 'required',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Reopen And Change Request
+        if ($validator->fails()) {
+            return Redirect::to('/tasks/'.$request->task_id)
+                ->withErrors($validator);
+        }
+        else {
+            $task = Task::find($request->task_id);
+            $task->workflow = 'Todo';
+            if (empty($task->description)){
+                $task->description = $request->request_type."\n".$request->description;
+            }
+            else{
+                $task->description .= "\n\n".$request->request_type."\n".$request->description;
+            }
+            $task->update();
+
+            // redirect
+            if ($request->request_type == "Reopen Request"){
+                Session::flash('message', 'Task Reopen Request Successfully Submitted!');
+            }
+            else{
+                Session::flash('message', 'Task Change Request Successfully Submitted!');
+            }
+            Session::flash('alert-class', 'alert-success');
+            return Redirect::to('tasks/'.$request->task_id);
+        }
+    }
+
+    // Task Assign to Users through admin And View.blade.php
+    public function assignTask(){
+        echo $_GET['UID'];
+        echo $_GET['TID'];
+
+        $task = Task::find($_GET['TID']);
+        $task->users()->attach($_GET['UID']);
 
         echo true;
     }

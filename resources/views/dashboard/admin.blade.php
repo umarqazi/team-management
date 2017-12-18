@@ -108,6 +108,7 @@
                                             @endif
                                             @if(Auth::user()->can('delete project'))
                                                 <td>
+                                                    {{--<button class="no_button" data-toggle="modal" data-target="#deleteProjectModal" ><i class="glyphicon glyphicon-trash"></i> </button>--}}
                                                     {{ Form::open(array('url' => '/projects/' . $project->id)) }}
                                                     {{ Form::hidden('_method', 'DELETE') }}
                                                     <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i> </button>

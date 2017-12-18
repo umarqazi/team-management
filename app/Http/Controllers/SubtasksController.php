@@ -61,7 +61,7 @@ class SubtasksController extends Controller
             'subtask_follower' => 'integer',
             'subtask_reporter' => 'integer',
             'subtask_description' => 'string',
-            'subtask_originalEstimate' => 'integer|min:1',
+            'subtask_originalEstimate' => 'required|integer|min:1',
             'subtask_remainingEstimate' => 'integer|min:1',
             'subtask_tags' => 'alpha_num',
             'subtask_workflow' => 'string',
@@ -120,7 +120,8 @@ class SubtasksController extends Controller
             $tasks = Task::all();
             $projects = $user->projects;
 
-            $subtask = $user->subtasks()->find($id);
+//            $subtask = $user->subtasks()->find($id);
+            $subtask = Subtask::find($id);
             $task = $subtask->task;
             $projectId = $task->project_id;
             $users = $task->users;
@@ -251,7 +252,7 @@ class SubtasksController extends Controller
             'subtask_follower' => 'integer',
             'subtask_reporter' => 'integer',
             'subtask_description' => 'string',
-            'subtask_originalEstimate' => 'integer|min:1',
+            'subtask_originalEstimate' => 'required|integer|min:1',
             'subtask_remainingEstimate' => 'integer|min:1',
             'subtask_tags' => 'alpha_num',
             'subtask_workflow' => 'string',
@@ -314,6 +315,42 @@ class SubtasksController extends Controller
         $subtask->update();
 
         echo true;
+    }
+
+    // Function To Add Task Reopen and Change Request.
+    public function reopenAndChangeRequest(Request $request){
+
+        $rules = array(
+            'description' => 'required',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Reopen And Change Request
+        if ($validator->fails()) {
+            return Redirect::to('/subtasks/'.$request->subtask_id)
+                ->withErrors($validator);
+        }
+        else {
+            $subtask = Subtask::find($request->subtask_id);
+            $subtask->Workflow = 'Todo';
+            if (empty($subtask->description)){
+                $subtask->description = $request->request_type.":\n".$request->description;
+            }
+            else{
+                $subtask->description .= "\n\n".$request->request_type.":\n".$request->description;
+            }
+            $subtask->update();
+
+            // redirect
+            if ($request->request_type == "Reopen Request"){
+                Session::flash('message', 'Task Reopen Request Successfully Submitted!');
+            }
+            else{
+                Session::flash('message', 'Task Change Request Successfully Submitted!');
+            }
+            Session::flash('alert-class', 'alert-success');
+            return Redirect::to('subtasks/'.$request->subtask_id);
+        }
     }
 
     /**

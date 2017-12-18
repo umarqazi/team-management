@@ -31,7 +31,7 @@
 
                             </tr>
                             </thead>
-                            <tfoot>
+                            {{--<tfoot>
                             <tr>
                                 <th>Key</th>
                                 <th>Name</th>
@@ -49,7 +49,7 @@
                                 <th>View Task</th>
 
                             </tr>
-                            </tfoot>
+                            </tfoot>--}}
                             <tbody>
                             @foreach($projects as $project)
                                 <tr>

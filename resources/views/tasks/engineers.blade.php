@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-select.min.css')}}">
 @endsection
 @section('content')
-    <div class="container-fluid pageIdentifier" data-project-id="{{$Project->id}}">
+    <div class="container-fluid pageIdentifier" @if(!empty($Project)) data-project-id="{{$Project->id}}" @endif>
         <div class="row">
             <div class="col-md-12 taskContainer">
                 <div>
@@ -125,9 +125,9 @@
                                 </div>
 
                                 <!--Tag Filter-->
-                                {{--<div class="taskDetailInput">
+                                <div class="taskDetailInput">
                                     <input type="text" class="form-control" id="task_tag" placeholder="Search By Tags">
-                                </div>--}}
+                                </div>
                             </div>
 
                             <div class="mainTaskDetail">
@@ -138,7 +138,7 @@
                                     <div>
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-tabs taskViewSidebarTabs" role="tablist">
-                                            <li role="presentation" class="active" ><a href="#tasks" aria-controls="tasks" role="tab"data-toggle="tab">Tasks @if(!empty($tasks)) <span class="tasksCount">{{count($tasks)}}</span> @endif</a></li>
+                                            <li role="presentation" class="active" ><a href="#tasks" aria-controls="tasks" role="tab"data-toggle="tab">Tasks @if(!empty($tasks)) <span class="tasksCount">{{count($tasks)-count($tasks->where('types','Bug'))}}</span> @endif</a></li>
                                             <li role="presentation"><a href="#bugs" aria-controls="bugs" role="tab" data-toggle="tab">Bugs @if(!empty($tasks)) <span class="bugsCount">{{0}}</span> @endif</a></li>
                                         </ul>
 
@@ -152,20 +152,22 @@
                                                     <ol class="eachTask" >
                                                         @if(! empty($tasks))
                                                             @foreach($tasks as $t)
-                                                                <li class="
-                                                                        @if($t->workflow == 'Completed')
-                                                                            taskCompleted
-                                                                        @elseif($t->duedate < strtotime('now'))
-                                                                            delayed
-                                                                        @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
-                                                                            aboutToDeliver
-                                                                        @endif
-                                                                {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
-                                                                    <a href="/tasks/{{$t->id}}">
-                                                                        <div class="taskKey">{{$t->key}}</div>
-                                                                        <div class="taskName">{{str_limit($t->name, 15)}}</div>
-                                                                    </a>
-                                                                </li>
+                                                                @if($t->types != 'Bug')
+                                                                    <li class="
+                                                                            @if($t->workflow == 'Completed')
+                                                                                taskCompleted
+                                                                            @elseif($t->duedate < strtotime('now'))
+                                                                                delayed
+                                                                            @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                                aboutToDeliver
+                                                                            @endif
+                                                                    {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                        <a href="/tasks/{{$t->id}}">
+                                                                            <div class="taskKey">{{$t->key}}</div>
+                                                                            <div class="taskName">{{str_limit($t->name, 15)}}</div>
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
                                                             @endforeach
                                                         @else
                                                             <li> No Tasks Available </li>
@@ -176,9 +178,30 @@
 
                                             <div role="tabpanel" class="allBugs tab-pane" id="bugs">
                                                 <div class="bugList">
-                                                    <ul class="eachBug">
-                                                        <li><div id="BugTitle">No Bugs Available</div></li>
-                                                    </ul>
+                                                    <ol class="eachBug">
+                                                        @if($tasks != null)
+                                                            @foreach($tasks as $t)
+                                                                @if($t->types == 'Bug')
+                                                                    <li class="
+                                                                    @if($t->workflow == 'Completed')
+                                                                        taskCompleted
+                                                                    @elseif($t->duedate < strtotime('now'))
+                                                                        delayed
+                                                                    @elseif(!($t->duedate < strtotime('+1 day')) && $t->duedate < strtotime('now')+1)
+                                                                        aboutToDeliver
+                                                                    @endif
+                                                                    {{strtolower(str_replace(' ','-', $t->types))}} {{strtolower(str_replace(' ','-', $t->component))}} {{strtolower(str_replace(' ','-', $t->priority))}} {{strtolower(str_replace(' ','-', $t->workflow))}} @foreach($t->users as $user) {{strtolower(str_replace(' ','-', $user->name))}} @endforeach {{strtolower(str_replace(' ','-', $t->tags))}}">
+                                                                        <a href="/tasks/{{$t->id}}">
+                                                                            <div class="taskKey">{{$t->key}}</div>
+                                                                            <div class="taskName">{{str_limit($t->name, 15)}}</div>
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <li><div id="BugTitle">No Bugs Available</div></li>
+                                                        @endif
+                                                    </ol>
                                                 </div>
                                             </div>
                                         </div>
@@ -228,63 +251,86 @@
                                             @if(auth()->user()->can('delete task'))
                                                 @if($task != null)
                                                     <div class="deleteTask" style="display: inline-block">
-                                                        {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
-                                                        {{ Form::hidden('_method', 'DELETE') }}
-                                                        <button class="btn btn-default btn-sm" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
-                                                        {{ Form::close() }}
+                                                        <button class="btn btn-default btn-sm" style="cursor: pointer" data-toggle="modal" data-target="#deleteTaskModal"><span class="fa fa-trash"></span> Delete</button>
                                                     </div>
+
+                                                    {{--Delete Prompt Modal Starts--}}
+                                                    <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                        <div class="modal-dialog" role="document" style="max-width: 400px">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
+                                                                    <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
+
+                                                                    <div style="margin-top: 20px">
+
+                                                                        <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                                        <div style="display: inline-block">
+                                                                            {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
+                                                                            {{ Form::hidden('_method', 'DELETE') }}
+                                                                            <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
+                                                                            {{ Form::close() }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{--Change Request Modal Ends--}}
+
                                                 @else
                                                     <button class="btn btn-default btn-sm" type="submit" style="cursor: pointer"><span class="fa fa-trash"></span> Delete</button>
                                                 @endif
                                             @endif
 
                                             <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
-                                            <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Status
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu taskStatus">
-                                                        <li value="Todo"><a>Todo</a></li>
-                                                        <li value="In Progress"><a>In Progress</a></li>
-                                                        <li value="In QA"><a>In QA</a></li>
-                                                        <li value="Completed"><a>Completed</a></li>
-                                                    </ul>
-                                                    <script>
-                                                        $(function () {
-                                                            $('.taskStatus li').click(function () {
-                                                                console.log($(this).attr('value'));
-                                                                $.ajax({
-                                                                    url: '/status',
-                                                                    type:'GET',
-                                                                    data:{task_id: '<?=$task->id ?>',value: $(this).attr('value')},
-                                                                    dataType: 'json',
-                                                                    success: function (data) {
-                                                                        if(data) {
-                                                                            alert('Status Successfully Updated');
-                                                                            location.reload();
-                                                                        }
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Status
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu taskStatus">
+                                                    <li value="Todo"><a>Todo</a></li>
+                                                    <li value="In Progress"><a>In Progress</a></li>
+                                                    <li value="In QA"><a>In QA</a></li>
+                                                    <li value="Completed"><a>Completed</a></li>
+                                                </ul>
+                                                <script>
+                                                    $(function () {
+                                                        $('.taskStatus li').click(function () {
+                                                            console.log($(this).attr('value'));
+                                                            $.ajax({
+                                                                url: '/status',
+                                                                type:'GET',
+                                                                data: {task_id: '<?= !empty($task)? $task->id :'' ?>',value: $(this).attr('value')},
+                                                                dataType: 'json',
+                                                                success: function (data) {
+                                                                    if(data) {
+                                                                        alert('Status Successfully Updated');
+                                                                        location.reload();
                                                                     }
-                                                                });
+                                                                }
                                                             });
-                                                        })
-                                                    </script>
-                                                </div>
-                                                <button type="button" class="btn btn-default">Assign</button>
-                                                <button type="button" class="btn btn-default">Reopen</button>
-                                                <button type="button" class="btn btn-default">Change Request</button>
-                                                <div class="btn-group" role="group">
-                                                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        More <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        @if(auth()->user()->can('create task'))
-                                                            <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
-                                                        @endif
-                                                        <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
-                                                    </ul>
-                                                </div>
+                                                        });
+                                                    })
+                                                </script>
+                                            </div>
+                                            @if(\Illuminate\Support\Facades\Auth::user()->hasRole(['admin','pm']))
+                                                <button type="button" class="btn btn-default btn-sm">Assign</button>
+                                                <button type="button" class="btn btn-default btn-sm">Reopen</button>
+                                                <button type="button" class="btn btn-default btn-sm">Change Request</button>
+                                            @endif
+
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    More <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    @if(auth()->user()->can('create task'))
+                                                        <li><a href="#" data-toggle="modal" data-target="#SubtaskModal" data-backdrop="static" data-keyboard="false">Create Sub Task</a></li>
+                                                    @endif
+                                                    <li><a href="#" data-toggle="modal" data-target="#DeveloperEstimationModal" data-backdrop="static" data-keyboard="false">Add Estimation</a></li>
+                                                </ul>
                                             </div>
 
                                             {{--<div class="btn-group btn-group-sm" role="group" aria-label="...">
@@ -386,7 +432,7 @@
                                                         <form>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <textarea class="form-control" rows="3" name="description" id="description"> @if($task != null) {{$task->description}} @endif </textarea>
+                                                                    <textarea class="form-control" rows="6" name="description" id="description" readonly> @if($task != null) {{$task->description}} @endif </textarea>
                                                                 </div>
                                                             </div>
                                                         </form>
@@ -402,26 +448,26 @@
                                                                 <li class="item">
                                                                     <div class="itemDetail">
                                                                         <span class="detailType">Total Estimated Hours:</span>
-                                                                        <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->first()->estimated_hours}} @else 0 @endif Hours</span>
+                                                                        <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}} @else 0 @endif Hours</span>
                                                                     </div>
                                                                 </li>
                                                             @endif
                                                             <li class="item">
                                                                 <div class="itemDetail">
                                                                     <span class="detailType">Dev's Estimated Hours:</span>
-                                                                    <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
+                                                                    <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}} @else 0 @endif Hours</span>
                                                                 </div>
                                                             </li>
                                                             <li class="item">
                                                                 <div class="itemDetail">
                                                                     <span class="detailType">Total Consumed Hours:</span>
-                                                                    <span class="detail"> @if(! empty($task->hours->first())) {{$task->hours->where('subtask_id',null)->sum('consumed_hours')}} @else 0 @endif Hours</span>
+                                                                    <span class="detail"> @if(! empty($task->hours[0])) {{$task->hours->where('subtask_id',null)->sum('consumed_hours')}} @else 0 @endif Hours</span>
                                                                 </div>
                                                             </li>
                                                             </li><li class="item">
                                                                 <div class="itemDetail">
                                                                     <span class="detailType">Total Remaining Hours:</span>
-                                                                    <span class="detail"> @if(! empty($task->hours->first())) {{abs($task->hours->first()->internal_hours - $task->hours->where('subtask_id',null)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours->first()) && $task->hours->where('subtask_id',null)->sum('consumed_hours') > $task->hours->first()->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
+                                                                    <span class="detail"> @if(! empty($task->hours[0])) {{abs($task->hours->where('subtask_id', null)->pluck('internal_hours')->first() - $task->hours->where('subtask_id',null)->sum('consumed_hours'))}} @else 0 @endif Hours</span>@if(! empty($task->hours[0]) && $task->hours->where('subtask_id',null)->sum('consumed_hours') > $task->hours->first()->internal_hours) <span class="overdueEstimation">Overdue</span>@endif
                                                                 </div>
                                                             </li>
                                                         </ul>
@@ -789,7 +835,7 @@
                                                                     <label class="taskFields"><input type="checkbox" id="editModal-reporter" onchange="configureFields(this.id)">Reporter</label>
                                                                     <label class="taskFields"><input type="checkbox" id="editModal-follower" onchange="configureFields(this.id)">Follower</label>
                                                                     <label class="taskFields"><input type="checkbox" id="editModal-sprint" onchange="configureFields(this.id)">Sprint</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Time Tracking</label>
+                                                                    <label class="taskFields"><input type="checkbox" id="editModal-timeTracking" onchange="configureFields(this.id)">Remaining Estimate</label>
                                                                     <label class="taskFields"><input type="checkbox" id="editModal-units" onchange="configureFields(this.id)">Units</label>
                                                                     <label class="taskFields"><input type="checkbox" id="editModal-workflow" onchange="configureFields(this.id)">Workflow</label>
                                                                 </div>
@@ -901,7 +947,7 @@
                                                             </div>
 
                                                             <div class="form-group editModal-reporter" hidden>
-                                                                <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                                                                <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                                                                 <div class="col-sm-8">
                                                                     <select class="form-control" id="edit_task_reporter" name="task_reporter" >
                                                                         <option value="null">Select A Reporter</option>
@@ -923,8 +969,8 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="form-group editModal-timeTracking" hidden>
-                                                                <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                                                            <div class="form-group">
+                                                                <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate <span class="mendatoryFields">*</span></label>
                                                                 <div class="col-sm-3">
                                                                     <input type="number" name="task_originalEstimate" class="form-control" id="edit_task_originalEstimate" >
                                                                 </div>
@@ -1030,261 +1076,256 @@
 
                                         {{--<!--Edit Task Model Ends Here-->--}}
 
-                                    <!--Create Sub Task Model Starts Here-->
+                                        <!--Sub Task Model Starts Here-->
 
-                                        <div id="SubtaskModal" class="modal fade" role="dialog">
-                                            <div class="modal-dialog modal-lg">
+                                            <div id="SubtaskModal" class="modal fade" role="dialog">
+                                                <div class="modal-dialog modal-lg">
 
-                                                <!-- TaskModal content-->
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <div class="btn-group" id="ConfigureFields">
-                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <span class="fa fa-cog"></span>Configure Fields <span class="caret"></span>
-                                                            </button>
+                                                    <!--Sub Task Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <div class="btn-group" id="ConfigureFields">
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span class="fa fa-cog"></span>Configure Fields <span class="caret"></span>
+                                                                </button>
 
-                                                            <!--Configure Fields Dropdown-->
-                                                            <ul class="dropdown-menu">
-                                                                <div id="dropdownHeader"><strong>Show Fields:</strong> All | Custom</div>
-                                                                <hr>
-                                                                <div class="configurableFields">
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-assignee" onchange="fieldStateChanged(this.id)">Assignee</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-attachment" onchange="fieldStateChanged(this.id)">Attachment</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-description" onchange="fieldStateChanged(this.id)">Description</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-duetime" onchange="fieldStateChanged(this.id)">Due Time</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-effort" onchange="fieldStateChanged(this.id)">Effort</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-environment" onchange="fieldStateChanged(this.id)">Environment</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-epicLink" onchange="fieldStateChanged(this.id)">Epic Link</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-tags" onchange="fieldStateChanged(this.id)">Tags</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-percentDone" onchange="fieldStateChanged(this.id)">Percent Done</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-priority" onchange="fieldStateChanged(this.id)">Priority</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-reporter" onchange="fieldStateChanged(this.id)">Reporter</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-follower" onchange="fieldStateChanged(this.id)">Follower</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Time Tracking</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-units" onchange="fieldStateChanged(this.id)">Units</label>
-                                                                    <label class="taskFields"><input type="checkbox" id="subtask-modal-workflow" onchange="fieldStateChanged(this.id)">Workflow</label>
-                                                                </div>
-                                                            </ul>
+                                                                <!--Configure Fields Dropdown-->
+                                                                <ul class="dropdown-menu">
+                                                                    <div id="dropdownHeader"><strong>Show Fields:</strong> All | Custom</div>
+                                                                    <hr>
+                                                                    <div class="configurableFields">
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-assignee" onchange="fieldStateChanged(this.id)">Assignee</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-attachment" onchange="fieldStateChanged(this.id)">Attachment</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-description" onchange="fieldStateChanged(this.id)">Description</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-duetime" onchange="fieldStateChanged(this.id)">Due Time</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-effort" onchange="fieldStateChanged(this.id)">Effort</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-environment" onchange="fieldStateChanged(this.id)">Environment</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-epicLink" onchange="fieldStateChanged(this.id)">Epic Link</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-tags" onchange="fieldStateChanged(this.id)">Tags</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-percentDone" onchange="fieldStateChanged(this.id)">Percent Done</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-priority" onchange="fieldStateChanged(this.id)">Priority</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-reporter" onchange="fieldStateChanged(this.id)">Reporter</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-follower" onchange="fieldStateChanged(this.id)">Follower</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-timeTracking" onchange="fieldStateChanged(this.id)">Time Tracking</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-units" onchange="fieldStateChanged(this.id)">Units</label>
+                                                                        <label class="taskFields"><input type="checkbox" id="subtask-modal-workflow" onchange="fieldStateChanged(this.id)">Workflow</label>
+                                                                    </div>
+                                                                </ul>
+                                                            </div>
+                                                            <h3 class="modal-title">Create Subtask</h3>
                                                         </div>
-                                                        <h3 class="modal-title">Create Subtask</h3>
-                                                    </div>
 
-                                                    <form class="form-horizontal subtaskForm" method="POST" action="">
-                                                        <div class="modal-body">
-                                                            <div class="form-group projectName">
-                                                                <label for="" class="col-sm-2 control-label">Task Name<span class="mendatoryFields">*</span></label>
-                                                                <div class="col-sm-4">
-                                                                    <select class="form-control" id="project_name" name="project_name" style="overflow-y: scroll">
-                                                                        <option id="" value="null">Select A Task</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+                                                        <form class="form-horizontal subtaskForm" method="POST" action="/subtasks">
+                                                            <div class="modal-body">
+                                                                <div class="form-group taskName">
+                                                                    <label for="" class="col-sm-2 control-label">Task Name<span class="mendatoryFields">*</span></label>
+                                                                    <div class="col-sm-4">
+                                                                        <select class="form-control" id="task_name" name="task_name" style="overflow-y: scroll">
 
-                                                            {{--<div class="form-group subtaskType">
-                                                                <label class="col-sm-2 control-label">Subtask Type<span class="mendatoryFields">*</span></label>
-                                                                <div class="col-sm-4">
-                                                                    <select class="form-control" name="subtask_type">
-                                                                        <option value="null">Select A Proper Type</option>
-                                                                        <option value="New Feature">New Feature</option>
-                                                                        <option value="Bug">Bug</option>
-                                                                        <option value="Improvement">Improvement</option>
-                                                                        <option value="Task">Task</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>--}}
-
-                                                            <hr>
-                                                            <div class="form-group subtaskName">
-                                                                <label for="subtask_name" class="col-sm-2 control-label">Task Name<span class="mendatoryFields">*</span></label>
-                                                                <div class="col-sm-8">
-                                                                    <input type="text" name="subtask_name" class="form-control" id="subtask_name">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group subtask-modal-priority" hidden>
-                                                                <label for="subtask_priority" class="col-sm-2 control-label">Priority</label>
-                                                                <div class="col-sm-4">
-                                                                    <select class="form-control" id="subtask_priority" name="subtask_priority">
-                                                                        <option value="Blocker">Blocker</option>
-                                                                        <option value="Critical">Critical</option>
-                                                                        <option value="Major">Major</option>
-                                                                        <option value="Minor">Minor</option>
-                                                                        <option value="Trivial">Trivial</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class='col-sm-12 subtaskDuedate'>
-                                                                <div class="form-group">
-                                                                    <label for="subtask_duedate" class="col-sm-2 control-label">Due Date & Time:<span class="mendatoryFields">*</span></label>
-                                                                    <div class='input-group date col-xs-3' id='subtaskModalDueDate'>
-                                                                        <input type='text' name="subtask_duedate" class="form-control" id="subtask_duedate" />
-                                                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                            @foreach($tasks as $eachtask)
+                                                                                <option value="{{ $eachtask->id}}" @if(!empty($task)) @if($eachtask->id == $task->id) selected @endif @endif>{{ucwords($eachtask->name)}}</option>
+                                                                            @endforeach
+                                                                        </select>
                                                                     </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <script type="text/javascript">
-                                                                $(function () {
-                                                                    $('#subtaskModalDueDate').datetimepicker();
-                                                                });
-                                                            </script>
-
-                                                            <div class="form-group subtask-modal-assignee" hidden>
-                                                                <label for="subtask_assignee" class="col-sm-2 control-label">Assignee</label>
-                                                                <div class="col-sm-8">
-                                                                    <select class="form-control selectpicker" id="subtask_assignee" name="subtask_assignee">
-                                                                        <option value="null" disabled>Select An Assignee</option>
-                                                                    </select>
+                                                                <hr>
+                                                                <div class="form-group subtaskName">
+                                                                    <label for="subtask_name" class="col-sm-2 control-label">Subtask Name<span class="mendatoryFields">*</span></label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" name="subtask_name" class="form-control" id="subtask_name">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-follower" hidden>
-                                                                <label for="subtask_follower" class="col-sm-2 control-label">Follower</label>
-                                                                <div class="col-sm-8">
-                                                                    <select class="form-control" id="subtask_follower" name="subtask_follower">
-                                                                        <option value="null">Select A Follower</option>
-                                                                    </select>
+                                                                <div class="form-group subtask-modal-priority" hidden>
+                                                                    <label for="subtask_priority" class="col-sm-2 control-label">Priority</label>
+                                                                    <div class="col-sm-4">
+                                                                        <select class="form-control" id="subtask_priority" name="subtask_priority">
+                                                                            <option value="">Select A Priority</option>
+                                                                            <option value="Blocker">Blocker</option>
+                                                                            <option value="Critical">Critical</option>
+                                                                            <option value="Major">Major</option>
+                                                                            <option value="Minor">Minor</option>
+                                                                            <option value="Trivial">Trivial</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-effort" hidden>
-                                                                <label for="subtask_effort" class="col-sm-2 control-label">Effort</label>
-                                                                <div class="col-sm-2">
-                                                                    <select class="form-control" id="subtask_effort" >
-                                                                        <option>None</option>
-                                                                    </select>
+                                                                <div class='col-sm-12 subtaskDuedate'>
+                                                                    <div class="form-group">
+                                                                        <label for="subtask_duedate" class="col-sm-2 control-label">Due Date & Time:<span class="mendatoryFields">*</span></label>
+                                                                        <div class='input-group date col-xs-3' id='subtaskModalDueDate'>
+                                                                            <input type='text' name="subtask_duedate" class="form-control" id="subtask_duedate" />
+                                                                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-reporter" hidden>
-                                                                <label for="subtask_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
-                                                                <div class="col-sm-8">
-                                                                    <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
-                                                                        <option value="null">Select A Reporter</option>
-                                                                    </select>
+                                                                <script type="text/javascript">
+                                                                    $(function () {
+                                                                        $('#subtaskModalDueDate').datetimepicker();
+                                                                    });
+                                                                </script>
+
+                                                                <div class="form-group subtask-modal-assignee" hidden>
+                                                                    <label for="subtask_assignee" class="col-sm-2 control-label">Assignee</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control selectpicker" id="subtask_assignee" name="subtask_assignee">
+                                                                            @foreach($users as $subtaskuser)
+                                                                                <option value="{{$subtaskuser->id}}">{{$subtaskuser->name}}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-environment" hidden>
-                                                                <label for="subtask_environment" class="col-sm-2 control-label">Task Environment</label>
-                                                                <div class="col-sm-8">
-                                                                    <textarea name="subtask_environment" class="form-control" rows="5" id="subtask_environment" ></textarea>
+                                                                <div class="form-group subtask-modal-follower" hidden>
+                                                                    <label for="subtask_follower" class="col-sm-2 control-label">Follower</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control" id="subtask_follower" name="subtask_follower">
+                                                                            @foreach($users as $subtaskfollower)
+                                                                                <option value="{{$subtaskfollower->id}}">{{$subtaskfollower->name}}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-description" hidden>
-                                                                <label for="subtask_description" class="col-sm-2 control-label">Task Description</label>
-                                                                <div class="col-sm-8">
-                                                                    <textarea name="subtask_description" class="form-control" rows="5" id="subtask_description" ></textarea>
+                                                                <div class="form-group subtask-modal-effort" hidden>
+                                                                    <label for="subtask_effort" class="col-sm-2 control-label">Effort</label>
+                                                                    <div class="col-sm-2">
+                                                                        <select class="form-control" id="subtask_effort" >
+                                                                            <option>None</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-timeTracking" hidden>
-                                                                <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
-                                                                <div class="col-sm-3">
-                                                                    <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" >
+                                                                <div class="form-group subtask-modal-reporter" hidden>
+                                                                    <label for="subtask_reporter" class="col-sm-2 control-label">Reporter</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control" id="subtask_reporter" name="subtask_reporter" >
+                                                                            @if(!is_null($task))<option value="{{$task->reporter}}">{{\App\User::where('id',$task->reporter)->pluck('name')->first()}} </option> @endif
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-timeTracking" hidden>
-                                                                <label for="subtask_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>
-                                                                <div class="col-sm-3">
-                                                                    <input type="number" name="subtask_remainingEstimate" class="form-control" id="subtask_remainingEstimate" >
+                                                                <div class="form-group subtask-modal-environment" hidden>
+                                                                    <label for="subtask_environment" class="col-sm-2 control-label">Task Environment</label>
+                                                                    <div class="col-sm-8">
+                                                                        <textarea name="subtask_environment" class="form-control" rows="5" id="subtask_environment" ></textarea>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-attachment" hidden>
-                                                                <label for="subtask_file" class="col-sm-2 control-label">Select File/s</label>
-                                                                <div class="col-sm-4" style="border: none">
-                                                                    <input type="file" name="subtask_file" id="subtask_file" >
+                                                                <div class="form-group subtask-modal-description" hidden>
+                                                                    <label for="subtask_description" class="col-sm-2 control-label">Task Description</label>
+                                                                    <div class="col-sm-8">
+                                                                        <textarea name="subtask_description" class="form-control" rows="5" id="subtask_description" ></textarea>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-tags" hidden>
-                                                                <label for="subtask_tags" class="col-sm-2 control-label">Tags</label>
-                                                                <div class="col-sm-8">
-                                                                    <input type="text" name="subtask_tags" class="form-control" id="subtask_tags" >
+                                                                <div class="form-group">
+                                                                    <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
+                                                                    <div class="col-sm-3">
+                                                                        <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" >
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-workflow" hidden>
-                                                                <label for="subtask_workflow" class="col-xs-2 control-label">Workflow</label>
-                                                                <div class="col-xs-8">
-                                                                    <select class="form-control" id="subtask_workflow" name="subtask_workflow">
-                                                                        <option value="Todo">Todo</option>
-                                                                        <option value="In Progress">In Progress</option>
-                                                                        <option value="In QA">In QA</option>
-                                                                        <option value="Completed">Completed</option>
-                                                                    </select>
+                                                                <div class="form-group subtask-modal-timeTracking" hidden>
+                                                                    <label for="subtask_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>
+                                                                    <div class="col-sm-3">
+                                                                        <input type="number" name="subtask_remainingEstimate" class="form-control" id="subtask_remainingEstimate" >
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-epicLink" hidden>
-                                                                <label for="subtask_epicLink" class="col-sm-2 control-label">Epic Links</label>
-                                                                <div class="col-sm-8">
-                                                                    <select class="form-control" id="subtask_epicLink" >
-                                                                        <option selected>Select Link</option>
-                                                                    </select>
+                                                                <div class="form-group subtask-modal-attachment" hidden>
+                                                                    <label for="subtask_file" class="col-sm-2 control-label">Select File/s</label>
+                                                                    <div class="col-sm-4" style="border: none">
+                                                                        <input type="file" name="subtask_file" id="subtask_file" >
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-sprint" hidden>
-                                                                <label for="subtask_sprint" class="col-sm-2 control-label">Sprint</label>
-                                                                <div class="col-sm-8">
-                                                                    <select class="form-control" id="subtask_sprint" >
-                                                                        <option selected>Select Sprint</option>
-                                                                        <option>Mustafa Rizvi</option>
-                                                                    </select>
+                                                                <div class="form-group subtask-modal-tags" hidden>
+                                                                    <label for="subtask_tags" class="col-sm-2 control-label">Tags</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" name="subtask_tags" class="form-control" id="subtask_tags" >
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-fixVersion" hidden>
-                                                                <label for="subtask_version" class="col-sm-2 control-label">Fix Version/s</label>
-                                                                <div class="col-sm-8">
-                                                                    <select class="form-control" id="subtask_version" >
-                                                                        <option selected>Select Version</option>
-                                                                    </select>
+                                                                <div class="form-group subtask-modal-workflow" hidden>
+                                                                    <label for="subtask_workflow" class="col-xs-2 control-label">Workflow</label>
+                                                                    <div class="col-xs-8">
+                                                                        <select class="form-control" id="subtask_workflow" name="subtask_workflow">
+                                                                            <option value="Todo">Todo</option>
+                                                                            <option value="In Progress">In Progress</option>
+                                                                            <option value="In QA">In QA</option>
+                                                                            <option value="Completed">Completed</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-units" hidden>
-                                                                <label for="subtask_units" class="col-sm-2 control-label">Units</label>
-                                                                <div class="col-sm-8">
-                                                                    <input type="text" name="subtask_units" class="form-control" id="subtask_units" >
+                                                                <div class="form-group subtask-modal-epicLink" hidden>
+                                                                    <label for="subtask_epicLink" class="col-sm-2 control-label">Epic Links</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control" id="subtask_epicLink" >
+                                                                            <option selected>Select Link</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-percentDone" hidden>
-                                                                <label for="subTaskPercentDone" class="col-sm-2 control-label">Percent Done </label>
-                                                                <div class="col-sm-8">
-                                                                    <input type="text" name="subTaskPercentDone" class="form-control" id="subTaskPercentDone" >
+                                                                <div class="form-group subtask-modal-sprint" hidden>
+                                                                    <label for="subtask_sprint" class="col-sm-2 control-label">Sprint</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control" id="subtask_sprint" >
+                                                                            <option selected>Select Sprint</option>
+                                                                            <option>Mustafa Rizvi</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="form-group subtask-modal-duetime" hidden>
-                                                                <label for="due_time" class="col-sm-2 control-label">Due Time</label>
-                                                                <div class="col-sm-8">
-                                                                    <input type="text" name="due_time" class="form-control" id="due_time" >
+                                                                <div class="form-group subtask-modal-fixVersion" hidden>
+                                                                    <label for="subtask_version" class="col-sm-2 control-label">Fix Version/s</label>
+                                                                    <div class="col-sm-8">
+                                                                        <select class="form-control" id="subtask_version" >
+                                                                            <option selected>Select Version</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
+
+                                                                <div class="form-group subtask-modal-units" hidden>
+                                                                    <label for="subtask_units" class="col-sm-2 control-label">Units</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" name="subtask_units" class="form-control" id="subtask_units" >
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group subtask-modal-percentDone" hidden>
+                                                                    <label for="subTaskPercentDone" class="col-sm-2 control-label">Percent Done </label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" name="subTaskPercentDone" class="form-control" id="subTaskPercentDone" >
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group subtask-modal-duetime" hidden>
+                                                                    <label for="due_time" class="col-sm-2 control-label">Due Time</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" name="due_time" class="form-control" id="due_time" >
+                                                                    </div>
+                                                                </div>
+
+                                                                <input type="hidden" name="project_id" @if(!empty($Project)) value="{{$Project->id}}" @endif >
                                                             </div>
 
-                                                            <input type="hidden" name="task_id">
-                                                        </div>
-
-                                                        <div class="modal-footer myFooter">
-                                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                            <input type="checkbox" id="createAnother">Create Another
-                                                            <button type="submit" class="btn btn-primary" id="createSubtaskButton">Create</button>
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </form>
+                                                            <div class="modal-footer myFooter">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                <input type="checkbox" id="createAnother">Create Another
+                                                                <button type="submit" class="btn btn-primary" id="createSubtaskButton">Create</button>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!--Sub Task Modal Content Ends -->
                                                 </div>
-                                                <!-- Task Modal Content Ends -->
                                             </div>
-                                        </div>
 
-                                        <!--Create Sub Task Model Ends Here-->
+                                            {{--<!--Sub Task Model Ends Here-->--}}
 
                                         {{--Add Hour Modal Starts--}}
 
@@ -1342,8 +1383,8 @@
 
                                                             @if(! empty($Project))<input type="hidden" name="project_id" value="{{$Project->id}}">@endif
                                                             @if(! empty($task))<input type="hidden" name="task_id" value="{{$task->id}}">@endif
-                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours[0]->internal_hours}}">@endif
-                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours[0]->estimated_hours}}">@endif
+                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_internal_hours" value="{{$task->hours->where('subtask_id', null)->pluck('internal_hours')->first()}}">@endif
+                                                            @if(! empty($task->hours[0])) <input type="hidden" name="task_estimated_hours" value="{{$task->hours->where('subtask_id', null)->pluck('estimated_hours')->first()}}">@endif
                                                         </div>
 
                                                         <div class="modal-footer">

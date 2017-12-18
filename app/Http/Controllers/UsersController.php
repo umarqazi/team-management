@@ -57,7 +57,7 @@ class UsersController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:users',
-            'password'  => 'required',
+            'password'  =>  'required',
             'role-name'  => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -181,7 +181,7 @@ class UsersController extends Controller
                 // redirect
                 Session::flash('message', 'Successfully updated the User!');
                 Session::flash('alert-class', 'alert-success');
-                return Redirect::to('/home');
+                return Redirect::to('/users');
             }
 
             else{

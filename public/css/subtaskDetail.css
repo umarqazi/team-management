@@ -19,10 +19,13 @@ body{
     border-right: 1px solid #ddd;
     padding: 15px 10px;
     position: relative;
-    background-color: #F5F5F5;
+    background-color: #c0504e !important;
 }
 .subtaskDetailSidebar li{
     display: block;
+}
+.subtaskDetailSidebar ul li a{
+    color: #ffffff !important;
 }
 .subtaskDetailSidebar .list{
     margin-top: 20px;
@@ -388,11 +391,13 @@ footer{
 }
 .liveSearch button {
     background: none;
-    border: 1px solid transparent;
     width: auto !important;
 }
 .liveSearch button:hover,.liveSearch button:focus,.liveSearch button:active {
     background: #FDFDFD;
+}
+.subtaskDetailBoxHeaderButtons .bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover{
+    color: #333 !important;
 }
 
 /*Custom Css For Bootstrap Live select */

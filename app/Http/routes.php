@@ -60,6 +60,22 @@ Route::group(['middleware'  => 'auth'], function(){
             'as' => 'Project'
         ]);
 
+        // Reopen and Change Request For Tasks
+        Route::post('/reopen', [
+           'uses' => 'TasksController@reopenAndChangeRequest',
+           'as' => 'reopenTask'
+        ]);
+
+        // Route for Assign Task
+        Route::get('/assign_task', [
+            'uses' => 'TasksController@assignTask',
+            'as' => 'assignTask'
+        ]);
+
+        Route::post('/reopen_subtask', [
+           'uses' => 'SubtasksController@reopenAndChangeRequest',
+           'as' => 'assignSubtask'
+        ]);
     });
 
     Route::resource( 'tasks', 'TasksController', ['only' => ['index', 'show']]);

@@ -161,7 +161,7 @@
                             <label class="taskFields"><input type="checkbox" id="modal-reporter" onchange="fieldStateChanged(this.id)">Reporter</label>
                             <label class="taskFields"><input type="checkbox" id="modal-follower" onchange="fieldStateChanged(this.id)">Follower</label>
                             <label class="taskFields"><input type="checkbox" id="modal-sprint" onchange="fieldStateChanged(this.id)">Sprint</label>
-                            <label class="taskFields"><input type="checkbox" id="modal-timeTracking" onchange="fieldStateChanged(this.id)">Time Tracking</label>
+                            <label class="taskFields"><input type="checkbox" id="modal-timeTracking" onchange="fieldStateChanged(this.id)">Remaining Estimate</label>
                             <label class="taskFields"><input type="checkbox" id="modal-units" onchange="fieldStateChanged(this.id)">Units</label>
                             <label class="taskFields"><input type="checkbox" id="modal-workflow" onchange="fieldStateChanged(this.id)">Workflow</label>
                         </div>
@@ -172,6 +172,7 @@
 
                 <form class="form-horizontal taskForm"method="POST" action="/tasks">
                     <div class="modal-body">
+
                         <div class="form-group projectName">
                             <label for="" class="col-sm-2 control-label">Project Name<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-4">
@@ -272,7 +273,7 @@
                         </div>
 
                         <div class="form-group modal-reporter" hidden>
-                            <label for="task_reporter" class="col-sm-2 control-label">Reporter<span class="mendatoryFields">*</span></label>
+                            <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="task_reporter" name="task_reporter" >
                                     <option value="">Select A Reporter</option>
@@ -294,8 +295,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group modal-timeTracking" hidden>
-                            <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate</label>
+                        <div class="form-group">
+                            <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-3">
                                 <input type="number" name="task_originalEstimate" class="form-control" id="task_originalEstimate" >
                             </div>

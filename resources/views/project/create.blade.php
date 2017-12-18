@@ -32,13 +32,13 @@
 					@endif
 					<form action="/projects" method="POST" style="margin-top: 50px;">
 						<div class="form-group">
-							<label for="name">Project Name:</label>
+							<label for="name">Project Name:</label><span class="mendatoryFields">*</span>
 							<input type="text" name="name" class="form-control" id="project-name" value="{{ old("name") }}">
 						</div>
 
 						<!--Project key Field Starts-->
 						<div class="form-group">
-							<label for="projectKey">Project Key:</label>
+							<label for="projectKey">Project Key:</label><span class="mendatoryFields">*</span>
 							<input type="text" name="key" class="form-control" id="key" onfocus="showSuggestions()">
 						</div>
 						<!--Project key Field Ends-->
@@ -96,7 +96,7 @@
 							<textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description.">{{ old("description") }}</textarea>
 						</div>
 						<div class="form-group">
-							<label for="status">Status:</label> <br>
+							<label for="status">Status:</label><span class="mendatoryFields">*</span> <br>
 							<input type="radio" name="status" value="1" class="radio-inline" @if(old("status") == "1") {{ "checked" }} @endif> Active
 							<input type="radio" name="status" value="0" class="radio-inline" @if(old("status") == "0") {{ "checked" }} @endif> Inactive<br>
 						</div>
