@@ -43,7 +43,12 @@ class TasksController extends Controller
 
             if (!empty($task)){
                 $Project = $task->project;
-                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+                if ($user->hasRole('teamlead')){
+                    $tasks = Task::where('project_id', $Project->id)->get();
+                }
+                else{
+                    $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+                }
                 $assignee = $task->users->pluck('id','name');
                 $hours = $task->hours;
             }
@@ -113,7 +118,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'required|integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1|max:999',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',
@@ -209,9 +214,17 @@ class TasksController extends Controller
         {
             $projects = $user->projects;
             $users = User::role(['teamlead','developer'])->get();
-            $task = $user->tasks()->find($id);
-            $Project = $task->project;
-            $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+
+            if ($user->hasRole('teamlead')){
+                $task = Task::find($id);
+                $Project = $task->project;
+                $tasks = Task::where('project_id', $Project->id)->get();
+            }
+            else{
+                $task = $user->tasks()->find($id);
+                $Project = $task->project;
+                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+            }
             $assignee = $task->users->pluck('id','name');
             $hours = $task->hours;
         }
@@ -244,6 +257,7 @@ class TasksController extends Controller
     }
 
     // Function To Fetch Specific Project and its Tasks on Project Filter in Task Views
+    // And when View Task Button in projects view is Clicked.
     public function showProjectSpecific($pid)
     {
         // String To Int Conversion
@@ -262,14 +276,20 @@ class TasksController extends Controller
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
             $projects = !empty($user->projects) ?$user->projects :array();
-            $users = User::all();
+            $users = User::role(['teamlead','developer'])->get();
             $Project = $user->projects()->find($pid);
-            $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+
+            if ($user->hasRole('teamlead')){
+                $tasks = Task::where('project_id', $Project->id)->get();
+            }
+            else{
+                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+            }
         }
         else
         {
             $projects = Project::all();
-            $users = User::all();
+            $users = User::role(['teamlead','developer'])->get();
             $Project = Project::find($pid);
             $tasks = $Project->tasks;
         }
@@ -467,7 +487,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'required|integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1|max:999',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',

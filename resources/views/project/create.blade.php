@@ -39,7 +39,7 @@
 						<!--Project key Field Starts-->
 						<div class="form-group">
 							<label for="projectKey">Project Key:</label><span class="mendatoryFields">*</span>
-							<input type="text" name="key" class="form-control" id="key" onfocus="showSuggestions()">
+							<input type="text" name="key" class="form-control" id="key" value="{{old("key")}}" onfocus="showSuggestions()">
 						</div>
 						<!--Project key Field Ends-->
 

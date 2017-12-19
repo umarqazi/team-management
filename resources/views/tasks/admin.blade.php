@@ -231,11 +231,12 @@
                                 <div class="taskDetailBoxHeading">
                                     @if(! empty($task))
                                         <div class="taskProjectNameAndKey"><a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{ucwords($task->project->name)}} @endif </a> / <a href= @if(! empty($task->project->id)) "/projects/{{$task->project->id}}" @endif> @if($task != null) {{$task->key}} @endif </a></div>
-                                        <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                        <div class="taskDetailBoxTaskName">@if($task != null) {{$task->name}} @endif </div>
                                     @endif
                                 </div>
 
-                                    <!--Task Detail Header Buttons-->
+                                <!--Task Detail Header Buttons-->
+                                @if(!empty($task))
                                     <div class="taskDetailBoxHeaderButtons">
                                         <!--Button Only Appears if the Authenticated User Has Permission to Edit-->
                                         @if(auth()->user()->can('edit task'))
@@ -243,38 +244,38 @@
                                         <a class="editTask" data-toggle="modal" data-target="#editTaskModal" data-backdrop="static" data-keyboard="false" @if($task != null) task-id="{{$task->id}}" @endif><button class="btn btn-default btn-sm" id="editTaskButton" type="button" style="cursor: pointer"><span class="fa fa-pencil-square-o"></span> Edit</button></a>
                                         @endif
 
-                                    <!--Button Only Appears if the Authenticated User Has Permission to Delete-->
-                                    @if(auth()->user()->can('delete task'))
-                                        @if($task != null)
-                                            <div class="deleteTask" style="display: inline-block">
-                                                <button class="btn btn-default btn-sm" style="cursor: pointer" data-toggle="modal" data-target="#deleteTaskModal"><span class="fa fa-trash"></span> Delete</button>
-                                            </div>
+                                        <!--Button Only Appears if the Authenticated User Has Permission to Delete-->
+                                        @if(auth()->user()->can('delete task'))
+                                            @if($task != null)
+                                                <div class="deleteTask" style="display: inline-block">
+                                                    <button class="btn btn-default btn-sm" style="cursor: pointer" data-toggle="modal" data-target="#deleteTaskModal"><span class="fa fa-trash"></span> Delete</button>
+                                                </div>
 
-                                                {{--Delete Prompt Modal Starts--}}
-                                                <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                                    <div class="modal-dialog" role="document" style="max-width: 400px">
-                                                        <div class="modal-content">
-                                                            <div class="modal-body text-center">
-                                                                <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
-                                                                <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
+                                                    {{--Delete Prompt Modal Starts--}}
+                                                    <div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                        <div class="modal-dialog" role="document" style="max-width: 400px">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <div class="alertIcon"><i class="fa fa-exclamation-circle" style="font-size:90px;margin: 10px 0px; color: #b94a48;"></i></div>
+                                                                    <h4 class="text-danger">Are You Sure You Want to Delete This?</h4>
 
-                                                                <div style="margin-top: 20px">
+                                                                    <div style="margin-top: 20px">
 
-                                                                    <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                                                                    <div style="display: inline-block">
-                                                                        {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
-                                                                        {{ Form::hidden('_method', 'DELETE') }}
-                                                                        <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
-                                                                        {{ Form::close() }}
+                                                                        <button style="margin: 0 10px; padding: 5px 20px" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                                        <div style="display: inline-block">
+                                                                            {{ Form::open(array('url' => '/tasks/' . $task->id)) }}
+                                                                            {{ Form::hidden('_method', 'DELETE') }}
+                                                                            <button style="margin: 0 10px; padding: 5px 20px; display: inline-block" type="submit" class="btn btn-danger">Yes</button>
+                                                                            {{ Form::close() }}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                {{--Change Request Modal Ends--}}
+                                                    {{--Change Request Modal Ends--}}
+                                            @endif
                                         @endif
-                                    @endif
 
                                         <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addHourModal"><span class="fa fa-clock-o"></span> Add Hour</button>
                                         <div class="btn-group" role="group">
@@ -312,9 +313,11 @@
                                         <div class="btn-group" role="group">
                                             <select class="selectpicker liveSearch " id="taskAssign" data-live-search="true">
                                                 <option value="">Assign</option>
-                                                @foreach($users as $user)
-                                                    <option data-tokens="{{$user->name}}" value="{{$user->id.'|'.$task->id}}"><a>{{$user->name}}</a></option>
-                                                @endforeach
+                                                @if(!empty($task))
+                                                    @foreach($users as $user)
+                                                        <option data-tokens="{{$user->name}}" value="{{$user->id.'|'.$task->id}}"><a>{{$user->name}}</a></option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#reopenModal">Reopen</button>
@@ -342,6 +345,7 @@
                                             </ul>
                                         </div>--}}
                                     </div>
+                                @endif
 
                                     <!-- Main Content Box with Both Left And Right Boxes-->
                                     <div class="mainTaskDetailBox">
@@ -918,7 +922,11 @@
 
                                         <script type="text/javascript">
                                             $(function () {
-                                                $('#subtaskModalDueDate').datetimepicker();
+                                                var dateToday  = new Date();
+                                                $('#subtaskModalDueDate').datetimepicker({
+                                                    minDate: dateToday
+                                                });
+
                                             });
                                         </script>
 
@@ -1111,7 +1119,10 @@
 
                                     <script type="text/javascript">
                                         $(function () {
-                                            $('#taskAddHourModalDate').datetimepicker();
+                                            var dateToday  = new Date();
+                                            $('#taskAddHourModalDate').datetimepicker({
+                                                minDate: dateToday
+                                            });
                                         });
                                     </script>
 
