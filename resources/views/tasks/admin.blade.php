@@ -584,7 +584,7 @@
                                             <label class="taskFields"><input type="checkbox" id="editModal-attachment" onchange="configureFields(this.id)">Attachment</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-component" onchange="configureFields(this.id)">Component/s</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-description" onchange="configureFields(this.id)">Description</label>
-                                            <label class="taskFields"><input type="checkbox" id="editModal-duetime" onchange="configureFields(this.id)">Due Time</label>
+                                            {{--<label class="taskFields"><input type="checkbox" id="editModal-duetime" onchange="configureFields(this.id)">Due Time</label>--}}
                                             <label class="taskFields"><input type="checkbox" id="editModal-effort" onchange="configureFields(this.id)">Effort</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-environment" onchange="configureFields(this.id)">Environment</label>
                                             <label class="taskFields"><input type="checkbox" id="editModal-epicLink" onchange="configureFields(this.id)">Epic Link</label>
@@ -732,7 +732,7 @@
                                     <div class="form-group">
                                         <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate <span class="mendatoryFields">*</span></label>
                                         <div class="col-sm-3">
-                                            <input type="number" name="task_originalEstimate" class="form-control" id="edit_task_originalEstimate" >
+                                            <input type="number" name="task_originalEstimate" class="form-control hourEstimation" id="edit_task_originalEstimate" min="0">
                                         </div>
                                     </div>
 
@@ -811,12 +811,12 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group editModal-duetime" hidden>
+                                    {{--<div class="form-group editModal-duetime" hidden>
                                         <label for="due_time" class="col-sm-2 control-label">Due Time</label>
                                         <div class="col-sm-8">
                                             <input type="text" name="due_time" class="form-control" id="edit_due_time" >
                                         </div>
-                                    </div>
+                                    </div>--}}
 
                                     <input type="hidden" name="project_id">
 
@@ -856,7 +856,7 @@
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-assignee" onchange="fieldStateChanged(this.id)">Assignee</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-attachment" onchange="fieldStateChanged(this.id)">Attachment</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-description" onchange="fieldStateChanged(this.id)">Description</label>
-                                            <label class="taskFields"><input type="checkbox" id="subtask-modal-duetime" onchange="fieldStateChanged(this.id)">Due Time</label>
+                                            {{--<label class="taskFields"><input type="checkbox" id="subtask-modal-duetime" onchange="fieldStateChanged(this.id)">Due Time</label>--}}
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-effort" onchange="fieldStateChanged(this.id)">Effort</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-environment" onchange="fieldStateChanged(this.id)">Environment</label>
                                             <label class="taskFields"><input type="checkbox" id="subtask-modal-epicLink" onchange="fieldStateChanged(this.id)">Epic Link</label>
@@ -987,7 +987,7 @@
                                         <div class="form-group">
                                             <label for="subtask_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                                             <div class="col-sm-3">
-                                                <input type="number" name="subtask_originalEstimate" class="form-control" id="subtask_originalEstimate" >
+                                                <input type="number" name="subtask_originalEstimate" class="form-control hourEstimation" id="subtask_originalEstimate" min="0">
                                             </div>
                                         </div>
 
@@ -1066,12 +1066,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group subtask-modal-duetime" hidden>
+                                        {{--<div class="form-group subtask-modal-duetime" hidden>
                                             <label for="due_time" class="col-sm-2 control-label">Due Time</label>
                                             <div class="col-sm-8">
                                                 <input type="text" name="due_time" class="form-control" id="due_time" >
                                             </div>
-                                        </div>
+                                        </div>--}}
 
                                         <input type="hidden" name="project_id" value="{{$Project->id}}">
                                     </div>
