@@ -230,10 +230,16 @@
                                     </div>
                                 @endif
 
+                                @if(Session::has('message'))
+                                    <script>
+                                        toastr.success('{{ Session::get('message') }}')
+                                    </script>
+                                @endif
+
                                 <div class="taskDetailBoxHeading">
                                     @if(!empty($task))
                                         <div class="taskProjectNameAndKey"><a href="/project/{{$task->project->id}}"> @if($task != null) {{$task->project->name}} @endif </a> / <a href="/project/{{$task->project->id}}"> @if($task != null) {{$task->key}} @endif </a></div>
-                                        <div class="taskDetailBoxHeading">@if($task != null) {{$task->name}} @endif </div>
+                                        <div class="taskDetailBoxTaskName">@if($task != null) {{$task->name}} @endif </div>
                                     @endif
                                 </div>
 
@@ -928,7 +934,10 @@
 
                                                     <script type="text/javascript">
                                                         $(function () {
-                                                            $('#subtaskModalDueDate').datetimepicker();
+                                                            var dateToday  = new Date();
+                                                            $('#subtaskModalDueDate').datetimepicker({
+                                                                minDate: dateToday
+                                                            });
                                                         });
                                                     </script>
 
@@ -1123,7 +1132,10 @@
 
                                                         <script type="text/javascript">
                                                             $(function () {
-                                                                $('#taskAddHourModalDate').datetimepicker();
+                                                                var dateToday  = new Date();
+                                                                $('#taskAddHourModalDate').datetimepicker({
+                                                                    minDate: dateToday
+                                                                });
                                                             });
                                                         </script>
 

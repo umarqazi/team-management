@@ -61,7 +61,7 @@ class SubtasksController extends Controller
             'subtask_follower' => 'integer',
             'subtask_reporter' => 'integer',
             'subtask_description' => 'string',
-            'subtask_originalEstimate' => 'required|integer|min:1',
+            'subtask_originalEstimate' => 'required|integer|min:1|max:999',
             'subtask_remainingEstimate' => 'integer|min:1',
             'subtask_tags' => 'alpha_num',
             'subtask_workflow' => 'string',
@@ -99,7 +99,7 @@ class SubtasksController extends Controller
             }
 
             // redirect
-            Session::flash('message', 'Successfully created Subtask!');
+            Session::flash('message', 'Successfully Created A Subtask. '.$request->subtask_name);
             Session::flash('alert-class', 'alert-success');
             return Redirect::to('/tasks/'.$request->task_name);
         }
@@ -252,7 +252,7 @@ class SubtasksController extends Controller
             'subtask_follower' => 'integer',
             'subtask_reporter' => 'integer',
             'subtask_description' => 'string',
-            'subtask_originalEstimate' => 'required|integer|min:1',
+            'subtask_originalEstimate' => 'required|integer|min:1|max:999',
             'subtask_remainingEstimate' => 'integer|min:1',
             'subtask_tags' => 'alpha_num',
             'subtask_workflow' => 'string',
@@ -302,7 +302,7 @@ class SubtasksController extends Controller
             }
 
             // redirect
-            Session::flash('message', 'Successfully Updated Subtask!');
+            Session::flash('message', 'Successfully Updated Subtask. '.$request->subtask_name);
             Session::flash('alert-class', 'alert-success');
             return Redirect::to('/subtasks/'.$id);
         }
@@ -313,6 +313,10 @@ class SubtasksController extends Controller
         $subtask = Subtask::find($_GET['subtask_id']);
         $subtask->Workflow = $_GET['value'];
         $subtask->update();
+
+        // redirect
+        Session::flash('message', 'Successfully Updated Subtask Status.');
+        Session::flash('alert-class', 'alert-success');
 
         echo true;
     }
@@ -343,10 +347,10 @@ class SubtasksController extends Controller
 
             // redirect
             if ($request->request_type == "Reopen Request"){
-                Session::flash('message', 'Task Reopen Request Successfully Submitted!');
+                Session::flash('message', 'Subtask Reopen Request Successfully Submitted!');
             }
             else{
-                Session::flash('message', 'Task Change Request Successfully Submitted!');
+                Session::flash('message', 'Subtask Change Request Successfully Submitted!');
             }
             Session::flash('alert-class', 'alert-success');
             return Redirect::to('subtasks/'.$request->subtask_id);
@@ -363,9 +367,10 @@ class SubtasksController extends Controller
     {
         $id= (int)$id;
         $subtask = Subtask::find($id);
+        $subtaskName = $subtask->name;
         $subtask->delete();
 
-        Session::flash('message', 'Successfully deleted the Task!');
+        Session::flash('message', 'Successfully Deleted A Subtask. '.$subtaskName);
         Session::flash('alert-class', 'alert-success');
         return Redirect::to('/tasks');
     }

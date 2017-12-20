@@ -123,6 +123,7 @@ class ProjectsController extends Controller
         $currentDate=Carbon::now()->format('Y-m-d');
     	return view('project.view', compact('project', 'hours', 'users', 'currentDate'));
     }
+
     public function downloadExcel($id, $type)
     {
         $project    = Project::find($id);
@@ -173,6 +174,7 @@ class ProjectsController extends Controller
             });
         })->download($type);
     }
+
     public function create()
     {
         /*$developers = User::whereHas('roles', function($r){
@@ -235,6 +237,9 @@ class ProjectsController extends Controller
             }
         }
 
+        // redirect
+        Session::flash('message', 'Successfully Created A Project '.$request->name);
+        Session::flash('alert-class', 'alert-success');
         return redirect('/projects');
     }
 
@@ -296,15 +301,20 @@ class ProjectsController extends Controller
                 $project->users()->attach($developer);
             }
         }
+
+        // redirect
+        Session::flash('message', 'Successfully Updated A Project '.$request->name);
+        Session::flash('alert-class', 'alert-success');
         return redirect('/projects');
     }
 
     public function destroy($id)
     {   
         $project    = Project::find($id);
+        $projectName = $project->name;
         $project->delete();
 
-        Session::flash('message', 'Successfully deleted the Project!');
+        Session::flash('message', 'Successfully Deleted A Project '.$projectName);
         Session::flash('alert-class', 'alert-success');
         return Redirect::to('/projects');
     }

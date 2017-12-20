@@ -56,7 +56,7 @@ input:focus { outline: none; }
 /* active */
 
 
-.loginForm input:focus ~ label, .loginForm input.used ~ label {
+.loginForm input:focus ~ label, .loginForm input.not-empty ~ label {
     top: -20px;
     -webkit-transform: scale(.75);
     transform: scale(.75); left: -2px;
