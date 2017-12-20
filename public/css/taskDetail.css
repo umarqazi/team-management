@@ -297,8 +297,11 @@ body{
     padding: 20px 0px 10px 20px;
     font-size: 16px;
 }
+.taskDetailBoxTaskName{
+    padding: 0px 0px 10px 20px;
+}
 .taskDetailBoxHeading{
-    height: 77px;
+    min-height: 77px;
     padding-left:20px;
     font-size: 18px;
     font-weight: bold;

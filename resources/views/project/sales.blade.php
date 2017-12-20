@@ -8,6 +8,13 @@
           <a href="/projects/create" class="btn btn-primary">Create Project</a>
         </div>
       @endif
+
+      @if(Session::has('message'))
+          <script>
+              toastr.success('{{ Session::get('message') }}')
+          </script>
+      @endif
+
         <ul class="nav nav-tabs" id="myTabs" role="tablist">
             <li role="presentation" class="active">
                 <a href="#content_active" id="active-tab" role="tab" data-toggle="tab" aria-controls="content_active" aria-expanded="false">Active Projects</a>

@@ -13,6 +13,7 @@
                         </ul>
                     </div>
                 @endif
+
                 @if(Auth::user()->can('create user'))
                 <div class="text-right" style="margin:20px 0px 20px 20px;">
                     <a href="/users/create" class="btn btn-primary">Create User</a>
@@ -25,10 +26,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Users</div>
                     <div class="panel-body">
+
                         @if(Session::has('message'))
-                            <div class="alert {{ Session::get('alert-class', 'alert-info') }}">
-                                <strong>Success!</strong> {{ Session::get('message') }}
-                            </div>
+                            <script>
+                                toastr.success('{{ Session::get('message') }}')
+                            </script>
                         @endif
 
                         <div class="table-responsive">

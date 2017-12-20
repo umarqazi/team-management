@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{URL::asset('css/theme.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-select.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-datetimepicker.min.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('css/toastr.min.css')}}">
     @yield('styles')
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
@@ -55,9 +56,9 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+    <script src="{{URL::asset('js/toastr.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script src="{{URL::asset('js/login.js')}}"></script>
 
     @yield('scripts')
 </head>
@@ -176,8 +177,7 @@
                         <div class="form-group projectName">
                             <label for="" class="col-sm-2 control-label">Project Name<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-4">
-                                <select class="form-control" id="project_name" name="project_name" style="overflow-y: scroll">
-                                    <option id="" value="">Select A Project</option>
+                                <select class="form-control" id="project_name" name="project_name" value="{{old('project_name')}}" style="overflow-y: scroll">
                                 </select>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                         <div class="form-group taskType">
                             <label class="col-sm-2 control-label">Task Type<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-4">
-                                <select class="form-control" name="task_type">
+                                <select class="form-control" name="task_type" value="{{old('task_type')}}">
                                     <option value="" selected>Select Task Type</option>
                                     <option value="New Feature">New Feature</option>
                                     <option value="Bug">Bug</option>
@@ -199,14 +199,14 @@
                         <div class="form-group taskName">
                             <label for="task_name" class="col-sm-2 control-label">Task Name<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-8">
-                                <input type="text" name="task_name" class="form-control" id="task_name">
+                                <input type="text" name="task_name" class="form-control" id="task_name" value="{{old('task_name')}}">
                             </div>
                         </div>
 
                         <div class="form-group modal-component" hidden>
                             <label for="task_component" class="col-sm-2 control-label">Component/s</label>
                             <div class="col-sm-4">
-                                <select class="form-control" id="task_component" name="task_component">
+                                <select class="form-control" id="task_component" name="task_component" value="{{old('task_component')}}">
                                     <option value="" selected>Select A Component</option>
                                     <option value="Web">Web</option>
                                     <option value="Android">Android</option>
@@ -218,7 +218,7 @@
                         <div class="form-group modal-priority" hidden>
                             <label for="task_priority" class="col-sm-2 control-label">Priority</label>
                             <div class="col-sm-4">
-                                <select class="form-control" id="task_priority" name="task_priority">
+                                <select class="form-control" id="task_priority" name="task_priority" value="{{old('task_priority')}}">
                                     <option value="">Select A Priority</option>
                                     <option value="Blocker">Blocker</option>
                                     <option value="Critical">Critical</option>
@@ -233,7 +233,7 @@
                             <div class="form-group">
                                 <label for="task_duedate" class="col-sm-2 control-label">Due Date & Time:<span class="mendatoryFields">*</span></label>
                                 <div class='input-group date col-xs-4' id='taskModalDueDate'>
-                                    <input type='text' name="task_duedate" class="form-control" id="task_duedate" />
+                                    <input type='text' name="task_duedate" class="form-control" id="task_duedate" value="{{old('task_duedate')}}" />
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                 </div>
                             </div>
@@ -241,7 +241,10 @@
 
                         <script type="text/javascript">
                             $(function () {
-                                $('#taskModalDueDate').datetimepicker();
+                                var dateToday  = new Date();
+                                $('#taskModalDueDate').datetimepicker({
+                                    minDate: dateToday
+                                });
                             });
                         </script>
 
@@ -257,7 +260,7 @@
                         <div class="form-group modal-follower" hidden>
                             <label for="task_follower" class="col-sm-2 control-label">Follower</label>
                             <div class="col-sm-8">
-                                <select class="form-control" id="task_follower" name="task_follower">
+                                <select class="form-control" id="task_follower" name="task_follower" value="{{old('task_follower')}}">
                                     <option value="">Select A Follower</option>
                                 </select>
                             </div>
@@ -266,7 +269,7 @@
                         <div class="form-group modal-effort" hidden>
                             <label for="task_effort" class="col-sm-2 control-label">Effort</label>
                             <div class="col-sm-2">
-                                <select class="form-control" id="task_effort" >
+                                <select class="form-control" id="task_effort">
                                     <option>None</option>
                                 </select>
                             </div>
@@ -275,7 +278,7 @@
                         <div class="form-group modal-reporter" hidden>
                             <label for="task_reporter" class="col-sm-2 control-label">Reporter</label>
                             <div class="col-sm-8">
-                                <select class="form-control" id="task_reporter" name="task_reporter" >
+                                <select class="form-control" id="task_reporter" name="task_reporter" value="{{old('task_reporter')}}" >
                                     <option value="">Select A Reporter</option>
                                 </select>
                             </div>
@@ -291,21 +294,21 @@
                         <div class="form-group modal-description" hidden>
                             <label for="task_description" class="col-sm-2 control-label">Task Description</label>
                             <div class="col-sm-8">
-                                <textarea name="task_description" class="form-control" rows="5" id="task_description" ></textarea>
+                                <textarea name="task_description" class="form-control" rows="5" id="task_description" >{{old('task_description')}}"</textarea>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-3">
-                                <input type="number" name="task_originalEstimate" class="form-control" id="task_originalEstimate" >
+                                <input type="number" name="task_originalEstimate" class="form-control hourEstimation" id="task_originalEstimate" value="{{old('task_originalEstimate')}}" min="0">
                             </div>
                         </div>
 
                         <div class="form-group modal-timeTracking" hidden>
                             <label for="task_remainingEstimate" class="col-sm-2 control-label">Remaining Estimate</label>
                             <div class="col-sm-3">
-                                <input type="number" name="task_remainingEstimate" class="form-control" id="task_remainingEstimate" >
+                                <input type="number" name="task_remainingEstimate" class="form-control" id="task_remainingEstimate" value="{{old('task_remainingEstimate')}}" >
                             </div>
                         </div>
 
@@ -319,14 +322,14 @@
                         <div class="form-group modal-tags" hidden>
                             <label for="task_tags" class="col-sm-2 control-label">Tags</label>
                             <div class="col-sm-8">
-                                <input type="text" name="task_tags" class="form-control" id="task_tags" >
+                                <input type="text" name="task_tags" class="form-control" id="task_tags" value="{{old('task_tags')}}">
                             </div>
                         </div>
 
                         <div class="form-group modal-workflow" hidden>
                             <label for="task_workflow" class="col-xs-2 control-label">Workflow</label>
                             <div class="col-xs-8">
-                                <select class="form-control" id="task_workflow" name="task_workflow">
+                                <select class="form-control" id="task_workflow" name="task_workflow" value="{{old('task_workflow')}}">
                                     <option value="">Select Workflow</option>
                                     <option value="Todo">Todo</option>
                                     <option value="In Progress">In Progress</option>
@@ -427,8 +430,8 @@
 <script src="{{URL::asset('js/bootstrap-select.min.js')}}"></script>
 <script src="{{URL::asset('js/taskFilter.js')}}"></script>
 <script src="{{URL::asset('js/moment.js')}}"></script>
+<script src="{{URL::asset('js/main.js')}}"></script>
 <script src="{{URL::asset('js/bootstrap-datetimepicker.js')}}"></script>
-
 <!--Initializing Select Picker-->
 <script>
     $('.selectpicker').selectpicker();

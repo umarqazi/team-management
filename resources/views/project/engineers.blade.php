@@ -9,6 +9,13 @@
                     <a href="/projects/create" class="btn btn-primary">Create Project</a>
                 </div>
                 @endif
+
+                @if(Session::has('message'))
+                    <script>
+                        toastr.success('{{ Session::get('message') }}')
+                    </script>
+                @endif
+
                 <div class="content" style="margin-top: 20px;">
                     <div class="table-responsive">
                         <table id="eng_projects" class="display table table-striped" cellspacing="0" width="100%">

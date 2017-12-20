@@ -48,6 +48,22 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('.hourEstimation').on('change', function () {
+        // Select your input element.
+        var numInput = document.querySelector($(this));
+
+        // Listen for input event on numInput.
+        numInput.addEventListener($(this) , function(){
+            // Let's match only digits.
+            var num = this.value.match(/^\d+$/);
+            if (num === null) {
+                // If we have no match, value will be empty.
+                this.value = "";
+            }
+        }, false)
+
+    });
 });
 
 /*
@@ -70,7 +86,6 @@ $(document).ready(function () {
             success: function (data) {
 
                 if(data){
-                    alert('Assignee Successfully added to this Task!');
                     location.reload();
                 }
             }

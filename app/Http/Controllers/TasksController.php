@@ -43,7 +43,12 @@ class TasksController extends Controller
 
             if (!empty($task)){
                 $Project = $task->project;
-                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+                if ($user->hasRole('teamlead')){
+                    $tasks = Task::where('project_id', $Project->id)->get();
+                }
+                else{
+                    $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+                }
                 $assignee = $task->users->pluck('id','name');
                 $hours = $task->hours;
             }
@@ -113,7 +118,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'required|integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1|max:999',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',
@@ -189,7 +194,7 @@ class TasksController extends Controller
             }
 
             // redirect
-            Session::flash('message', 'Successfully created Task!');
+            Session::flash('message', 'Successfully Created A Task '.$request->task_name);
             Session::flash('alert-class', 'alert-success');
             return Redirect::to('/tasks/specific/'.$request->project_name);
         }
@@ -209,9 +214,17 @@ class TasksController extends Controller
         {
             $projects = $user->projects;
             $users = User::role(['teamlead','developer'])->get();
-            $task = $user->tasks()->find($id);
-            $Project = $task->project;
-            $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+
+            if ($user->hasRole('teamlead')){
+                $task = Task::find($id);
+                $Project = $task->project;
+                $tasks = Task::where('project_id', $Project->id)->get();
+            }
+            else{
+                $task = $user->tasks()->find($id);
+                $Project = $task->project;
+                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+            }
             $assignee = $task->users->pluck('id','name');
             $hours = $task->hours;
         }
@@ -244,6 +257,7 @@ class TasksController extends Controller
     }
 
     // Function To Fetch Specific Project and its Tasks on Project Filter in Task Views
+    // And when View Task Button in projects view is Clicked.
     public function showProjectSpecific($pid)
     {
         // String To Int Conversion
@@ -261,15 +275,21 @@ class TasksController extends Controller
 
         if($user->hasRole(['developer', 'teamlead', 'engineer', 'frontend']))
         {
-            $projects = $user->projects;
-            $users = User::all();
+            $projects = !empty($user->projects) ?$user->projects :array();
+            $users = User::role(['teamlead','developer'])->get();
             $Project = $user->projects()->find($pid);
-            $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+
+            if ($user->hasRole('teamlead')){
+                $tasks = Task::where('project_id', $Project->id)->get();
+            }
+            else{
+                $tasks = $user->tasks()->where('project_id', $Project->id)->get();
+            }
         }
         else
         {
             $projects = Project::all();
-            $users = User::all();
+            $users = User::role(['teamlead','developer'])->get();
             $Project = Project::find($pid);
             $tasks = $Project->tasks;
         }
@@ -467,7 +487,7 @@ class TasksController extends Controller
             'task_follower' => 'integer',
             'task_reporter' => 'integer',
             'task_description' => 'string',
-            'task_originalEstimate' => 'required|integer|min:1',
+            'task_originalEstimate' => 'required|integer|min:1|max:999',
             'task_remainingEstimate' => 'integer|min:1',
             'task_tags' => 'alpha_num',
             'task_workflow' => 'string',
@@ -535,7 +555,7 @@ class TasksController extends Controller
             }
 
             // redirect
-            Session::flash('message', 'Successfully Updated Task!');
+            Session::flash('message', 'Successfully Updated A Task '.$request->task_name);
             Session::flash('alert-class', 'alert-success');
             return Redirect::to('tasks/'.$id);
         }
@@ -546,6 +566,10 @@ class TasksController extends Controller
         $task = Task::find($_GET['task_id']);
         $task->workflow = $_GET['value'];
         $task->update();
+
+        // redirect
+        Session::flash('message', 'Successfully Updated Task Status');
+        Session::flash('alert-class', 'alert-success');
 
         echo true;
     }
@@ -593,6 +617,11 @@ class TasksController extends Controller
 
         $task = Task::find($_GET['TID']);
         $task->users()->attach($_GET['UID']);
+        $userName = User::find($_GET['UID'])->pluck('name');
+
+        // redirect
+        Session::flash('message', 'Successfully Assigned Task To '.$userName);
+        Session::flash('alert-class', 'alert-success');
 
         echo true;
     }
@@ -607,10 +636,11 @@ class TasksController extends Controller
     {
         $id= (int)$id;
         $task = Task::find($id);
+        $taskName = $task->name;
 
         $task->delete();
 
-        Session::flash('message', 'Successfully deleted the Task!');
+        Session::flash('message', 'Successfully Deleted A Task '.$taskName);
         Session::flash('alert-class', 'alert-success');
         return Redirect::to('/tasks/specific/'.$task->project()->pluck('id')->first());
     }

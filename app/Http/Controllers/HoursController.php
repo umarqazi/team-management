@@ -87,7 +87,7 @@ class HoursController extends Controller
             $hour->update();
 
             // redirect
-            Session::flash('message', 'Subtask Successfully created Estimated!');
+            Session::flash('message', 'Subtask Successfully Estimated!');
             Session::flash('alert-class', 'alert-success');
 
             return redirect('/subtasks/'.$request->subtask_id);
@@ -127,6 +127,10 @@ class HoursController extends Controller
             }
             $hour->save();
 
+            // redirect
+            Session::flash('message', 'Hours Successfully Added on Task!');
+            Session::flash('alert-class', 'alert-success');
+
             return redirect('/tasks/' . $request->task_id);
         }
     }
@@ -165,6 +169,10 @@ class HoursController extends Controller
                 $hour->created_at = Carbon::parse($request->date)->format('Y-m-d H:i:s');
             }
             $hour->save();
+
+            // redirect
+            Session::flash('message', 'Hours Successfully Added on Subtask!');
+            Session::flash('alert-class', 'alert-success');
 
             return redirect('/subtasks/' . $request->subtask_id);
         }

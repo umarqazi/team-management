@@ -33,6 +33,12 @@
                         </div>
                     @endif
 
+                    @if(Session::has('message'))
+                        <script>
+                            toastr.success('{{ Session::get('message') }}')
+                        </script>
+                    @endif
+
                     <div class="contentBoxHeader">
                         <div class="contentBoxSubheader">
                             <span class="contentBoxSubheaderTaskName"><a href="/tasks/{{$subtask->task()->pluck('id')->first()}}">{{$subtask->task()->pluck('name')->first()}}</a></span>/
