@@ -151,7 +151,7 @@
                             <label class="taskFields"><input type="checkbox" id="modal-attachment" onchange="fieldStateChanged(this.id)">Attachment</label>
                             <label class="taskFields"><input type="checkbox" id="modal-component" onchange="fieldStateChanged(this.id)">Component/s</label>
                             <label class="taskFields"><input type="checkbox" id="modal-description" onchange="fieldStateChanged(this.id)">Description</label>
-                            <label class="taskFields"><input type="checkbox" id="modal-duetime" onchange="fieldStateChanged(this.id)">Due Time</label>
+                            {{--<label class="taskFields"><input type="checkbox" id="modal-duetime" onchange="fieldStateChanged(this.id)">Due Time</label>--}}
                             <label class="taskFields"><input type="checkbox" id="modal-effort" onchange="fieldStateChanged(this.id)">Effort</label>
                             <label class="taskFields"><input type="checkbox" id="modal-environment" onchange="fieldStateChanged(this.id)">Environment</label>
                             <label class="taskFields"><input type="checkbox" id="modal-epicLink" onchange="fieldStateChanged(this.id)">Epic Link</label>
@@ -301,7 +301,7 @@
                         <div class="form-group">
                             <label for="task_originalEstimate" class="col-sm-2 control-label">Original Estimate<span class="mendatoryFields">*</span></label>
                             <div class="col-sm-3">
-                                <input type="number" name="task_originalEstimate" class="form-control hourEstimation" id="task_originalEstimate" value="{{old('task_originalEstimate')}}" min="0">
+                                <input type="number" name="task_originalEstimate" class="form-control hourEstimation" id="task_originalEstimate" value="{{old('task_originalEstimate')}}" min="0" maxlength="3">
                             </div>
                         </div>
 
@@ -381,12 +381,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group modal-duetime" hidden>
+                        {{--<div class="form-group modal-duetime" hidden>
                             <label for="due_time" class="col-sm-2 control-label">Due Time</label>
                             <div class="col-sm-8">
                                 <input type="text" name="due_time" class="form-control" id="due_time" >
                             </div>
-                        </div>
+                        </div>--}}
 
                         <input type="hidden" name="project_id">
                     </div>
