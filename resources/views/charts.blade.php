@@ -16,7 +16,7 @@
             @hasrole(['admin','engineer','teamlead'])
              {
                     showInLegend: true,
-                    legendText: "Actual Hours",
+                    legendText: "Consumed Hours",
                     // Change type to "bar", "area", "spline", "pie",etc.
                     type: "column",
                     dataPoints: {!! json_encode($datapoints[1], JSON_NUMERIC_CHECK) !!}
@@ -24,7 +24,7 @@
              @endhasrole
                 {
                     showInLegend: true,
-                    legendText: "Productive Hours",
+                    legendText: "Estimated Hours",
                     type: "column",
                     dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
                     }
@@ -86,7 +86,7 @@
                             @hasrole(['admin','engineer','teamlead'])
                             {
                                 showInLegend: true,
-                                legendText: "Actual Hours",
+                                legendText: "Consumed Hours",
                                 // Change type to "bar", "area", "spline", "pie",etc.
                                 type: "line",
                                 dataPoints: ActualHoursDataPoints
@@ -94,7 +94,7 @@
                                 @endhasrole
                             {
                                 showInLegend: true,
-                                legendText: "Productive Hours",
+                                legendText: "Estimated Hours",
                                 // Change type to "bar", "area", "spline", "pie",etc.
                                 type: "line",
                                 dataPoints: ProductiveHourdataPoints
@@ -121,14 +121,14 @@
                                     {
                                         type: "column",
                                         showInLegend: true,
-                                        legendText: "Actual Hours",
+                                        legendText: "Consumed Hours",
                                         dataPoints: dataPoint_actual
                                     },
                                         @endhasrole
                                     {
                                         type: "column",
                                         showInLegend: true,
-                                        legendText: "Productive Hours",
+                                        legendText: "Estimated Hours",
                                         dataPoints: dataPoint_prod
                                     }
                                 ]
@@ -194,7 +194,7 @@
                         @hasrole(['admin','engineer','teamlead'])
                         {
                             showInLegend: true,
-                            legendText: "Actual Hours",
+                            legendText: "Consumed Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ActualHoursDataPoints
@@ -202,7 +202,7 @@
                         @endhasrole
                         {
                             showInLegend: true,
-                            legendText: "Productive Hours",
+                            legendText: "Estimated Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ProductiveHourdataPoints
@@ -229,14 +229,14 @@
                                 {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Actual Hours",
+                                    legendText: "Consumed Hours",
                                     dataPoints: dataPoint_actual
                                 },
                                 @endhasrole
                                 {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Productive Hours",
+                                    legendText: "Estimated Hours",
                                     dataPoints: dataPoint_prod
                                 }
                             ]
@@ -298,7 +298,7 @@
                         @hasrole(['admin','engineer','teamlead'])
                         {
                             showInLegend: true,
-                            legendText: "Actual Hours",
+                            legendText: "Consumed Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ActualHoursDataPoints
@@ -306,7 +306,7 @@
                         @endhasrole
                         {
                             showInLegend: true,
-                            legendText: "Productive Hours",
+                            legendText: "Estimated Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ProductiveHourdataPoints
@@ -334,14 +334,14 @@
                              {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Actual Hours",
+                                    legendText: "Consumed Hours",
                                     dataPoints: dataPoint_actual
                                 },
                              @endhasrole
                                 {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Productive Hours",
+                                    legendText: "Estimated Hours",
                                     dataPoints: dataPoint_prod
                                 }
                             ]
