@@ -227,7 +227,15 @@
                                             <div class="alert alert-danger">
                                                 <ul>
                                                     @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
+                                                        {{--<li>{{ $error }}</li>--}}
+                                                        <script>
+                                                            toastr.error('{{ $error }}')
+                                                            toastr.options = {
+                                                                tapToDismiss: true,
+                                                                closeButton: true,
+                                                                timeOut: 0,
+                                                            };
+                                                        </script>
                                                     @endforeach
                                                 </ul>
                                             </div>

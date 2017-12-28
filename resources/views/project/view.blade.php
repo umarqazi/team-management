@@ -22,9 +22,9 @@
                                     <th>Team lead</th>
                                     <th>Developer</th>
                                     @hasrole(['developer', 'teamlead', 'engineer', 'admin'])
-                                    <th>Actual Hours</th>
+                                    <th>Consumed Hours</th>
                                     @endrole
-                                    <th>Productive Hours</th>
+                                    <th>Estimated Hours</th>
                                     <th>Export</th>
                                 </tr>
                                 </thead>

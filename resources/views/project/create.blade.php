@@ -101,12 +101,12 @@
 							<input type="radio" name="status" value="0" class="radio-inline" @if(old("status") == "0") {{ "checked" }} @endif> Inactive<br>
 						</div>
 						<br>
-						<div class="form-group">
+						{{--<div class="form-group">
 							<label for="internal_deadline">Internal Deadline:</label> <br>
 							<input type="datetime-local" class="form-control" name="internal_deadline" value="{{ old("internal_deadline") }}"><br>
-						</div>
+						</div>--}}
 
-						{{--<div>
+						<div>
 							<div class="form-group">
 								<label for="internal_deadline" class="col-sm-12 control-label" style="padding: 0px 0px 0px 0px">Internal Deadline:</label>
 								<div class='input-group date' id='projectInternalDeadline'>
@@ -118,16 +118,19 @@
 
 						<script type="text/javascript">
                             $(function () {
-                                $('#projectInternalDeadline').datetimepicker();
+                                var dateToday  = new Date();
+                                $('#projectInternalDeadline').datetimepicker({
+                                    minDate: dateToday,
+								});
                             });
 						</script>
---}}
-						<div class="form-group">
+
+						{{--<div class="form-group">
 							<label for="external_deadline">External Deadline:</label> <br>
 							<input type="datetime-local" class="form-control" name="external_deadline" value="{{ old("external_deadline") }}" ><br>
-						</div>
+						</div>--}}
 
-						{{--<div>
+						<div>
 							<div class="form-group">
 								<label for="external_deadline" class="col-sm-12 control-label" style="padding: 0px 0px 0px 0px">External Deadline:</label>
 								<div class='input-group date' id='projectExternalDeadline'>
@@ -139,9 +142,12 @@
 
 						<script type="text/javascript">
                             $(function () {
-                                $('#projectExternalDeadline').datetimepicker();
+                                var dateToday  = new Date();
+                                $('#projectExternalDeadline').datetimepicker({
+                                    minDate: dateToday,
+								});
                             });
-						</script>--}}
+						</script>
 
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="text-right">

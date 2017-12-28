@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-select.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/bootstrap-datetimepicker.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('css/toastr.min.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('css/main.css')}}">
     @yield('styles')
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
@@ -112,6 +113,48 @@
                     @if(auth()->user()->can('create user'))
                         <li><a href="{{ url('/users') }}">Users</a></li>
                     @endif
+
+                    {{--Notifications Dropdown Starts--}}
+                        <li class="dropdown head-dpdn">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                <span class="badge blue">3</span>
+                            </a>
+                            <ul class="dropdown-menu notificationDropdown">
+                                <li>
+                                    <div class="notification_header">
+                                        <h3>You have 3 New Notifications</h3>
+                                    </div>
+                                </li>
+                                <li><a href="#">
+                                        <div class="notification_desc">
+                                            <p class="notificationDescription">Lorem ipsum dolor</p>
+                                            <p><span>1 hour ago</span></p>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </a></li>
+                                <li class="odd"><a href="#">
+                                        <div class="notification_desc">
+                                            <p class="notificationDescription">Lorem ipsum dolor</p>
+                                            <p><span>1 hour ago</span></p>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </a></li>
+                                <li><a href="#">
+                                        <div class="notification_desc">
+                                            <p class="notificationDescription">Lorem ipsum dolor</p>
+                                            <p><span>1 hour ago</span></p>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </a></li>
+                                <li>
+                                    <div class="notification_bottom">
+                                        <a href="#">See all notifications</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    {{--Notifications Dropdown Ends--}}
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

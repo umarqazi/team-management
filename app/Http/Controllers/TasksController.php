@@ -127,7 +127,7 @@ class TasksController extends Controller
 
         // Process the Task Creation
         if ($validator->fails()) {
-            return Redirect::to('/tasks/specific/'.$request->project_name)
+            return redirect()->back()
                 ->withErrors($validator);
         }
         else {
