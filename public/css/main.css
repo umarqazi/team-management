@@ -1,0 +1,71 @@
+/*Notification Dropdown in Header*/
+.head-dpdn .badge{
+    background-color: #337ab7;
+}
+.notificationDropdown{
+    padding-top: 0;
+    padding-bottom: 0;
+    min-width: 200px;
+}
+
+.notification_header{
+    background-color:#FAFAFA;
+    padding: 10px 15px;
+    border-bottom:1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 5px;
+}
+.notification_header h3{
+    color:#6A6A6A;
+    font-size:12px;
+    font-weight:600;
+    margin:0;
+}
+.notification_bottom {
+    background-color:#333;
+    color: #ffffff;
+    padding: 10px 15px;
+    text-align: center;
+    margin-top: 5px;
+}
+.notification_bottom a {
+    color: #ffffff;
+    font-size: 1em;
+}
+.notification_bottom a:hover {
+    color:#6164C1;
+}
+.notification_bottom h3 a{
+    color: #717171;
+    font-size:12px;
+    border-radius:0;
+    border:none;
+    padding:0;
+    text-align:center;
+}
+.notification_bottom h3 a:hover{
+    color:#4A4A4A;
+    text-decoration:underline;
+    background:none;
+}
+
+.notification_desc{
+    float:left;
+    width:100%;
+    margin-left:5%;
+}
+.notification_desc p{
+    color:#757575;
+    font-size:13px;
+    padding:2px 0;
+    margin-bottom: 0px;
+}
+.notification_desc .notificationDescription{
+    font-weight: bold;
+}
+.wrapper-dropdown-2 .dropdown li a:hover .notification_desc p{
+    color:#424242;
+}
+.notification_desc p span{
+    color:#979797 !important;
+    font-size:11px;
+}

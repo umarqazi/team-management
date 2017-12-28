@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\View;
@@ -203,44 +204,55 @@ class ProjectsController extends Controller
                 ->withInput();
         }
 
-        $project = new Project;
-        $project->name = $request->name;
-        $project->technology = json_encode($request->technology);
-        $project->description = $request->description;
-        $project->status = $request->status;
-        $project->internal_deadline = $request->internal_deadline;
-        $project->external_deadline = $request->external_deadline;
-        $project->key = $request->key;
+        else {
+            $project = new Project;
+            $project->name = $request->name;
+            $project->technology = json_encode($request->technology);
+            $project->description = $request->description;
+            $project->status = $request->status;
+            $project->internal_deadline = date('Y-m-d H:i:s', strtotime($request->internal_deadline));
+            $project->external_deadline = date('Y-m-d H:i:s', strtotime($request->external_deadline));
+            $project->key = $request->key;
 
-        $project->save();
+            $project->save();
 
-        if( ! empty($request->teamlead) ) {
+            if (!empty($request->teamlead)) {
 
-            if(is_array($request->teamlead))
-            {
-
-                foreach($request->teamlead as $teamlead)
-                {
-                    $project->users()->attach($teamlead);
+                if (is_array($request->teamlead)) {
+                    foreach ($request->teamlead as $teamlead) {
+                        $project->users()->attach($teamlead);
+//                  dd(User::where('id',$teamlead)->pluck('email')->first());
+                    }
+                } else {
+                    $project->users()->attach($request->teamlead);
                 }
             }
-            else{
-                $project->users()->attach($request->teamlead);
+            if (!empty($request->developer)) {
+                foreach ($request->developer as $developer) {
+                    $project->users()->attach($developer);
+                }
             }
-        }
-        if  ( ! empty($request->developer) )
-        {
 
-            foreach($request->developer as $developer)
-            {
-                $project->users()->attach($developer);
-            }
-        }
+            // Email Notification
 
-        // redirect
-        Session::flash('message', 'Successfully Created A Project '.$request->name);
-        Session::flash('alert-class', 'alert-success');
-        return redirect('/projects');
+            Mail::send('mail.project', array(
+                'projectName' => $request->name,
+                'teamleadName' => $request->teamlead,
+                'description' => $request->description,
+                'int_deadline' => date('Y-m-d H:i:s', strtotime($request->internal_deadline)),
+                'ext_deadline' => date('Y-m-d H:i:s', strtotime($request->external_deadline))), function ($message) {
+                $message->to('umarfarooq.hcp@gmail.com', 'Techverx Management');
+                $message->from('umarfarooq1857@gmail.com');
+
+                $message->subject('Project Notification via Email');
+            });
+
+
+            // redirect
+            Session::flash('message', 'Successfully Created A Project ' . $request->name);
+            Session::flash('alert-class', 'alert-success');
+            return redirect('/projects');
+        }
     }
 
     public function edit(Project $project)

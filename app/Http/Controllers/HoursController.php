@@ -229,8 +229,8 @@ class HoursController extends Controller
             {
 	            $hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Actual hours'      => $hr->consumed_hours,
-	                'Productive hours'  => $hr->estimated_hours,
+	                'Consumed hours'      => $hr->consumed_hours,
+	                'Estimated hours'  => $hr->estimated_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );

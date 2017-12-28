@@ -213,13 +213,17 @@
                             <div class="taskDetailBoxHeader">
 
                                 @if (count($errors) > 0)
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+                                    @foreach ($errors->all() as $error)
+                                        {{--<li>{{ $error }}</li>--}}
+                                        <script>
+                                            toastr.error('{{ $error }}')
+                                            toastr.options = {
+                                                tapToDismiss: true,
+                                                timeOut: 0,
+                                                closeButton: true,
+                                            };
+                                        </script>
+                                    @endforeach
                                 @endif
 
                                 @if(Session::has('message'))
@@ -322,6 +326,18 @@
                                         </div>
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#reopenModal">Reopen</button>
                                         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#changeRequestModal">Change Request</button>
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Sprint
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu taskStatus">
+                                                <li><a href="#" data-toggle="modal" data-target="#SprintModal" data-backdrop="static" data-keyboard="false">Create Sprint</a></li>
+                                                <li><a href="#">View Sprint</a></li>
+                                            </ul>
+                                        </div>
+
                                         <div class="btn-group" role="group">
                                             @if(auth()->user()->can('create task'))
                                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -1235,6 +1251,102 @@
                     </div>
                 </div>
                 {{--Change Request Modal Ends--}}
+
+                {{--Create Sprint Modal Starts--}}
+                <div class="modal fade" id="SprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Create Sprint</h4>
+                            </div>
+
+                            <form method="post" action="#">
+                                <div class="modal-body">
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_name" class="col-sm-12 control-label">Sprint Name<span class="mendatoryFields">*</span></label>
+                                        <div class="col-sm-12">
+                                            <input type="text" name="sprint_name" class="form-control" id="sprint_name" value="{{old('sprint_name')}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="" class="col-sm-12 control-label">Project Name<span class="mendatoryFields">*</span></label>
+                                        <div class="col-sm-12">
+                                            <select class="form-control" id="sprint_project_name" name="sprint_project_name" value="{{old('sprint_project_name')}}" style="overflow-y: scroll">
+                                                <option value="" selected>Select A Project</option>
+                                                @foreach($projects as $project)
+                                                    <option value="{{$project->id}}" @if($project->id == $Project->id) {{"selected"}} @endif><a href="#">{{$project->name}}</a></option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_task_name" class="col-sm-12 control-label">Task Name<span class="mendatoryFields">*</span></label>
+                                        <div class="col-sm-12">
+                                            <select class="form-control selectpicker" id="sprint_task_name" name="sprint_task_name[]" value="{{old('sprint_task_name')}}" style="overflow-y: scroll" multiple>
+                                                <option value="" disabled>Select A Task</option>
+                                                @foreach($tasks as $task)
+                                                    <option value="{{$task['id']}}">{{$task["name"]}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_start_date" class="col-sm-12 control-label">Start Date<span class="mendatoryFields">*</span></label>
+                                        <div class="col-sm-12">
+                                            <input type="date" name="sprint_start_date" class="form-control" id="sprint_start_date" value="{{old('sprint_start_date')}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_end_date" class="col-sm-12 control-label">End Date<span class="mendatoryFields">*</span></label>
+                                        <div class="col-sm-12">
+                                            <input type="date" name="sprint_end_date" class="form-control" id="sprint_end_date" value="{{old('sprint_end_date')}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_status" class="col-sm-2 control-label">Status<span class="mendatoryFields">*</span></label>
+                                        <input type="radio" name="sprint_status" value="1" class="radio-inline" @if(old("sprint_status") == "1") {{ "checked" }} @endif> Active
+                                        <input type="radio" name="sprint_status" value="0" class="radio-inline" @if(old("sprint_status") == "0") {{ "checked" }} @endif> Inactive
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_duration" class="col-sm-12 control-label">Sprint Duration</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" name="sprint_duration" class="form-control" id="sprint_duration" value="{{old('sprint_duration')}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group sprintModalFields">
+                                        <label for="sprint_follower" class="col-sm-12 control-label">Follower</label>
+                                        <div class="col-sm-12">
+                                            <select class="form-control" id="sprint_follower" name="sprint_follower" value="{{old('sprint_follower')}}" style="overflow-y: scroll">
+                                            <option value="" selected>Select A Follower</option>
+                                                @foreach($users as $user)
+                                                    <option value="{{$user['id']}}">{{$user["name"]}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    @if(! empty($task)) <input type="hidden" name="task_id" value="{{$task->id}}">@endif
+                                </div>
+
+                                <div class="modal-footer">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Create Sprint</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{--Create Sprint Modal Ends--}}
 
             </div>
         </div>
