@@ -10,6 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
 Route::get('/verge', function(){
     return File::get(public_path(). '/verge/index.php');
 });

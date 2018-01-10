@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         })->whereHas('projects', function($p){
             $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active >= 1');
         })->get();
-        $this->resources['free']      = User::whereHas('roles', function($r){
+        $this->resources['free'] = User::whereHas('roles', function($r){
             $r->whereIn('name', array('teamlead', 'developer'));
         })->whereHas('projects', function($p){
             $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active = 0');
