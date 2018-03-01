@@ -9,10 +9,11 @@
                     <a href="/projects/create" class="btn btn-primary">Create Project</a>
                 </div>
                 @endif
-                <div class="content" style="margin-top: 20px;">
-                    <table id="eng_projects" class="display" cellspacing="0" width="100%">
+                <div class="content table-responsive" style="margin-top: 20px;">
+                    <table id="eng_projects" class="table table-striped" cellspacing="0" width="100%">
                         <thead>
                         <tr>
+                            <th>Key</th>
                             <th>Name</th>
                             <th>Technology</th>
                             <th>Team lead</th>
