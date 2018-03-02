@@ -77,6 +77,7 @@ Route::group(['middleware'  => 'auth'], function(){
 //    Route::get('/project/create', 'ProjectsController@create');
 
 //    Route::get('/project/{project}', 'ProjectsController@show');
+    Route::get('/hour/{id}', 'HoursController@updateStatus');
 
     Route::post('/hour', 'HoursController@store');
     Route::post('/hour/update/{id}', 'HoursController@update');

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
-    <link rel="stylesheet" href="{{URL::asset('css/taskDetail.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
 @endsection
 
 @section('content')
@@ -168,7 +168,7 @@
     </script>
 
     <!-- Modal 2-->
-    <div id="myModal2" class="modal fade" role="dialog">
+    <div id="myModal2" class="hours_detail modal fade modal-lg" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->

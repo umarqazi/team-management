@@ -10,7 +10,7 @@
                 </div>
                 @endif
                 <div class="content table-responsive" style="margin-top: 20px;">
-                    <table id="eng_projects" class="table table-striped" cellspacing="0" width="100%">
+                    <table id="eng_projects" class="display table table-striped" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>Key</th>

@@ -547,7 +547,7 @@
     } );
     $(document).ready(function() {
         $('#active_projects').DataTable();
-    } );
+    });
 </script>
 </body>
 </html>
