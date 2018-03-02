@@ -84,27 +84,6 @@
                 @else
                     <li><a href="{{ url('/home') }}">Home</a></li>
                     <li><a href="{{ url('/projects') }}">Projects</a></li>
-                    @hasrole(['admin', 'pm'])
-                        <li><a href="{{url('/projectView')}}">Task View</a></li>
-
-                    <!--////////////////////////// Add New Task Types, Priority, Workflow, Sprint, Components /////////////////////////////-->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle addNew" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Add New <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Roles</a></li>
-                            <li><a href="#">Permissions</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Component</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Task Types</a></li>
-                            <li><a href="#">Priority</a></li>
-                            <li><a href="#">Workflow</a></li>
-                            <li><a href="#">Sprints</a></li>
-                        </ul>
-                    </div>
-                    @endrole
                 @endif
             </ul>
 
@@ -115,13 +94,6 @@
                     <li><a href="{{ url('/login') }}">Login</a></li>
                     <li><a href="{{ url('/register') }}">Register</a></li>
                 @else
-                    {{--@hasrole(['pm', 'admin'])--}}
-                    {{--Create New Task Model--}}
-                    @if(auth()->user()->can('create task'))
-                        <li><a data-toggle="modal" data-target="#taskModal" data-backdrop="static" data-keyboard="false" style="cursor: pointer">Add Task</a></li>
-                    @endif
-
-                    {{--@endrole--}}
 
                     @if(auth()->user()->can('create user'))
                         <li><a href="{{ url('/users') }}">Users</a></li>
@@ -575,7 +547,7 @@
     } );
     $(document).ready(function() {
         $('#active_projects').DataTable();
-    } );
+    });
 </script>
 </body>
 </html>

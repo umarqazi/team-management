@@ -169,4 +169,13 @@ class HoursController extends Controller
             });
         })->download('xlsx');
     }
+
+    public function updateStatus($id)
+    {
+//        echo 'success '.$id;
+        $hour = Hour::find($id);
+        $hour->status == 0 ? $hour->status = 1 : $hour->status = 0;
+        if ($hour->update())
+            echo $hour->status == 0 ? 'Open' : 'Close';
+    }
 }

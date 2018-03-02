@@ -8,10 +8,15 @@
         <th>Productive Hours</th>
         <th>Developer</th>
         <th>Details</th>
+        <th>Current Status</th>
         @hasrole('developer')
         @else
             <th>Action</th>
         @endif
+
+        @hasrole('admin')
+            <th>Status</th>
+        @endhasrole
     </tr>
     </thead>
     <tbody>
@@ -29,13 +34,24 @@
             @endif
         @endforeach
         </td>
-        <td id="td_details_{{$hrs->id}}" >{{$hrs->details}}</td>
+        <td id="td_details_{{$hrs->id}}" >
+            {{--{{$hrs->details}}--}}
+            <textarea rows="4" readonly>{{$hrs->details}}</textarea>
+        </td>
+
+        <td class="hour_status">{{$hrs->status == 0 ? 'Open' : 'Close'}}</td>
         @hasrole('developer')
         @else
         <td class="link">
             <span class="glyphicon glyphicon-edit" id="hours_edit_{{$hrs->id}}" onclick="showform(this)"></span> | <span id="hours_delete_{{$hrs->id}}" class="glyphicon glyphicon-trash" onclick="delete_hour(this)"></span>
         </td>
         @endif
+
+        @hasrole('admin')
+        <td>
+            <a class="btn btn-primary btn-sm hourStatus" hour-id="{{$hrs->id}}">Update Status</a>
+        </td>
+        @endhasrole
        
     </tr>
     <tr id="tr_hours_form_{{$hrs->id}}_1" class="hidden"></tr>
@@ -67,3 +83,19 @@
     @endforeach
     </tbody>
 </table>
+
+<script>
+    $('.hourStatus').click(function () {
+        var me = $(this);
+        var id = $(this).attr('hour-id');
+
+        $.ajax({
+            url: '/hour/'+id,
+            method: 'GET',
+            success: function (data) {
+                if (data)
+                    me.closest('tr').find('.hour_status').html(data);
+            }
+        });
+    });
+</script>
