@@ -46,4 +46,28 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Hour');
     }
+
+    // Get Allocated Users to whom projects has been assigned
+    public static function allocatedUsers()
+    {
+        $allocatedUsers = self::whereHas('roles', function($r){
+            $r->whereIn('name', array('teamlead', 'developer'));
+        })->whereHas('projects', function($p){
+            $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active >= 1');
+        })->get();
+
+        return $allocatedUsers;
+    }
+
+    // Get Free Users to whom NO project has been assigned
+    public static function freeUsers()
+    {
+        $freeUsers = self::whereHas('roles', function($r){
+            $r->whereIn('name', array('teamlead', 'developer'));
+        })->whereHas('projects', function($p){
+            $p->selectRaw('count(*) AS active')->where('status', 1)->havingRaw('active = 0');
+        })->get();
+
+        return $freeUsers;
+    }
 }
