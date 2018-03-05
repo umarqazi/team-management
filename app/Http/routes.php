@@ -23,6 +23,18 @@ Route::get('/camp', function(){
    return File::get(public_path(). '/camp/index.php');
 });
 
+Route::get('/4hq-israel-encounters', function(){
+   return File::get(public_path(). '/4hq-israel-encounters/index.php');
+});
+
+Route::get('/hansa-garten', function(){
+   return File::get(public_path(). '/hansa-garten/index.php');
+});
+
+Route::get('/landing-grad', function(){
+   return File::get(public_path(). '/landing-grad/index.php');
+});
+
 Route::get('/pages', 'PagesController@showPage');
 
 Route::auth();
