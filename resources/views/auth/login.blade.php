@@ -17,7 +17,7 @@
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="group">
 
-                                    <input id="email" type="email" class="" name="email" value="{{ old('email') }}"><span class="highlight"></span><span class="bar"></span>
+                                    <input id="email" type="email" class="" name="email"><span class="highlight"></span><span class="bar"></span>
                                     <label class="control-label loginLabels">Email</label>
                                 </div>
                                 @if ($errors->has('email'))

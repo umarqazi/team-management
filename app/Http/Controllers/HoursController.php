@@ -81,19 +81,19 @@ class HoursController extends Controller
 
         foreach ($hrs_details as $hr) {
         	$user_id = $hr->user_id;
-        	if($user->hasRole(['admin', 'teamlead']))
+        	if($user->hasRole(['admin', 'teamlead','developer']))
             {
 	            $hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Actual hours'      => $hr->actual_hours,
-	                'Productive hours'  => $hr->productive_hours,
+	                'Actual hours'      => (int)$hr->actual_hours,
+	                'Productive hours'  => (int)$hr->productive_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );
 	        }elseif($user->hasRole('sales')){
 	        	$hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Hours'  			=> $hr->productive_hours,
+	                'Hours'  			=> (int)$hr->productive_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );
@@ -105,6 +105,12 @@ class HoursController extends Controller
         return Excel::create('hours '.$year_month, function($excel) use ($hours) {
             $excel->sheet('mySheet', function($sheet) use ($hours)
             {
+                $sheet->row(1, ['Col 1', 'Col 2', 'Col 3','Col 4', 'Col 5']); // etc etc
+                $sheet->row(1, function($row) {
+                    $row->setFont(array(
+                        'bold' => true
+                    ));
+                });
                 $sheet->fromArray($hours);
             });
         })->download('xlsx');
@@ -142,8 +148,8 @@ class HoursController extends Controller
             {
 	            $hours[]    = array(
 	                'Date'				=> Carbon::parse($hr->created_at)->format('d-M'),
-	                'Actual hours'      => $hr->actual_hours,
-	                'Productive hours'  => $hr->productive_hours,
+	                'Actual hours'      => (int)$hr->actual_hours,
+	                'Productive hours'  => (int)$hr->productive_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Task'				=> $hr->details
 	                );
@@ -152,7 +158,7 @@ class HoursController extends Controller
 	        {
 	        	$hours[]    = array(
 	                'Date'				=> Carbon::parse($hr->created_at)->format('d-M'),
-	                'Hours'  			=> $hr->productive_hours,
+	                'Hours'  			=> (int)$hr->productive_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Task'				=> $hr->details
 	                );
@@ -165,6 +171,12 @@ class HoursController extends Controller
         return Excel::create($file_name, function($excel) use ($hours, $project) {
             $excel->sheet($project->name, function($sheet) use ($hours)
             {
+                $sheet->row(1, ['Col 1', 'Col 2', 'Col 3','Col 4', 'Col 5']); // etc etc
+                $sheet->row(1, function($row) {
+                    $row->setFont(array(
+                        'bold' => true
+                    ));
+                });
                 $sheet->fromArray($hours);
             });
         })->download('xlsx');

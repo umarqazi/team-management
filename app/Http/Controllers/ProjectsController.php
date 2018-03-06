@@ -169,6 +169,12 @@ class ProjectsController extends Controller
         return Excel::create($project->name, function($excel) use ($hours, $project) {
             $excel->sheet($project->name, function($sheet) use ($hours)
             {
+                $sheet->row(1, ['Col 1', 'Col 2', 'Col 3','Col 4', 'Col 5']); // etc etc
+                $sheet->row(1, function($row) {
+                    $row->setFont(array(
+                        'bold' => true
+                ));
+                });
                 $sheet->fromArray($hours);
             });
         })->download($type);
