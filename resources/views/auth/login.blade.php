@@ -56,28 +56,24 @@
 
                             <div class="form-group login_with">
                                 <div class="col-md-8 col-md-offset-3">
-                                    <button type="submit" class="btn btn-primary btn-md loginButton">
+                                    <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-btn fa-sign-in"></i> Login
                                     </button>
-                                </div>
-                                {{--
-                                                                <a href="{{ url('redirect/google') }}" class="btn btn-danger btn-social btn-google"><span class="fa fa-google"></span> | Sign in with Google</a>
-                                --}}
-                                <div class="col-md-8 col-md-offset-3" id="forgotLink">
+
+                                    <a href="{{ url('redirect/google') }}" class="btn btn-danger btn-social btn-google"><span class="fa fa-google"></span> | Sign in with Google</a>
                                     <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
                                 </div>
                             </div>
+                        </form>
                     </div>
-                    </form>
-                </div>
-                <div class="row login-footer">
-                    <div class="footerContent">
-                        <span>Not A Member?</span>
-                        <a href="{{url('/register')}}"><span><strong>Register Now!</strong></span></a>
+                    <div class="row login-footer">
+                        <div class="footerContent">
+                            <span>Not A Member?</span>
+                            <a href="{{url('/register')}}"><span><strong>Register Now!</strong></span></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection
