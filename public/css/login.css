@@ -346,12 +346,3 @@ input[type="checkbox"]:checked + .box:before {
     text-decoration: none;
     color: #ffffff;
 }
-
-#forgotLink{
-    padding-left: 1px;
-    margin-bottom: 10px;
-}
-.loginButton{
-    width: 250px;
-    padding: 10px;
-}
