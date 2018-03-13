@@ -33,20 +33,9 @@
 					<!--Project key Field Starts-->
 					<div class="form-group">
 						<label for="projectKey">Project Key:</label>
-						<input type="text" name="key" class="form-control" id="key" value="{{$project->key}}" onfocus="showSuggestions()">
+						<input type="text" name="key" class="form-control" id="key" value="{{$project->key}}" readonly>
 					</div>
 					<!--Project key Field Ends-->
-
-					<!--Project Key Suggestions Starts-->
-					<div class="form-group" id="suggestions" style="display:none">
-						<label>Suggestions:</label><br>
-						<input type="radio" name="ProjectKeySuggestion" id="projectKey1" value="" onclick="addSuggestion('projectKey1')" > <label id="ProjectKeySugg1"></label><br>
-						<input type="radio" name="ProjectKeySuggestion" id="projectKey2" value="" onclick="addSuggestion('projectKey2')" > <label id="ProjectKeySugg2"></label><br>
-						<input type="radio" name="ProjectKeySuggestion" id="projectKey3" value="" onclick="addSuggestion('projectKey3')" > <label id="ProjectKeySugg3"></label><br>
-						<input type="radio" name="ProjectKeySuggestion" id="projectKey4" value="" onclick="addSuggestion('projectKey4')" > <label id="ProjectKeySugg4"></label><br>
-						<input type="radio" name="ProjectKeySuggestion" id="projectKey5" value="" onclick="addSuggestion('projectKey5')" > <label id="ProjectKeySugg5"></label><br>
-					</div>
-					<!--Project Key Suggestions Ends-->
 
 					<div class="form-group">
 						<label for="technology">Technology:</label>
