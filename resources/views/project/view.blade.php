@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('styles')
-    <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
+
 @endsection
 
 @section('content')

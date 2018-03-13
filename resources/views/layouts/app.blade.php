@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{URL::asset('css/task_modal.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('css/custom.css')}}">
     @yield('styles')
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
@@ -58,6 +59,7 @@
     @yield('scripts')
 </head>
 <body id="app-layout">
+<div class="main_wrapper">
 <nav class="navbar navbar-default navbar-static-top menuBar">
     <div class="container">
         <div class="navbar-header">
@@ -128,8 +130,14 @@
 @endif
 
 @yield('content')
-
-<footer style="margin-top: 50px; height: 100px;"></footer>
+</div>
+<footer class="footer">
+    <!--Copyright-->
+    <div class="text-right">
+        TM-V1.0
+    </div>
+    <!--/.Copyright-->
+</footer>
 
 
 <!-- JavaScripts -->
