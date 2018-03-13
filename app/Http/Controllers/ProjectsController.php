@@ -267,7 +267,7 @@ class ProjectsController extends Controller
         $rules = array(
             'name'       => 'required|unique:projects,name,'.$id.'|max:255',
             'status'     => 'required',
-            'key' => 'required|unique:projects',
+            'key'        => 'required',
         );
         $validator = Validator::make(Input::all(), $rules);
 

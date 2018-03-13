@@ -1,6 +1,19 @@
+body, html{
+    height: 100%;
+}
+.main_wrapper{
+    min-height: calc(100% - 51px);
+    padding-bottom: 50px;
+}
 .hours_detail{
     margin: auto;
 }
 textarea{
     width: 100%;
+}
+
+.footer{
+    background: #f8f8f8;
+    padding: 15px 20px;
+    border-top: 1px solid #e7e7e7;
 }
