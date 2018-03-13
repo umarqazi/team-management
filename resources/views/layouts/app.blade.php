@@ -133,7 +133,7 @@
 </div>
 <footer class="footer">
     <!--Copyright-->
-    <div class="text-right">
+    <div class="text-center">
         TM {{env('TM_VERSION_NO')}}
     </div>
     <!--/.Copyright-->
