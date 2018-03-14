@@ -18,12 +18,16 @@ class AppServiceProvider extends ServiceProvider
     {
         // Using Closure based composers...
 
-        $this->resources['allocated']   = User::allocatedUsers();
-        $this->resources['free']        = User::freeUsers();
+        if(!app()->runningInConsole())
+        {
+            $this->resources['allocated']   = User::allocatedUsers();
+            $this->resources['free']        = User::freeUsers();
 
-        view()->composer(['users.index','home', 'project.index'], function ($view) {
-            $view->with('resources', $this->resources);
-        });
+            view()->composer(['users.index','home', 'project.index'], function ($view) {
+                $view->with('resources', $this->resources);
+            });
+        }
+
     }
 
     /**
