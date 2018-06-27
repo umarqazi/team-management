@@ -9,10 +9,12 @@ use App\Project;
 use App\Hour;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
 use Auth;
-use Session;
 use Excel;
 
 class HoursController extends Controller
@@ -21,8 +23,8 @@ class HoursController extends Controller
     {
     	$hour = new Hour;
     	$hour->project_id   	= $request->project_id;
-    	$hour->actual_hours 	= $request->actual_hours;
-    	$hour->productive_hours = $request->productive_hours;
+    	$hour->consumed_hours 	= $request->consumed_hours;
+    	$hour->estimated_hours = $request->estimated_hours;
 		$hour->details 			= $request->details;
 		$hour->user_id 			= $request->resource;
 		if(empty($request->date)){
@@ -32,6 +34,148 @@ class HoursController extends Controller
 		}
     	$hour->save();
 		return redirect('/projects');
+    }
+
+    public function storeDeveloperTaskEstimation(Request $request){
+
+        $rules = array(
+            'dev_estimated_hours' => 'required|integer',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Creation
+        if ($validator->fails()) {
+            return Redirect::to('/tasks/'.$request->task_id)
+                ->withErrors($validator);
+        }
+        else {
+
+            $hour = Hour::where([
+                ['task_id', $request->task_id],
+                ['subtask_id', null]
+            ])->first();
+
+            $hour->internal_hours = $request->dev_estimated_hours;
+            $hour->update();
+
+            // redirect
+            Session::flash('message', 'Task Successfully Estimated!');
+            Session::flash('alert-class', 'alert-success');
+
+            return redirect('/tasks/'.$request->task_id);
+        }
+    }
+
+    public function storeDeveloperSubtaskEstimation(Request $request)
+    {
+        $rules = array(
+            'dev_estimated_hours' => 'required|integer',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Creation
+        if ($validator->fails()) {
+            return Redirect::to('/subtasks/'.$request->subtask_id)
+                ->withErrors($validator);
+        } else {
+
+            $hour = Hour::where([
+                ['subtask_id', $request->subtask_id]
+            ])->first();
+
+            $hour->internal_hours = $request->dev_estimated_hours;
+            $hour->update();
+
+            // redirect
+            Session::flash('message', 'Subtask Successfully Estimated!');
+            Session::flash('alert-class', 'alert-success');
+
+            return redirect('/subtasks/'.$request->subtask_id);
+        }
+    }
+
+    public function storeTaskConsumption(Request $request){
+
+        $rules = array(
+            'project_id' => 'required|integer',
+            'task_id' => 'required|integer',
+            'consumed_hours' => 'required|integer',
+            'task_internal_hours' => 'required|integer',
+            'task_estimated_hours' => 'required|integer',
+            'resource' => 'required|integer',
+            'date' => 'date',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Creation
+        if ($validator->fails()) {
+            return Redirect::to('/tasks/' . $request->task_id)
+                ->withErrors($validator);
+        } else {
+            $hour = new Hour;
+            $hour->project_id = $request->project_id;
+            $hour->task_id = $request->task_id;
+            $hour->consumed_hours = $request->consumed_hours;
+            $hour->internal_hours = $request->task_internal_hours;
+            $hour->estimated_hours = $request->task_estimated_hours;
+            $hour->user_id = $request->resource;
+
+            if (empty($request->date)) {
+                $hour->created_at = Carbon::now()->format('Y-m-d H:i:s');
+            } else {
+                $hour->created_at = Carbon::parse($request->date)->format('Y-m-d H:i:s');
+            }
+            $hour->save();
+
+            // redirect
+            Session::flash('message', 'Hours Successfully Added on Task!');
+            Session::flash('alert-class', 'alert-success');
+
+            return redirect('/tasks/' . $request->task_id);
+        }
+    }
+
+    public function storeSubtaskConsumption(Request $request){
+
+        $rules = array(
+            'project_id' => 'required|integer',
+            'task_id' => 'required|integer',
+            'subtask_id' => 'required|integer',
+            'consumed_hours' => 'required|integer',
+            'subtask_internal_hours' => 'required|integer',
+            'subtask_estimated_hours' => 'required|integer',
+            'resource' => 'required|integer',
+            'date' => 'date',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // Process the Task Creation
+        if ($validator->fails()) {
+            return Redirect::to('/subtasks/'. $request->subtask_id)
+                ->withErrors($validator);
+        } else {
+            $hour = new Hour;
+            $hour->project_id = $request->project_id;
+            $hour->task_id = $request->task_id;
+            $hour->subtask_id = $request->subtask_id;
+            $hour->consumed_hours = $request->consumed_hours;
+            $hour->internal_hours = $request->subtask_internal_hours;
+            $hour->estimated_hours = $request->subtask_estimated_hours;
+            $hour->user_id = $request->resource;
+
+            if (empty($request->date)) {
+                $hour->created_at = Carbon::now()->format('Y-m-d H:i:s');
+            } else {
+                $hour->created_at = Carbon::parse($request->date)->format('Y-m-d H:i:s');
+            }
+            $hour->save();
+
+            // redirect
+            Session::flash('message', 'Hours Successfully Added on Subtask!');
+            Session::flash('alert-class', 'alert-success');
+
+            return redirect('/subtasks/' . $request->subtask_id);
+        }
     }
 
 	public function show(Project $project, $year_month)
@@ -49,8 +193,8 @@ class HoursController extends Controller
 	    // echo(json_encode(array('id'	=> $request->all())));
 	    // die();
 	    $hour = Hour::findOrFail($id);
-	    $hour->actual_hours     = $request->actual_hours;
-	    $hour->productive_hours = $request->productive_hours;
+	    $hour->consumed_hours     = $request->consumed_hours;
+	    $hour->estimated_hours = $request->estimated_hours;
 	    $hour->details          = $request->details;
 	    $hour->user_id 			= $request->resource;
 		$hour->created_at 		= $request->created_at;
@@ -69,7 +213,7 @@ class HoursController extends Controller
         $hour= Hour::find($id);
         $hour->delete();
         return response()->json(array('success' => true));
-        
+
     }
     public function downloadExcel(Project $project, $year_month)
     {
@@ -85,15 +229,15 @@ class HoursController extends Controller
             {
 	            $hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Actual hours'      => (int)$hr->actual_hours,
-	                'Productive hours'  => (int)$hr->productive_hours,
+	                'Consumed hours'      => $hr->consumed_hours,
+	                'Estimated hours'  => $hr->estimated_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );
 	        }elseif($user->hasRole('sales')){
 	        	$hours[]    = array(
 	                'Date'				=> $hr->created_at->format('d-M'),
-	                'Hours'  			=> (int)$hr->productive_hours,
+	                'Hours'  			=> $hr->estimated_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Details'			=> $hr->details
 	                );
@@ -148,17 +292,17 @@ class HoursController extends Controller
             {
 	            $hours[]    = array(
 	                'Date'				=> Carbon::parse($hr->created_at)->format('d-M'),
-	                'Actual hours'      => (int)$hr->actual_hours,
-	                'Productive hours'  => (int)$hr->productive_hours,
+	                'Actual hours'      => $hr->consumed_hours,
+	                'Productive hours'  => $hr->estimated_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Task'				=> $hr->details
 	                );
-	        } 
+	        }
 	        elseif($user->hasRole('sales'))
 	        {
 	        	$hours[]    = array(
 	                'Date'				=> Carbon::parse($hr->created_at)->format('d-M'),
-	                'Hours'  			=> (int)$hr->productive_hours,
+	                'Hours'  			=> $hr->estimated_hours,
 	                'Developer'			=> !empty($hr->user_id) ? $hr->user->name:"N/A",
 	                'Task'				=> $hr->details
 	                );

@@ -14,8 +14,10 @@ class SocialAuthController extends Controller
 {
     public function redirect($provider)
     {
-        return Socialite::driver($provider)->with(['hd' => 'gems.techverx.com','techverx.com'])->redirect();
-    }   
+        return Socialite::driver($provider)
+            ->with(['hd' => 'gems.techverx.com'])
+            ->redirect();
+    }
 
     public function callback(SocialAccountService $service, $provider)
     {

@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
+
+
+@section('styles')
+    <link rel="stylesheet" href="{{URL::asset('css/bootstrap-datetimepicker.min.css')}}">
+@endsection
+
 @section('content')
+
 <div class="container">
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
@@ -25,14 +32,14 @@
 					@endif
 					<form action="/projects" method="POST" style="margin-top: 50px;">
 						<div class="form-group">
-							<label for="name">Project Name:</label>
+							<label for="name">Project Name:</label><span class="mendatoryFields">*</span>
 							<input type="text" name="name" class="form-control" id="project-name" value="{{ old("name") }}">
 						</div>
 
 						<!--Project key Field Starts-->
 						<div class="form-group">
-							<label for="projectKey">Project Key:</label>
-							<input type="text" name="key" class="form-control" id="key" onfocus="showSuggestions()">
+							<label for="projectKey">Project Key:</label><span class="mendatoryFields">*</span>
+							<input type="text" name="key" class="form-control" id="key" value="{{old("key")}}" onfocus="showSuggestions()">
 						</div>
 						<!--Project key Field Ends-->
 
@@ -89,20 +96,59 @@
 							<textarea class="form-control" name="description" rows="2" placeholder="Enter Project Description.">{{ old("description") }}</textarea>
 						</div>
 						<div class="form-group">
-							<label for="status">Status:</label> <br>
+							<label for="status">Status:</label><span class="mendatoryFields">*</span> <br>
 							<input type="radio" name="status" value="1" class="radio-inline" @if(old("status") == "1") {{ "checked" }} @endif> Active
 							<input type="radio" name="status" value="0" class="radio-inline" @if(old("status") == "0") {{ "checked" }} @endif> Inactive<br>
 						</div>
 						<br>
-						<div class="form-group">
+						{{--<div class="form-group">
 							<label for="internal_deadline">Internal Deadline:</label> <br>
 							<input type="datetime-local" class="form-control" name="internal_deadline" value="{{ old("internal_deadline") }}"><br>
+						</div>--}}
+
+						<div>
+							<div class="form-group">
+								<label for="internal_deadline" class="col-sm-12 control-label" style="padding: 0px 0px 0px 0px">Internal Deadline:</label>
+								<div class='input-group date' id='projectInternalDeadline'>
+									<input type='text' name="internal_deadline" class="form-control" id="internal_deadline" />
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
 						</div>
 
-						<div class="form-group">
+						<script type="text/javascript">
+                            $(function () {
+                                var dateToday  = new Date();
+                                $('#projectInternalDeadline').datetimepicker({
+                                    minDate: dateToday,
+								});
+                            });
+						</script>
+
+						{{--<div class="form-group">
 							<label for="external_deadline">External Deadline:</label> <br>
 							<input type="datetime-local" class="form-control" name="external_deadline" value="{{ old("external_deadline") }}" ><br>
+						</div>--}}
+
+						<div>
+							<div class="form-group">
+								<label for="external_deadline" class="col-sm-12 control-label" style="padding: 0px 0px 0px 0px">External Deadline:</label>
+								<div class='input-group date' id='projectExternalDeadline'>
+									<input type='text' name="external_deadline" class="form-control" id="external_deadline" />
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
 						</div>
+
+						<script type="text/javascript">
+                            $(function () {
+                                var dateToday  = new Date();
+                                $('#projectExternalDeadline').datetimepicker({
+                                    minDate: dateToday,
+								});
+                            });
+						</script>
+
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<div class="text-right">
 							<button type="submit" class="btn btn-primary">Submit</button>
@@ -116,12 +162,19 @@
 	</div>
 </div>
 
+@section('scripts')
+    <script src="{{URL::asset('js/bootstrap-datetimepicker.js')}}"></script>
+
+@endsection
+
 	<script>
         $(document).ready(function() {
             $('#project-name').on("keyup change", function () {
                 generateKey();
-            })
-        } );
+            });
+        });
+
+
 
         function generateKey() {
             // Code To Generate Key For Project Starts

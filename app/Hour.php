@@ -8,7 +8,7 @@ use App\User;
 
 class Hour extends Model
 {
-	protected $fillable = ['actual_hours', 'productive_hours', 'details', 'created_at'];
+	protected $fillable = ['consumed_hours', 'estimated_hours','internal_hours', 'details', 'task_id', 'subtask_id', 'created_at'];
 
     public function project()
     {
@@ -18,5 +18,15 @@ class Hour extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public function task()
+    {
+        return $this->belongsTo('App\Task');
+    }
+
+    public function subtask()
+    {
+        return $this->belongsTo('App\Subtask');
     }
 }

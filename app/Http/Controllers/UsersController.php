@@ -57,7 +57,7 @@ class UsersController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:users',
-            'password'  => 'required',
+            'password'  =>  'required',
             'role-name'  => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -86,7 +86,7 @@ class UsersController extends Controller
             }
 
             // redirect
-            Session::flash('message', 'Successfully created a user!');
+            Session::flash('message', 'Successfully Created A User!');
             Session::flash('alert-class', 'alert-success'); 
             return Redirect::to('/users');
         }
@@ -179,9 +179,9 @@ class UsersController extends Controller
                 $user->save();
 
                 // redirect
-                Session::flash('message', 'Successfully updated the User!');
+                Session::flash('message', 'Successfully Updated Your Profile');
                 Session::flash('alert-class', 'alert-success');
-                return Redirect::to('/home');
+                return Redirect::to('/users');
             }
 
             else{
@@ -204,7 +204,7 @@ class UsersController extends Controller
                     }
 
                     // redirect
-                    Session::flash('message', 'Successfully updated the User!');
+                    Session::flash('message', 'Successfully Updated A User '.Input::get('name'));
                     Session::flash('alert-class', 'alert-success');
                     return Redirect::to('/users');
                 }
@@ -228,10 +228,11 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+        $userName = $user->name;
         $user->delete();
 
         // redirect
-        Session::flash('message', 'Successfully deleted the user!');
+        Session::flash('message', 'Successfully Deleted A User '.$userName);
         Session::flash('alert-class', 'alert-success'); 
         return Redirect::to('/users');
     }

@@ -16,7 +16,7 @@
             @hasrole(['admin','engineer','teamlead'])
              {
                     showInLegend: true,
-                    legendText: "Actual Hours",
+                    legendText: "Consumed Hours",
                     // Change type to "bar", "area", "spline", "pie",etc.
                     type: "column",
                     dataPoints: {!! json_encode($datapoints[1], JSON_NUMERIC_CHECK) !!}
@@ -24,7 +24,7 @@
              @endhasrole
                 {
                     showInLegend: true,
-                    legendText: "Productive Hours",
+                    legendText: "Estimated Hours",
                     type: "column",
                     dataPoints: {!! json_encode($datapoints[0], JSON_NUMERIC_CHECK) !!}
                     }
@@ -59,9 +59,9 @@
                     var dataPoint_actual = [];
                     var dataPoint_prod = [];
                     $(response.resources).each(function(){
-                        a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                        a = { y: $(this).get(0).consumed_hours, label: $(this).get(0).user['name']}
                         dataPoint_actual.push(a);
-                        b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                        b = { y: $(this).get(0).estimated_hours, label: $(this).get(0).user['name']}
                         dataPoint_prod.push(b);
                         var project_resource_name = $(this).get(0).user['name'];
                         var project_resource_id = $(this).get(0).user['id'];
@@ -86,7 +86,7 @@
                             @hasrole(['admin','engineer','teamlead'])
                             {
                                 showInLegend: true,
-                                legendText: "Actual Hours",
+                                legendText: "Consumed Hours",
                                 // Change type to "bar", "area", "spline", "pie",etc.
                                 type: "line",
                                 dataPoints: ActualHoursDataPoints
@@ -94,7 +94,7 @@
                                 @endhasrole
                             {
                                 showInLegend: true,
-                                legendText: "Productive Hours",
+                                legendText: "Estimated Hours",
                                 // Change type to "bar", "area", "spline", "pie",etc.
                                 type: "line",
                                 dataPoints: ProductiveHourdataPoints
@@ -121,14 +121,14 @@
                                     {
                                         type: "column",
                                         showInLegend: true,
-                                        legendText: "Actual Hours",
+                                        legendText: "Consumed Hours",
                                         dataPoints: dataPoint_actual
                                     },
                                         @endhasrole
                                     {
                                         type: "column",
                                         showInLegend: true,
-                                        legendText: "Productive Hours",
+                                        legendText: "Estimated Hours",
                                         dataPoints: dataPoint_prod
                                     }
                                 ]
@@ -167,9 +167,9 @@
                 var dataPoint_actual = [];
                 var dataPoint_prod = [];
                 $(response.resources).each(function(){
-                    a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                    a = { y: $(this).get(0).consumed_hours, label: $(this).get(0).user['name']}
                     dataPoint_actual.push(a);
-                    b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                    b = { y: $(this).get(0).estimated_hours, label: $(this).get(0).user['name']}
                     dataPoint_prod.push(b);
                     var project_resource_name = $(this).get(0).user['name'];
                     var project_resource_id = $(this).get(0).user['id'];
@@ -194,7 +194,7 @@
                         @hasrole(['admin','engineer','teamlead'])
                         {
                             showInLegend: true,
-                            legendText: "Actual Hours",
+                            legendText: "Consumed Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ActualHoursDataPoints
@@ -202,7 +202,7 @@
                         @endhasrole
                         {
                             showInLegend: true,
-                            legendText: "Productive Hours",
+                            legendText: "Estimated Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ProductiveHourdataPoints
@@ -229,14 +229,14 @@
                                 {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Actual Hours",
+                                    legendText: "Consumed Hours",
                                     dataPoints: dataPoint_actual
                                 },
                                 @endhasrole
                                 {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Productive Hours",
+                                    legendText: "Estimated Hours",
                                     dataPoints: dataPoint_prod
                                 }
                             ]
@@ -274,9 +274,9 @@
                 var dataPoint_actual = [];
                 var dataPoint_prod = [];
                 $(response.resources).each(function(){
-                    a = { y: $(this).get(0).actual_hours, label: $(this).get(0).user['name']}
+                    a = { y: $(this).get(0).consumed_hours, label: $(this).get(0).user['name']}
                     dataPoint_actual.push(a);
-                    b = { y: $(this).get(0).productive_hours, label: $(this).get(0).user['name']}
+                    b = { y: $(this).get(0).estimated_hours, label: $(this).get(0).user['name']}
                     dataPoint_prod.push(b);
                 });
 
@@ -298,7 +298,7 @@
                         @hasrole(['admin','engineer','teamlead'])
                         {
                             showInLegend: true,
-                            legendText: "Actual Hours",
+                            legendText: "Consumed Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ActualHoursDataPoints
@@ -306,7 +306,7 @@
                         @endhasrole
                         {
                             showInLegend: true,
-                            legendText: "Productive Hours",
+                            legendText: "Estimated Hours",
                             // Change type to "bar", "area", "spline", "pie",etc.
                             type: "line",
                             dataPoints: ProductiveHourdataPoints
@@ -334,14 +334,14 @@
                              {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Actual Hours",
+                                    legendText: "Consumed Hours",
                                     dataPoints: dataPoint_actual
                                 },
                              @endhasrole
                                 {
                                     type: "column",
                                     showInLegend: true,
-                                    legendText: "Productive Hours",
+                                    legendText: "Estimated Hours",
                                     dataPoints: dataPoint_prod
                                 }
                             ]

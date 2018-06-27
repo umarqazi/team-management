@@ -13,8 +13,9 @@
                         </ul>
                     </div>
                 @endif
+
                 @if(Auth::user()->can('create user'))
-                <div class="text-right" style="margin:20px;">
+                <div class="text-right" style="margin:20px 0px 20px 20px;">
                     <a href="/users/create" class="btn btn-primary">Create User</a>
                     @hasrole('admin')
                     {{--<button class="btn btn-primary" data-toggle="modal" data-target="#role-modal">Add Role--}}
@@ -25,45 +26,50 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Users</div>
                     <div class="panel-body">
+
                         @if(Session::has('message'))
-                            <div class="alert {{ Session::get('alert-class', 'alert-info') }}">
-                                <strong>Success!</strong> {{ Session::get('message') }}
-                            </div>
+                            <script>
+                                toastr.success('{{ Session::get('message') }}')
+                            </script>
                         @endif
-                        <table class="table table-hover table-striped">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Joined</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($users as $user)
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
                                 <tr>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ Carbon\Carbon::parse($user->created_at)->format("dS \of F, Y") }}</td>
-                                    <td>
-                                        {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
-                                        {{ Form::hidden('_method', 'DELETE') }}
-
-                                        @if(auth()->user()->can('edit user'))
-                                        <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> |
-                                        @endif
-
-                                        @if(auth()->user()->can('delete user'))
-                                        <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button> |
-                                        @endif
-
-                                        <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                                         {{ Form::close() }}
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                    <th>Action</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ Carbon\Carbon::parse($user->created_at)->format("dS \of F, Y") }}</td>
+                                        <td>
+                                            {{ Form::open(array('url' => '/users/' . $user->id, 'class' => '')) }}
+                                            {{ Form::hidden('_method', 'DELETE') }}
+
+                                            @if(auth()->user()->can('edit user'))
+                                                <a href="{{ url('/users/'. $user->id.'/edit') }}"><span class="glyphicon glyphicon-edit"></span></a> |
+                                            @endif
+
+                                            @if(auth()->user()->can('delete user'))
+                                                <button type="submit" class="no_button"><i class="glyphicon glyphicon-trash"></i></button> |
+                                            @endif
+
+                                            <a href="{{ url('/users/'. $user->id) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                            {{ Form::close() }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>

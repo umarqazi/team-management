@@ -17,25 +17,25 @@
                                 <div class="col-md-10 col-md-offset-1">
                                     <div class="group">
 
-                                        <input id="email" type="email" class="" name="email"><span class="highlight"></span><span class="bar"></span>
-                                        <label class="control-label loginLabels">Email</label>
-                                    </div>
-                                    @if ($errors->has('email'))
-                                        <span class="help-block">
+                                    <input id="email" type="email" class="email" name="email" value="{{ old('email') }}"><span class="highlight"></span><span class="bar"></span>
+                                    <label class="control-label loginLabels">Email</label>
+                                </div>
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
                                     <strong>{{ $errors->first('email') }}</strong>
                                 </span>
                                     @endif
                                 </div>
                             </div>
 
-                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <div class="group">
-                                        <input id="password" type="password" class="" name="password"><span class="highlight"></span><span class="bar"></span>
-                                        <label class="control-label loginLabels">Password</label>
-                                    </div>
-                                    @if ($errors->has('password'))
-                                        <span class="help-block">
+                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="group">
+                                    <input id="password" type="password" class="password" name="password" value="{{ old('password') }}"><span class="highlight"></span><span class="bar"></span>
+                                    <label class="control-label loginLabels">Password</label>
+                                </div>
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
                                     <strong>{{ $errors->first('password') }}</strong>
                                 </span>
                                     @endif
@@ -76,4 +76,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="{{URL::asset('js/login.js')}}"></script>
 @endsection
